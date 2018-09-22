@@ -1,37 +1,56 @@
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Objects;
 
 public class Receiver {
-    public static void main(String args[]) {
-        ServerSocket echoServer = null;
-        String line;
-        DataInputStream is;
-        PrintStream os;
-        Socket clientSocket;
+    private Boolean connected = false;
+    private BufferedReader inputReader = null;
+    private PrintStream outputStream = null;
+
+    private Receiver(int port) {
+        ServerSocket serverSocket;
+        Socket clientSocket = null;
+        InputStreamReader inputStream;
 
         try {
-            echoServer = new ServerSocket(9999);
+            serverSocket = new ServerSocket(port);
+            clientSocket = serverSocket.accept();
+            inputStream = new InputStreamReader(clientSocket.getInputStream());
+            inputReader = new BufferedReader(inputStream);
+            outputStream = new PrintStream(clientSocket.getOutputStream());
         } catch (IOException e) {
-            System.out.println(e);
+            System.err.println("IOException:  " + e);
         }
 
-        try {
-            if (echoServer != null) {
-                clientSocket = echoServer.accept();
-                is = new DataInputStream(clientSocket.getInputStream());
-                os = new PrintStream(clientSocket.getOutputStream());
+        connected = clientSocket != null && inputReader != null && outputStream != null;
+    }
 
-                while (true) {
-                    line = is.readLine();
-                    System.out.println(line);
-                    os.println("received");
-                }
-            }
+    private void receive() {
+        try {
+            receiveLoop();
         } catch (IOException e) {
-            System.out.println(e);
+            System.err.println("IOException:  " + e);
+        }
+    }
+
+    private void receiveLoop() throws IOException {
+        while (true) {
+            String line = inputReader.readLine();
+            System.out.println(line);
+            outputStream.println("received");
+
+            if (Objects.equals(line, "exit")) {
+                break;
+            }
+        }
+    }
+
+    public static void main(String args[]) {
+        Receiver receiver = new Receiver(9999);
+
+        if (receiver.connected) {
+            receiver.receive();
         }
     }
 }
