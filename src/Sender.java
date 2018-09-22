@@ -1,5 +1,7 @@
 import java.net.*;
 import java.io.*;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class Sender extends Thread {
     private Socket client = null;
@@ -7,6 +9,8 @@ public class Sender extends Thread {
     private BufferedReader inputReader = null;
     private DataOutputStream outputStream = null;
     private Boolean connected = false;
+    private String userName;
+    private Scanner scanner;
 
     private Sender(String host, int port) {
         try {
@@ -23,11 +27,40 @@ public class Sender extends Thread {
         connected = client != null && inputReader != null && outputStream != null;
     }
 
-    private void send(String[] args) {
-        try {
-            for (String s: args) {
-                outputStream.writeBytes(s + "\n");
+    private void handleUserInput() {
+        scanner = new Scanner(System.in);
+        String response;
+
+        System.out.print("Enter your username: ");
+
+        while (true) {
+            if (userName != null) {
+                System.out.print(userName + ": ");
             }
+
+            String userInput = scanner.nextLine();
+
+            if (userName == null) {
+                setUserName(userInput);
+            }
+
+            send(userInput);
+            response = receive();
+            printResponse(response);
+
+            if (Objects.equals("end", userInput)) {
+                break;
+            }
+        }
+    }
+
+    private void setUserName(String newUserName) {
+        userName = newUserName;
+    }
+
+    private void send(String args) {
+        try {
+            outputStream.writeBytes(args + "\n");
         } catch (UnknownHostException e) {
             System.err.println("Trying to connect to unknown host: " + e);
         } catch (IOException e) {
@@ -35,36 +68,60 @@ public class Sender extends Thread {
         }
     }
 
-    private void receive() {
+    private String receive() {
+        String serverResponse = "";
 
         try {
-            String responseLine;
-            while ((responseLine = inputReader.readLine()) != null) {
-                System.out.println("Server: " + responseLine);
-                if (responseLine.contains("Ok")) {
-                    break;
-                }
-            }
+            serverResponse = getServerResponse();
         } catch (UnknownHostException e) {
             System.err.println("Trying to connect to unknown host: " + e);
         } catch (IOException e) {
             System.err.println("IOException:  " + e);
         }
+
+        return serverResponse;
     }
 
-    private void closeConnection()throws IOException {
+    private String getServerResponse() throws IOException {
+        StringBuilder completeResponse = new StringBuilder();
+        String response;
+
+        while ((response = inputReader.readLine()) != null) {
+            if (response.contains("Ok")) {
+                break;
+            }
+
+            completeResponse.append(response);
+            completeResponse.append("\n");
+        }
+
+        return completeResponse.toString();
+    }
+
+    private void printResponse(String response) {
+        String[] responseArray = response.split("\n");
+        for (String s : responseArray) {
+            System.out.println("Server: " + s);
+        }
+    }
+
+    private void closeConnection() throws IOException {
         inputStream.close();
         outputStream.close();
         client.close();
+        scanner.close();
     }
 
     public static void main(String[] args) throws IOException {
-        Sender sender = new Sender("localhost", 9999);
+        String host = args[0];
+        int port = Integer.parseInt(args[1]);
+
+        Sender sender = new Sender(host, port);
 
         if (sender.connected) {
-            System.err.println("Connection established.");
-            sender.send(args);
-            sender.receive();
+            System.out.println("Connection established.");
+
+            sender.handleUserInput();
             sender.closeConnection();
         }
     }

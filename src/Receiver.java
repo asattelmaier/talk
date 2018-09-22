@@ -39,8 +39,9 @@ public class Receiver {
             String line = inputReader.readLine();
             System.out.println(line);
             outputStream.println("received");
+            outputStream.println("Ok");
 
-            if (Objects.equals(line, "exit")) {
+            if (Objects.equals(line, "end")) {
                 break;
             }
         }
