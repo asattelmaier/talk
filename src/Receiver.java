@@ -74,24 +74,4 @@ public class Receiver extends Thread {
         String[] splitResponse = response.split("&");
         this.remoteUserName = splitResponse[1];
     }
-
-    private void printResponse(String response) {
-        String[] responseArray = response.split("\n");
-        for (String s : responseArray) {
-            System.out.println("Server: " + s);
-        }
-    }
-
-    private void receiveLoop() throws IOException {
-        while (true) {
-            String line = inputReader.readLine();
-            System.out.println(line);
-            outputStream.println("received");
-            outputStream.println("Ok");
-
-            if (Objects.equals(line, "end")) {
-                break;
-            }
-        }
-    }
 }
