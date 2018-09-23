@@ -24,16 +24,14 @@ public class Sender extends Thread {
      * @param remote - remote machine to talk to.
      * @param port - remote port to talk to.
      */
-    Sender(String remote, int port) {
+    Sender(String remote, int port, String userName) {
         this.remote = remote;
         this.port = port;
+        this.userName = userName;
     }
 
 
     public void run() {
-        System.out.print("Enter your username: ");
-        this.userName = this.getUserNameFromInput();
-
         System.out.println("Waiting for connection to: " + this.remote + ":" + this.port + "...");
         this.establishConnection();
         System.out.println("Connection established.");
@@ -109,9 +107,9 @@ public class Sender extends Thread {
 
     private void closeConnection() {
         try {
-            outputStream.close();
-            client.close();
-            scanner.close();
+            this.outputStream.close();
+            this.client.close();
+            this.scanner.close();
         } catch (IOException e) {
             System.err.println("IOException: " + e);
         }

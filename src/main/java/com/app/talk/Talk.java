@@ -1,5 +1,7 @@
 package com.app.talk;
 
+import java.util.Scanner;
+
 /**
  * A driver for a simple sender of network traffic.
  */
@@ -7,15 +9,15 @@ public class Talk {
 
     private Receiver receiver;
     private Sender sender;
-
-    private Talk(int listenPort, int talkPort, String remote) {
-        this.receiver = new Receiver(listenPort);
-        this.sender = new Sender(remote, talkPort);
-    }
+    private Scanner scanner = new Scanner(System.in);
 
     private void start(){
         this.receiver.start();
         this.sender.start();
+    }
+
+    private String getUserNameFromInput() {
+        return this.scanner.nextLine();
     }
 
     /**
@@ -30,7 +32,15 @@ public class Talk {
         int talkPort = args[1].length() > 0 ? Integer.parseInt(args[1]) : 2049;
         String remote = args[2].length() > 0 ? args[2] : "localhost";
 
-        Talk talk = new Talk(listenPort, talkPort, remote);
-        talk.start();
+        Talk talk = new Talk();
+
+        System.out.print("Enter your username: ");
+        String userName = talk.getUserNameFromInput();
+
+        Receiver receiver = new Receiver(listenPort);
+        Sender sender = new Sender(remote, talkPort, userName);
+
+        receiver.start();
+        sender.start();
     }
 }

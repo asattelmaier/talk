@@ -3,7 +3,6 @@ package com.app.talk;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 /**
  * A simple receiver of network traffic.
@@ -32,24 +31,14 @@ public class Receiver extends Thread {
         try {
             clientSocket = serverSocket.accept();
             this.inputReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        } catch (IOException e) {
-            System.err.println("IOException:  " + e);
-        }
-
-        this.receive();
-    }
-
-    private void receive() {
-        try {
-            this.printResponse();
-        } catch (UnknownHostException e) {
-            System.err.println("Trying to connect to unknown host: " + e);
+            this.receive();
+            this.closeConnection();
         } catch (IOException e) {
             System.err.println("IOException:  " + e);
         }
     }
 
-    private void printResponse() throws IOException {
+    private void receive() throws IOException {
         String response;
 
         while ((response = inputReader.readLine()) != null) {
@@ -70,5 +59,10 @@ public class Receiver extends Thread {
     private void setRemoteUserName(String response) {
         String[] splitResponse = response.split("&");
         this.remoteUserName = splitResponse[1];
+    }
+
+    private void closeConnection() throws IOException {
+        this.inputReader.close();
+        this.serverSocket.close();
     }
 }
