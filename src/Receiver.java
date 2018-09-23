@@ -2,13 +2,13 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Objects;
 
+/**
+ * A simple receiver of network traffic.
+ */
 public class Receiver extends Thread {
     private ServerSocket serverSocket;
-    private Boolean connected = false;
     private BufferedReader inputReader = null;
-    private PrintStream outputStream = null;
     private String remoteUserName = null;
 
     /**
@@ -24,27 +24,21 @@ public class Receiver extends Thread {
     }
 
     public void run() {
-        Socket clientSocket = null;
-        InputStreamReader inputStream;
-        String response;
+        Socket clientSocket;
 
         try {
             clientSocket = serverSocket.accept();
-            inputStream = new InputStreamReader(clientSocket.getInputStream());
-            inputReader = new BufferedReader(inputStream);
-            outputStream = new PrintStream(clientSocket.getOutputStream());
+            this.inputReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         } catch (IOException e) {
             System.err.println("IOException:  " + e);
         }
 
-        connected = clientSocket != null && inputReader != null && outputStream != null;
-
-        receive();
+        this.receive();
     }
 
     private void receive() {
         try {
-            printResponse();
+            this.printResponse();
         } catch (UnknownHostException e) {
             System.err.println("Trying to connect to unknown host: " + e);
         } catch (IOException e) {

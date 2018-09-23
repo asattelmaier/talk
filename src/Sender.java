@@ -4,6 +4,9 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A simple sender of network traffic.
+ */
 public class Sender extends Thread {
     private String remote;
     private int port;
@@ -15,8 +18,8 @@ public class Sender extends Thread {
     /**
      * A sender of information over the network.
      *
-     * @param remote - - remote machine to talk to.
-     * @param port   - - remote port to talk to.
+     * @param remote - remote machine to talk to.
+     * @param port - remote port to talk to.
      */
     Sender(String remote, int port) {
         this.remote = remote;
@@ -25,6 +28,7 @@ public class Sender extends Thread {
 
 
     public void run() {
+        System.out.print("Enter your username: ");
         this.userName = this.getUserNameFromInput();
 
         System.out.println("Waiting for connection to: " + this.remote + ":" + this.port + "...");
@@ -38,11 +42,15 @@ public class Sender extends Thread {
         this.sendUserInput();
 
         this.closeConnection();
+        System.out.println("Connection closed.");
     }
 
     private String getUserNameFromInput() {
-        System.out.print("Enter your username: ");
         return scanner.nextLine();
+    }
+
+    private void sendUserName() {
+        this.sendMsg("?userName&" + this.userName);
     }
 
     private void establishConnection() {
@@ -74,10 +82,6 @@ public class Sender extends Thread {
         }
     }
 
-    private void sendUserName() {
-        this.sendMsg("?userName&" + this.userName);
-    }
-
     private void sendUserInput() {
         String userInput;
 
@@ -105,7 +109,6 @@ public class Sender extends Thread {
             outputStream.close();
             client.close();
             scanner.close();
-            System.out.println("Connection closed.");
         } catch (IOException e) {
             System.err.println("IOException: " + e);
         }
