@@ -1,13 +1,21 @@
+package com.app.talk;
+
 /**
  * A driver for a simple sender of network traffic.
  */
 public class Talk {
-    private Talk(int listenPort, int talkPort, String remote) {
-        Receiver receiver = new Receiver(listenPort);
-        Sender sender = new Sender(remote, talkPort);
 
-        receiver.start();
-        sender.start();
+    private Receiver receiver;
+    private Sender sender;
+
+    private Talk(int listenPort, int talkPort, String remote) {
+        this.receiver = new Receiver(listenPort);
+        this.sender = new Sender(remote, talkPort);
+    }
+
+    private void start(){
+        this.receiver.start();
+        this.sender.start();
     }
 
     /**
@@ -22,6 +30,7 @@ public class Talk {
         int talkPort = args[1].length() > 0 ? Integer.parseInt(args[1]) : 2048;
         String remote = args[2].length() > 0 ? args[2] : "localhost";
 
-        new Talk(listenPort, talkPort, remote);
+        Talk talk = new Talk(listenPort, talkPort, remote);
+        talk.start();
     }
 }

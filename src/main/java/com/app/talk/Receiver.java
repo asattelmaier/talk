@@ -1,3 +1,5 @@
+package com.app.talk;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -7,12 +9,13 @@ import java.net.UnknownHostException;
  * A simple receiver of network traffic.
  */
 public class Receiver extends Thread {
+
     private ServerSocket serverSocket;
     private BufferedReader inputReader = null;
     private String remoteUserName = null;
 
     /**
-     * A Receiver of information from the network.
+     * A main.java.Receiver of information from the network.
      * @param port - to listen to.
      */
     Receiver(int port) {

@@ -1,3 +1,5 @@
+package com.app.talk;
+
 import java.net.*;
 import java.io.*;
 import java.util.Objects;
@@ -8,6 +10,7 @@ import java.util.concurrent.TimeUnit;
  * A simple sender of network traffic.
  */
 public class Sender extends Thread {
+
     private String remote;
     private int port;
     private Socket client = null;
