@@ -27,7 +27,7 @@ public class Talk {
      */
     public static void main(String[] args) {
         int listenPort = args[0].length() > 0 ? Integer.parseInt(args[0]) : 2048;
-        int talkPort = args[1].length() > 0 ? Integer.parseInt(args[1]) : 2048;
+        int talkPort = args[1].length() > 0 ? Integer.parseInt(args[1]) : 2049;
         String remote = args[2].length() > 0 ? args[2] : "localhost";
 
         Talk talk = new Talk(listenPort, talkPort, remote);
