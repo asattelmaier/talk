@@ -6,13 +6,37 @@ import java.util.Scanner;
  * A driver for a simple sender of network traffic.
  */
 public class Talk {
-    private static final int DEFAULT_TALK_PORT = 2049;
-    private static final int DEFAULT_LISTEN_PORT = 2048;
-    private static final String DEFAULT_IP = "localhost";
-    private static int listenPort;
-    private static int talkPort;
-    private static String remoteHost;
+    private int listenPort;
+    private int talkPort;
+    private String remoteHost;
+    private String userName;
 
+    /**
+     * A sender of information over the network.
+     */
+    private Talk() {
+        this.listenPort = 2048;
+        this.talkPort = 2049;
+        this.remoteHost = "localhost";
+    }
+
+    private void setListenPort(int listenPort) {
+        this.listenPort = listenPort;
+    }
+
+    private void setTalkPort(int talkPort) {
+        this.talkPort = talkPort;
+    }
+
+    private void setRemoteHost(String remoteHost) {
+        this.remoteHost = remoteHost;
+    }
+
+    /**
+     * Validates given arguments.
+     *
+     * @param args - arguments transferred from the operating system.
+     */
     private static void validateArgs(String[] args) {
         int argLength = args.length;
 
@@ -33,18 +57,26 @@ public class Talk {
         }
     }
 
-    private static void setPortsAndRemoteHost(String[] args) {
-        listenPort = args.length > 0 ? Integer.parseInt(args[0]) : DEFAULT_LISTEN_PORT;
-        talkPort = args.length > 1 ? Integer.parseInt(args[1]) : DEFAULT_TALK_PORT;
-        remoteHost = args.length > 2 ? args[2] : DEFAULT_IP;
+    private void setPortsAndRemoteHost(String[] args) {
+        int argLength = args.length;
+
+        if (argLength > 0) {
+            this.setListenPort(Integer.parseInt(args[0]));
+        }
+        if (argLength > 1) {
+            this.setTalkPort(Integer.parseInt(args[1]));
+        }
+        if (argLength > 2) {
+            this.setRemoteHost(args[2]);
+        }
     }
 
-    private static String getUserNameFromInput() {
+    private void setUserNameFromUserInput() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter your username: ");
 
-        return scanner.nextLine();
+        this.userName = scanner.nextLine();
     }
 
     /**
@@ -57,12 +89,15 @@ public class Talk {
      */
     public static void main(String[] args) {
         validateArgs(args);
-        setPortsAndRemoteHost(args);
 
-        String userName = getUserNameFromInput();
+        Talk talk = new Talk();
 
-        Receiver receiver = new Receiver(listenPort);
-        Sender sender = new Sender(remoteHost, talkPort, userName);
+        talk.setPortsAndRemoteHost(args);
+
+        talk.setUserNameFromUserInput();
+
+        Receiver receiver = new Receiver(talk.listenPort);
+        Sender sender = new Sender(talk.remoteHost, talk.talkPort, talk.userName);
 
         receiver.start();
         sender.start();
