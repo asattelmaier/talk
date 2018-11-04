@@ -6,15 +6,10 @@ import java.util.Scanner;
  * A driver for a simple sender of network traffic.
  */
 public class Talk {
-
-    private Receiver receiver;
-    private Sender sender;
+    private static final int DEFAULT_TALK_PORT = 2049;
+    private static final int DEFAULT_LISTEN_PORT = 2048;
+    private static final String DEFAULT_IP = "localhost";
     private Scanner scanner = new Scanner(System.in);
-
-    private void start() {
-        this.receiver.start();
-        this.sender.start();
-    }
 
     private String getUserNameFromInput() {
         return this.scanner.nextLine();
@@ -33,9 +28,9 @@ public class Talk {
         String talkPortArg = args.length > 1 ? args[1] : "";
         String listenPortArg = args.length > 2 ? args[2] : "";
 
-        String remote = remoteArg.length() > 0 ? remoteArg : "localhost";
-        int talkPort = talkPortArg.length() > 0 ? Integer.parseInt(talkPortArg) : 2049;
-        int listenPort = listenPortArg.length() > 0 ? Integer.parseInt(listenPortArg) : 2048;
+        String remote = remoteArg.length() > 0 ? remoteArg : DEFAULT_IP;
+        int talkPort = talkPortArg.length() > 0 ? Integer.parseInt(talkPortArg) : DEFAULT_TALK_PORT;
+        int listenPort = listenPortArg.length() > 0 ? Integer.parseInt(listenPortArg) : DEFAULT_LISTEN_PORT;
 
         Talk talk = new Talk();
 
