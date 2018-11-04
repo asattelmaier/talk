@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Sender extends Thread {
 
-    private String remote;
+    private String remoteHost;
     private int port;
     private Socket client = null;
     private DataOutputStream outputStream = null;
@@ -21,18 +21,18 @@ public class Sender extends Thread {
     /**
      * A sender of information over the network.
      *
-     * @param remote - remote machine to talk to.
-     * @param port   - remote port to talk to.
+     * @param remoteHost - remote machine to talk to.
+     * @param port       - remote port to talk to.
      */
-    Sender(String remote, int port, String userName) {
-        this.remote = remote;
+    Sender(String remoteHost, int port, String userName) {
+        this.remoteHost = remoteHost;
         this.port = port;
         this.userName = userName;
     }
 
 
     public void run() {
-        System.out.println("Waiting for connection to: " + this.remote + ":" + this.port + "...");
+        System.out.println("Waiting for connection to: " + this.remoteHost + ":" + this.port + "...");
         this.establishConnection();
         System.out.println("Connection established.");
 
@@ -63,7 +63,7 @@ public class Sender extends Thread {
     }
 
     private void connect() throws IOException {
-        this.client = new Socket(this.remote, this.port);
+        this.client = new Socket(this.remoteHost, this.port);
     }
 
     private void reconnect() {

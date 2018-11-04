@@ -11,7 +11,7 @@ public class Talk {
     private static final String DEFAULT_IP = "localhost";
     private static int listenPort;
     private static int talkPort;
-    private static String remote;
+    private static String remoteHost;
 
     private static void validateArgs(String[] args) {
         int argLength = args.length;
@@ -33,10 +33,10 @@ public class Talk {
         }
     }
 
-    private static void setPortsAndRemote(String[] args) {
+    private static void setPortsAndRemoteHost(String[] args) {
         listenPort = args.length > 0 ? Integer.parseInt(args[0]) : DEFAULT_LISTEN_PORT;
         talkPort = args.length > 1 ? Integer.parseInt(args[1]) : DEFAULT_TALK_PORT;
-        remote = args.length > 2 ? args[2] : DEFAULT_IP;
+        remoteHost = args.length > 2 ? args[2] : DEFAULT_IP;
     }
 
     private static String getUserNameFromInput() {
@@ -53,16 +53,16 @@ public class Talk {
      * @param args - arguments transferred from the operating system
      *             args[0]: the port to listen to (default: 2048)
      *             args[1]: the port to talk to (default: 2049)
-     *             args[2]: remote machine to talk to (default: localhost)
+     *             args[2]: remoteHost of the machine to talk to (default: localhost)
      */
     public static void main(String[] args) {
         validateArgs(args);
-        setPortsAndRemote(args);
+        setPortsAndRemoteHost(args);
 
         String userName = getUserNameFromInput();
 
         Receiver receiver = new Receiver(listenPort);
-        Sender sender = new Sender(remote, talkPort, userName);
+        Sender sender = new Sender(remoteHost, talkPort, userName);
 
         receiver.start();
         sender.start();
