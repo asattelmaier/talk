@@ -108,11 +108,10 @@ public class Sender extends Thread {
 
     private void closeConnection() {
         try {
-            this.outputStream.close();
-            this.client.close();
-            this.scanner.close();
+        	this.client.close(); //closes OutputStream as well
         } catch (IOException e) {
-            System.err.println("IOException: " + e);
+        	System.err.println("IOException: " + e);
         }
+        this.scanner.close();
     }
 }
