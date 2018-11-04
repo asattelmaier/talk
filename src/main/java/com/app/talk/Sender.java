@@ -100,6 +100,7 @@ public class Sender extends Thread {
     private void sendMsg(String msg) {
         try {
             this.outputStream.writeBytes(msg + "\n");
+            this.outputStream.flush();
         } catch (IOException e) {
             System.err.println("IOException: " + e);
         }
