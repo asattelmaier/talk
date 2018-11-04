@@ -15,6 +15,7 @@ public class Receiver extends Thread {
 
     /**
      * A main.java.Receiver of information from the network.
+     *
      * @param port - to listen to.
      */
     Receiver(int port) {

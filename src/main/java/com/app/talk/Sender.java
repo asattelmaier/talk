@@ -22,7 +22,7 @@ public class Sender extends Thread {
      * A sender of information over the network.
      *
      * @param remote - remote machine to talk to.
-     * @param port - remote port to talk to.
+     * @param port   - remote port to talk to.
      */
     Sender(String remote, int port, String userName) {
         this.remote = remote;
