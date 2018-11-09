@@ -6,9 +6,21 @@ import java.util.Scanner;
  * A driver for a simple sender of network traffic.
  */
 public class Talk {
+	/**
+	 * The port this host listens to for incoming messages.
+	 */
     private int listenPort;
+    /**
+     * The port this host sends his messages to.
+     */
     private int talkPort;
+    /**
+     * The ip-address of the other Host / chatpartner.
+     */
     private String remoteHost;
+    /**
+     * The name chosen by the user.
+     */
     private String userName;
 
     /**
@@ -19,19 +31,34 @@ public class Talk {
         this.talkPort = 2049;
         this.remoteHost = "localhost";
     }
-
+    /**
+     * A setter for the listening port.
+     */
     private void setListenPort(int listenPort) {
         this.listenPort = listenPort;
     }
-
+    /**
+     * A setter for the talk port.
+     * @param - talkPort
+     */
     private void setTalkPort(int talkPort) {
         this.talkPort = talkPort;
     }
-
+    /**
+     * A setter for the other hosts ip-address
+     * @param - remoteHost
+     */
     private void setRemoteHost(String remoteHost) {
         this.remoteHost = remoteHost;
     }
-
+    /**
+     * A simple method to verify given ports.
+     * @param args - arguments transferred from the operating system
+     *             args[0]: the port to listen to (default: 2048)
+     *             args[1]: the port to talk to (default: 2049)
+     *             args[2]: remoteHost of the machine to talk to (default: localhost)
+     * @return true - if the given ports are valid.
+     */
     private static boolean portsAreValid(String[] args) {
         int argLength = args.length;
 
@@ -48,7 +75,14 @@ public class Talk {
 
         return true;
     }
-
+    /**
+     * A simple method to set the given ip-address, source port and destination port if given.
+     * 
+     * @param args - arguments transferred from the operating system
+     *             args[0]: the port to listen to (default: 2048)
+     *             args[1]: the port to talk to (default: 2049)
+     *             args[2]: remoteHost of the machine to talk to (default: localhost)
+     */
     private void setPortsAndRemoteHost(String[] args) {
         int argLength = args.length;
 
@@ -62,7 +96,9 @@ public class Talk {
             this.setRemoteHost(args[2]);
         }
     }
-
+    /**
+     * Gets User keyboard input and sets it as the username.
+     */
     private void setUserNameFromUserInput() {
         Scanner scanner = new Scanner(System.in);
 
@@ -70,7 +106,9 @@ public class Talk {
 
         this.userName = scanner.nextLine();
     }
-
+    /**
+     * Creates a Sender and a Receiver object.
+     */
     private void start() {
         new Thread(new Receiver(this.listenPort)).start();
         new Thread(new Sender(this.remoteHost, this.talkPort, this.userName)).start();
