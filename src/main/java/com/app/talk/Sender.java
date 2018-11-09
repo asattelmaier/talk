@@ -75,7 +75,7 @@ public class Sender extends Thread {
         try {
             this.outputStream = new DataOutputStream(client.getOutputStream());
         } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to: hostname");
+            System.err.println("Couldn't get I/O for the connection to: " + this.remoteHost);
         }
     }
 
