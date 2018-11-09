@@ -21,7 +21,7 @@ public class Sender implements Runnable {
     private int port;
     /**
      * A dummy Socket that represents the receiving Socket of the other Host. 
-     * Contains the ip-adress and listening port of the other Host.
+     * Contains the ip-address and listening port of the other Host.
      */
     private Socket client = null;
     /**
