@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * A simple sender of network traffic.
  */
-public class Sender extends Thread {
+public class Sender implements Runnable {
 
     private String remoteHost;
     private int port;

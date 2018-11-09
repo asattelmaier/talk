@@ -72,11 +72,8 @@ public class Talk {
     }
 
     private void start() {
-        Receiver receiver = new Receiver(this.listenPort);
-        Sender sender = new Sender(this.remoteHost, this.talkPort, this.userName);
-
-        receiver.start();
-        sender.start();
+        new Thread(new Receiver(this.listenPort)).start();
+        new Thread(new Sender(this.remoteHost, this.talkPort, this.userName)).start();
     }
 
     /**

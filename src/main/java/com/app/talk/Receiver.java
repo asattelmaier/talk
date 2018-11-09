@@ -7,7 +7,7 @@ import java.net.Socket;
 /**
  * A simple receiver of network traffic.
  */
-public class Receiver extends Thread {
+public class Receiver implements Runnable {
 
     private ServerSocket serverSocket;
     private BufferedReader inputReader = null;
