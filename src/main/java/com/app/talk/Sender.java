@@ -51,7 +51,7 @@ public class Sender implements Runnable {
 
     /**
      * The the executing method of the class.
-     * This method is being called by the start()-method of an Thread object containing 
+     * This method is being called by the start()-method of a Thread object containing 
      * a Sender object to establish the outgoing connection to the other host.
      */
     public void run() {

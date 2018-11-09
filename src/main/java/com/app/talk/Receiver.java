@@ -8,9 +8,18 @@ import java.net.Socket;
  * A simple receiver of network traffic.
  */
 public class Receiver implements Runnable {
-
+	/**
+	 * A ServerSockets that serves as the endingpoint of Communication for 
+	 * the other Host.
+	 */
     private ServerSocket serverSocket;
+    /**
+     * A buffered Reader for incoming messages.
+     */
     private BufferedReader inputReader = null;
+    /**
+     * The username of the other Host.
+     */
     private String remoteUserName = null;
 
     /**
@@ -25,7 +34,11 @@ public class Receiver implements Runnable {
             System.err.println("IOException:  " + e);
         }
     }
-
+    /**
+     * The the executing method of the class.
+     * This method is being called by the start()-method of a Thread object containing 
+     * a Receiver object to establish the incoming connection from the other host.
+     */
     public void run() {
         Socket clientSocket;
 
@@ -38,7 +51,12 @@ public class Receiver implements Runnable {
             System.err.println("IOException:  " + e);
         }
     }
-
+    /**
+     * Creates a loop in which the incoming messages are printed to the console.
+     * If the incoming message contains "exit." gets an information that the other user
+     * disconnected.
+     * @throws IOException
+     */
     private void receive() throws IOException {
         String response;
 
@@ -56,12 +74,18 @@ public class Receiver implements Runnable {
             }
         }
     }
-
+    /**
+     * A simple setter for the remoteUserName
+     * @param response
+     */
     private void setRemoteUserName(String response) {
         String[] splitResponse = response.split("&");
         this.remoteUserName = splitResponse[1];
     }
-
+    /**
+     * Closes the inputReader, as well as the serverSocket from the Receiver object.
+     * @throws IOException
+     */
     private void closeConnection() throws IOException {
         this.inputReader.close();
         this.serverSocket.close();
