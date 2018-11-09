@@ -46,10 +46,6 @@ public class Sender extends Thread {
         System.out.println("Connection closed.");
     }
 
-    private String getUserNameFromInput() {
-        return scanner.nextLine();
-    }
-
     private void sendUserName() {
         this.sendMsg("?userName&" + this.userName);
     }
