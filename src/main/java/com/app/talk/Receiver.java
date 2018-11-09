@@ -90,6 +90,6 @@ public class Receiver implements Runnable {
     private void closeConnection() throws IOException {
         this.inputReader.close();
         this.serverSocket.close();
-        System.exit(-1);
+        System.exit(0);
     }
 }

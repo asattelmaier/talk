@@ -162,6 +162,6 @@ public class Sender implements Runnable {
             System.err.println("IOException: " + e);
         }
         this.scanner.close();
-        System.exit(-1);
+        System.exit(0);
     }
 }
