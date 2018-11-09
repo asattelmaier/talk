@@ -125,7 +125,7 @@ public class Sender implements Runnable {
 
             this.sendMsg(userInput);
 
-            if (Objects.equals("end", userInput)) {
+            if (Objects.equals("exit.", userInput)) {
                 break;
             }
         }
