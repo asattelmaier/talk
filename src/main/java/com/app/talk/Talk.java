@@ -32,18 +32,8 @@ public class Talk {
         this.remoteHost = remoteHost;
     }
 
-    /**
-     * Validates given arguments.
-     *
-     * @param args - arguments transferred from the operating system.
-     */
-    private static void validateArgs(String[] args) {
+    private static boolean portsAreValid(String[] args) {
         int argLength = args.length;
-
-        if (argLength > 3) {
-            System.err.println("To many arguments given. Type 'help' for further Information.");
-            System.exit(-1);
-        }
 
         try {
             if (argLength > 0) {
@@ -53,8 +43,10 @@ public class Talk {
                 Integer.parseInt(args[1]);
             }
         } catch (NumberFormatException e) {
-            System.err.println("Given Port is not valid!");
+            return false;
         }
+
+        return true;
     }
 
     private void setPortsAndRemoteHost(String[] args) {
@@ -96,7 +88,10 @@ public class Talk {
      *             args[2]: remoteHost of the machine to talk to (default: localhost)
      */
     public static void main(String[] args) {
-        validateArgs(args);
+        if (!portsAreValid(args)) {
+            System.err.println("Given Ports are invalid!");
+            System.exit(-1);
+        }
 
         Talk talk = new Talk();
 
