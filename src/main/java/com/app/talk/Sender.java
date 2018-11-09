@@ -11,17 +11,17 @@ import java.util.concurrent.TimeUnit;
  */
 public class Sender implements Runnable {
 
-    /**
-     * The ip-address of the other Host.
-     */
+	/**
+	 * The ip-address of the other Host.
+	 */
     private String remoteHost;
     /**
      * The port which the addressed host listens to.
      */
     private int port;
     /**
-     * A dummy Socket that represents the receiving Socket of the other Host.
-     * Contains the ip-adress and listening port of the other Host.
+     * A dummy Socket that represents the receiving Socket of the other Host. 
+     * Contains the ip-address and listening port of the other Host.
      */
     private Socket client = null;
     /**
@@ -42,6 +42,7 @@ public class Sender implements Runnable {
      *
      * @param remoteHost - remote machine to talk to.
      * @param port       - remote port to talk to.
+     * @param userName   - username of this host.
      */
     Sender(String remoteHost, int port, String userName) {
         this.remoteHost = remoteHost;
@@ -51,7 +52,7 @@ public class Sender implements Runnable {
 
     /**
      * The the executing method of the class.
-     * This method is being called by the start()-method of an Thread object containing
+     * This method is being called by the start()-method of a Thread object containing
      * a Sender object to establish the outgoing connection to the other host.
      */
     public void run() {
@@ -89,8 +90,8 @@ public class Sender implements Runnable {
 
     /**
      * A method that creates a dummy Socket as a receiving end for outgoing communication.
-     *
-     * @throws IOException
+     * 
+     * @throws IOException IOExceptions
      */
     private void connect() throws IOException {
         this.client = new Socket(this.remoteHost, this.port);

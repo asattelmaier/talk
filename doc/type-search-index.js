@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"com.app.talk","l":"Receiver"},{"p":"com.app.talk","l":"Sender"},{"p":"com.app.talk","l":"Talk"}]
