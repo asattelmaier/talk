@@ -40,20 +40,20 @@ public class Talk {
     private static void validateArgs(String[] args) {
         int argLength = args.length;
 
-        if (argLength <= 3) {
-            try {
-                if (argLength > 0) {
-                    Integer.parseInt(args[0]);
-                }
-                if (argLength > 1) {
-                    Integer.parseInt(args[1]);
-                }
-            } catch (NumberFormatException e) {
-                System.err.println("Given Port is not valid!");
-            }
-        } else {
+        if (argLength > 3) {
             System.err.println("To many arguments given. Type 'help' for further Information.");
             System.exit(-1);
+        }
+
+        try {
+            if (argLength > 0) {
+                Integer.parseInt(args[0]);
+            }
+            if (argLength > 1) {
+                Integer.parseInt(args[1]);
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("Given Port is not valid!");
         }
     }
 
@@ -79,6 +79,14 @@ public class Talk {
         this.userName = scanner.nextLine();
     }
 
+    private void start() {
+        Receiver receiver = new Receiver(this.listenPort);
+        Sender sender = new Sender(this.remoteHost, this.talkPort, this.userName);
+
+        receiver.start();
+        sender.start();
+    }
+
     /**
      * A simple talk/chat application.
      *
@@ -96,10 +104,6 @@ public class Talk {
 
         talk.setUserNameFromUserInput();
 
-        Receiver receiver = new Receiver(talk.listenPort);
-        Sender sender = new Sender(talk.remoteHost, talk.talkPort, talk.userName);
-
-        receiver.start();
-        sender.start();
+        talk.start();
     }
 }
