@@ -52,6 +52,7 @@ public class Receiver implements Runnable {
 
             if (response.contains("exit.")) {
                 System.out.println("User disconnected: " + remoteUserName);
+                this.closeConnection();
                 break;
             }
         }
@@ -65,5 +66,6 @@ public class Receiver implements Runnable {
     private void closeConnection() throws IOException {
         this.inputReader.close();
         this.serverSocket.close();
+        System.exit(-1);
     }
 }

@@ -72,8 +72,17 @@ public class Talk {
     }
 
     private void start() {
-        new Thread(new Receiver(this.listenPort)).start();
-        new Thread(new Sender(this.remoteHost, this.talkPort, this.userName)).start();
+        Thread receiver = new Thread(new Receiver(this.listenPort));
+        Thread sender = new Thread(new Sender(this.remoteHost, this.talkPort, this.userName));
+
+        receiver.start();
+        sender.start();
+
+        try {
+            sender.join();
+        } catch (InterruptedException e) {
+            System.out.print(e.getMessage());
+        }
     }
 
     /**
