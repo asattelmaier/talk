@@ -50,7 +50,7 @@ public class Receiver extends Thread {
                 System.out.println(remoteUserName + ": " + response);
             }
 
-            if (response.contains("end")) {
+            if (response.contains("exit.")) {
                 System.out.println("User disconnected: " + remoteUserName);
                 break;
             }
