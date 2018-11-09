@@ -55,7 +55,7 @@ public class Receiver implements Runnable {
      * Creates a loop in which the incoming messages are printed to the console.
      * If the incoming message contains "exit." gets an information that the other user
      * disconnected.
-     * @throws IOException
+     * @throws IOException IOExceptions 
      */
     private void receive() throws IOException {
         String response;
@@ -76,7 +76,7 @@ public class Receiver implements Runnable {
     }
     /**
      * A simple setter for the remoteUserName
-     * @param response
+     * @param response - the username gotten from the InputStream.
      */
     private void setRemoteUserName(String response) {
         String[] splitResponse = response.split("&");
@@ -84,7 +84,7 @@ public class Receiver implements Runnable {
     }
     /**
      * Closes the inputReader, as well as the serverSocket from the Receiver object.
-     * @throws IOException
+     * @throws IOException IOExceptions 
      */
     private void closeConnection() throws IOException {
         this.inputReader.close();

@@ -42,6 +42,7 @@ public class Sender implements Runnable {
      *
      * @param remoteHost - remote machine to talk to.
      * @param port       - remote port to talk to.
+     * @param userName   - username of this host.
      */
     Sender(String remoteHost, int port, String userName) {
         this.remoteHost = remoteHost;
@@ -87,7 +88,7 @@ public class Sender implements Runnable {
     /**
      * A method that creates a dummy Socket as a receiving end for outgoing communication.
      * 
-     * @throws IOException
+     * @throws IOException IOExceptions 
      */
     private void connect() throws IOException {
         this.client = new Socket(this.remoteHost, this.port);

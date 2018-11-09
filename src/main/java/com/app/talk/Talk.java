@@ -15,7 +15,7 @@ public class Talk {
      */
     private int talkPort;
     /**
-     * The ip-address of the other Host / chatpartner.
+     * The ip-address of the other host / chatpartner.
      */
     private String remoteHost;
     /**
@@ -33,20 +33,21 @@ public class Talk {
     }
     /**
      * A setter for the listening port.
+     * @param listenPort - the port to receive messages.
      */
     private void setListenPort(int listenPort) {
         this.listenPort = listenPort;
     }
     /**
      * A setter for the talk port.
-     * @param - talkPort
+     * @param talkPort - the port to send messages.
      */
     private void setTalkPort(int talkPort) {
         this.talkPort = talkPort;
     }
     /**
-     * A setter for the other hosts ip-address
-     * @param - remoteHost
+     * A setter for the other hosts ip-address.
+     * @param remoteHost - the ip-adress of the other host.
      */
     private void setRemoteHost(String remoteHost) {
         this.remoteHost = remoteHost;
