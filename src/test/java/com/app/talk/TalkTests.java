@@ -10,8 +10,7 @@ class TalkTests {
     private int DEFAULT_TALK_PORT = 2049;
     private String DEFAULT_REMOTE_HOST = "localhost";
     private Talk talk = new Talk();
-
-    String[] args = new String[3];
+    private String[] args = new String[3];
 
     @Test
     @DisplayName("Arguments:")
