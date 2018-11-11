@@ -8,18 +8,8 @@ import java.util.Scanner;
  * A driver for a simple sender of network traffic.
  */
 public class Talk {
-    /**
-     * The port this host listens to for incoming messages.
-     */
-    private int listenPort;
-    /**
-     * The port this host sends his messages to.
-     */
-    private int talkPort;
-    /**
-     * The ip-address of the other host / chatpartner.
-     */
-    private String remoteHost;
+    private Config config;
+
     /**
      * The name chosen by the user.
      */
@@ -29,36 +19,7 @@ public class Talk {
      * A sender of information over the network.
      */
     private Talk(Config config) {
-        this.listenPort = config.getListenPort();
-        this.talkPort = config.getTalkPort();
-        this.remoteHost = config.getRemoteHost();
-    }
-
-    /**
-     * A setter for the listening port.
-     *
-     * @param listenPort - the port to receive messages.
-     */
-    private void setListenPort(int listenPort) {
-        this.listenPort = listenPort;
-    }
-
-    /**
-     * A setter for the talk port.
-     *
-     * @param talkPort - the port to send messages.
-     */
-    private void setTalkPort(int talkPort) {
-        this.talkPort = talkPort;
-    }
-
-    /**
-     * A setter for the other hosts ip-address.
-     *
-     * @param remoteHost - the ip-adress of the other host.
-     */
-    private void setRemoteHost(String remoteHost) {
-        this.remoteHost = remoteHost;
+        this.config = config;
     }
 
     /**
@@ -76,14 +37,17 @@ public class Talk {
      * Creates a Sender and a Receiver object.
      */
     private void start() {
-        Thread receiver = new Thread(new Receiver(this.listenPort));
-        Thread sender = new Thread(new Sender(this.remoteHost, this.talkPort, this.userName));
+        Receiver receiver = new Receiver(this.config.getListenPort());
+        Thread receiverThread = new Thread(receiver);
 
-        receiver.start();
-        sender.start();
+        Sender sender = new Sender(this.config.getRemoteHost(), this.config.getTalkPort(), this.userName);
+        Thread senderThread = new Thread(sender);
+
+        receiverThread.start();
+        senderThread.start();
 
         try {
-            sender.join();
+            senderThread.join();
         } catch (InterruptedException e) {
             System.out.print(e.getMessage());
         }
@@ -98,7 +62,9 @@ public class Talk {
      *             args[2]: remoteHost of the machine to talk to (default: localhost)
      */
     public static void main(String[] args) {
-        Config config = new Config(args);
+        Config config = new Config();
+
+        config.parseArgumentStrings(args);
 
         Talk talk = new Talk(config);
 
