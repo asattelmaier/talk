@@ -11,16 +11,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class Sender implements Runnable {
 
-	/**
-	 * The ip-address of the other Host.
-	 */
+    /**
+     * The ip-address of the other Host.
+     */
     private String remoteHost;
     /**
      * The port which the addressed host listens to.
      */
     private int port;
     /**
-     * A dummy Socket that represents the receiving Socket of the other Host. 
+     * A dummy Socket that represents the receiving Socket of the other Host.
      * Contains the ip-address and listening port of the other Host.
      */
     private Socket client = null;
@@ -90,7 +90,7 @@ public class Sender implements Runnable {
 
     /**
      * A method that creates a dummy Socket as a receiving end for outgoing communication.
-     * 
+     *
      * @throws IOException IOExceptions
      */
     private void connect() throws IOException {
