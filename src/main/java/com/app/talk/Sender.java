@@ -56,31 +56,35 @@ public class Sender implements Runnable {
      * a Sender object to establish the outgoing connection to the other host.
      */
     public void run() {
-        System.out.println("Waiting for connection to: " + this.remoteHost + ":" + this.port + "...");
-        this.establishConnection();
-        System.out.println("Connection established.");
+        try {
+            System.out.println("Waiting for connection to: " + this.remoteHost + ":" + this.port + "...");
+            this.establishConnection();
+            System.out.println("Connection established.");
 
-        this.setOutputStream();
+            this.setOutputStream();
 
-        this.sendUserName();
+            this.sendUserName();
 
-        this.sendUserInput();
+            this.sendUserInput();
 
-        this.closeConnection();
-        System.out.println("Connection closed.");
+            this.closeConnection();
+            System.out.println("Connection closed.");
+        } catch (IOException e) {
+            System.err.println("IOException: " + e);
+        }
     }
 
     /**
      * A method to send the username of the sending Host.
      */
-    private void sendUserName() {
+    private void sendUserName() throws IOException {
         this.sendMsg("?userName&" + this.userName);
     }
 
     /**
      * A method to establish the connection to another host over the network.
      */
-    private void establishConnection() {
+    private void establishConnection() throws IOException {
         try {
             this.connect();
         } catch (IOException e) {
@@ -100,7 +104,7 @@ public class Sender implements Runnable {
     /**
      * A method that tries to reconnect after 10 seconds
      */
-    private void reconnect() {
+    private void reconnect() throws IOException {
         try {
             TimeUnit.SECONDS.sleep(10);
             this.establishConnection();
@@ -112,19 +116,15 @@ public class Sender implements Runnable {
     /**
      * Initializes the outputStream of the Sender object
      */
-    private void setOutputStream() {
-        try {
-            this.outputStream = new DataOutputStream(client.getOutputStream());
-        } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to: " + this.remoteHost);
-        }
+    private void setOutputStream() throws IOException {
+        this.outputStream = new DataOutputStream(client.getOutputStream());
     }
 
     /**
      * A method that creates a loop in which the user keyboard input is being taken in and
      * sent to the other Host.
      */
-    private void sendUserInput() {
+    private void sendUserInput() throws IOException {
         String userInput;
 
         while (true) {
@@ -143,24 +143,16 @@ public class Sender implements Runnable {
      *
      * @param msg - message that should be sent to the other host.
      */
-    private void sendMsg(String msg) {
-        try {
-            this.outputStream.writeBytes(msg + "\n");
-            this.outputStream.flush();
-        } catch (IOException e) {
-            System.err.println("IOException: " + e);
-        }
+    private void sendMsg(String msg) throws IOException {
+        this.outputStream.writeBytes(msg + "\n");
+        this.outputStream.flush();
     }
 
     /**
      * Closes the client Socket as well as its OutputStream.
      */
-    private void closeConnection() {
-        try {
-            this.client.close(); //closes OutputStream as well
-        } catch (IOException e) {
-            System.err.println("IOException: " + e);
-        }
+    private void closeConnection() throws IOException {
+        this.client.close(); //closes OutputStream as well
         this.scanner.close();
         System.exit(0);
     }

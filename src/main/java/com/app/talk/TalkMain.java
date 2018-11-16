@@ -15,16 +15,16 @@ public class TalkMain {
     public static void main(String[] args) {
         try {
             Talk.validatePorts(args);
-
-            Talk talk = new Talk();
-
-            talk.setPortsAndRemoteHost(args);
-
-            talk.setUserNameFromUserInput();
-
-            talk.start();
         } catch (TalkException e) {
             System.out.printf("Talk error: %s\n", e.errorMessage());
         }
+
+        Talk talk = new Talk();
+
+        talk.setPortsAndRemoteHost(args);
+
+        talk.setUserNameFromUserInput();
+
+        talk.start();
     }
 }
