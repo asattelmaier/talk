@@ -15,7 +15,7 @@ class ConfigParserTest {
 
     @Test
     @DisplayName("Arguments:")
-    void setDefaultValues() throws ConfigParserException {
+    void testSetDefaultValues() throws ConfigParserException {
         int DEFAULT_LISTEN_PORT = 2048;
         String[] args = {};
 
@@ -26,7 +26,7 @@ class ConfigParserTest {
 
     @Test
     @DisplayName("Arguments: 3333")
-    void setListenPort() throws ConfigParserException {
+    void testSetListenPort() throws ConfigParserException {
         String[] args = {"3333"};
 
         configParser = new ConfigParser(args);
@@ -36,7 +36,7 @@ class ConfigParserTest {
 
     @Test
     @DisplayName("Arguments: 3333 9999")
-    void setListenAndTalkPort() throws ConfigParserException {
+    void testSetListenAndTalkPort() throws ConfigParserException {
         String[] args = {"3333", "9999"};
 
         configParser = new ConfigParser(args);
@@ -46,7 +46,7 @@ class ConfigParserTest {
 
     @Test
     @DisplayName("Arguments: 3333 9999 localhost")
-    void setPortsAndRemoteHost() throws ConfigParserException {
+    void testSetPortsAndRemoteHost() throws ConfigParserException {
         String[] args = {"3333", "9999", "localhost"};
 
         configParser = new ConfigParser(args);
@@ -56,7 +56,7 @@ class ConfigParserTest {
 
     @Test
     @DisplayName("Arguments: #+*0")
-    void invalidListenPortGiven() throws ConfigParserException {
+    void testInvalidListenPortGiven() throws ConfigParserException {
         String[] args = {"#+*0"};
 
         Assertions.assertThrows(ConfigParserException.class, () -> new ConfigParser(args));
@@ -64,7 +64,7 @@ class ConfigParserTest {
 
     @Test
     @DisplayName("Arguments: 33333 #+*0")
-    void invalidTalkPortGiven() {
+    void testInvalidTalkPortGiven() {
         String[] args = {"#+*0"};
 
         Assertions.assertThrows(ConfigParserException.class, () -> new ConfigParser(args));
@@ -72,7 +72,7 @@ class ConfigParserTest {
 
     @Test
     @DisplayName("Arguments: 3333 9999 localhost test")
-    void toManyArgumentsGiven() {
+    void testToManyGivenArguments() {
         String[] args = {"3333", "9999", "localhost", "test"};
 
         Assertions.assertThrows(ConfigParserException.class, () -> new ConfigParser(args));

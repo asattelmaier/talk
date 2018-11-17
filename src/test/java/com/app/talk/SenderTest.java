@@ -21,7 +21,7 @@ class SenderTest {
 
     @Test
     @DisplayName("Waiting for Connection")
-    void startSender() {
+    void testSenderStart() {
         Config config = new Config(PORT, REMOTE_HOST);
         user.setName("Frank Elstner");
 
@@ -37,7 +37,7 @@ class SenderTest {
 
     @Test
     @DisplayName("Connection Failed")
-    void reconnect() throws IOException {
+    void testReconnect() throws IOException {
         Config config = new Config(PORT, REMOTE_HOST);
         user.setName("Frank Elstner");
 
