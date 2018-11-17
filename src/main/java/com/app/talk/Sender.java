@@ -1,5 +1,8 @@
 package com.app.talk;
 
+import com.app.talk.common.Config;
+import com.app.talk.common.User;
+
 import java.net.*;
 import java.io.*;
 import java.util.Objects;
@@ -37,17 +40,17 @@ public class Sender implements Runnable {
      */
     private Scanner scanner = new Scanner(System.in);
 
+
     /**
      * A sender of information over the network.
      *
-     * @param remoteHost - remote machine to talk to.
-     * @param port       - remote port to talk to.
-     * @param userName   - username of this host.
+     * @param config Configuration information
+     * @param user User object with user information
      */
-    Sender(String remoteHost, int port, String userName) {
-        this.remoteHost = remoteHost;
-        this.port = port;
-        this.userName = userName;
+    Sender(Config config, User user) {
+        this.remoteHost = config.getRemoteHost();
+        this.port = config.getTalkPort();
+        this.userName = user.getName();
     }
 
     /**

@@ -5,8 +5,6 @@ import com.app.talk.common.ConfigParser;
 import com.app.talk.common.ConfigParserException;
 import com.app.talk.common.User;
 
-import java.util.Scanner;
-
 /**
  * A driver for a simple sender of network traffic.
  */
@@ -26,10 +24,10 @@ public class Talk {
      * Creates a Sender and a Receiver object.
      */
     private void start() {
-        Receiver receiver = new Receiver(this.config.getListenPort());
+        Receiver receiver = new Receiver(this.config);
         Thread receiverThread = new Thread(receiver);
 
-        Sender sender = new Sender(this.config.getRemoteHost(), this.config.getTalkPort(), this.user.getName());
+        Sender sender = new Sender(this.config, this.user);
         Thread senderThread = new Thread(sender);
 
         receiverThread.start();

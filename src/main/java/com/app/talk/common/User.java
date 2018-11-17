@@ -5,8 +5,22 @@ import java.util.Scanner;
 public class User {
     private String name;
 
+    /**
+     * Get the name of the user.
+     *
+     * @return the user name
+     */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * Set the name of the user.
+     *
+     * @param name the user name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**

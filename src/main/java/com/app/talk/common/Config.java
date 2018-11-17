@@ -8,6 +8,14 @@ public class Config {
     /**
      * Config constructor with default values.
      */
+    public Config(int talkPort, String remoteHost) {
+        this.talkPort = talkPort;
+        this.remoteHost = remoteHost;
+    }
+
+    /**
+     * Config constructor with default values.
+     */
     Config(int listenPort, int talkPort, String remoteHost) {
         this.listenPort = listenPort;
         this.talkPort = talkPort;

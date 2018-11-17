@@ -1,5 +1,7 @@
 package com.app.talk;
 
+import com.app.talk.common.Config;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -25,11 +27,11 @@ public class Receiver implements Runnable {
     /**
      * A main.java.Receiver of information from the network.
      *
-     * @param port - to listen to.
+     * @param config - configuration object.
      */
-    Receiver(int port) {
+    Receiver(Config config) {
         try {
-            serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket(config.getListenPort());
         } catch (IOException e) {
             System.err.println("IOException:  " + e);
         }
