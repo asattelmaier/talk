@@ -2,6 +2,7 @@ package com.app.talk;
 
 import com.app.talk.common.Config;
 import com.app.talk.common.ConfigParser;
+import com.app.talk.common.ConfigParserException;
 
 import java.util.Scanner;
 
@@ -65,7 +66,11 @@ public class Talk {
     public static void main(String[] args) {
         ConfigParser configParser = new ConfigParser();
 
-        configParser.parseArgumentStrings(args);
+        try {
+            configParser.parseArgumentStrings(args);
+        } catch (ConfigParserException e) {
+            System.err.println(e.errorMessage());
+        }
 
         Config config = configParser.getConfig();
 

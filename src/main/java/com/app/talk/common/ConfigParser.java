@@ -1,5 +1,7 @@
 package com.app.talk.common;
 
+import static com.app.talk.common.ConfigParserException.ErrorCode.*;
+
 public class ConfigParser {
     private int listenPort = 0;
     private int talkPort = 0;
@@ -23,7 +25,7 @@ public class ConfigParser {
      *
      * @param args the given Arguments
      */
-    public void parseArgumentStrings(String[] args) {
+    public void parseArgumentStrings(String[] args) throws ConfigParserException {
         if (args.length > 0)
             this.listenPort = parseStringToInteger(args[0]);
         if (args.length > 1)
@@ -31,7 +33,7 @@ public class ConfigParser {
         if (args.length > 2)
             this.remoteHost = args[2];
         if (args.length > 3)
-            System.err.println("To many arguments given");
+            throw new ConfigParserException(INVALID_PORT);
     }
 
     /**
@@ -40,13 +42,13 @@ public class ConfigParser {
      * @param value checks if the given value is an integer
      * @return returns the given value as Integer
      */
-    private int parseStringToInteger(String value) {
-        int intValue = 0;
+    private int parseStringToInteger(String value) throws ConfigParserException {
+        int intValue;
 
         try {
             intValue = Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            System.err.println("Invalid Port Number");
+            throw new ConfigParserException(INVALID_PORT, value);
         }
 
         return intValue;

@@ -1,11 +1,11 @@
-package com.app.talk;
+package com.app.talk.common;
 
-import static com.app.talk.TalkException.ErrorCode.*;
+import static com.app.talk.common.ConfigParserException.ErrorCode.*;
 
 /**
  * Exception handling for Talk.
  */
-class TalkException extends Exception {
+public class ConfigParserException extends Exception {
     private ErrorCode errorCode = OK;
     private String errorParameter = null;
 
@@ -14,7 +14,7 @@ class TalkException extends Exception {
      *
      * @param errorCode of the thrown error
      */
-    TalkException(ErrorCode errorCode) {
+    ConfigParserException(ErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 
@@ -24,7 +24,7 @@ class TalkException extends Exception {
      * @param errorCode      of the thrown error
      * @param errorParameter of the thrown error
      */
-    TalkException(ErrorCode errorCode, String errorParameter) {
+    ConfigParserException(ErrorCode errorCode, String errorParameter) {
         this.errorCode = errorCode;
         this.errorParameter = errorParameter;
     }
@@ -34,12 +34,14 @@ class TalkException extends Exception {
      *
      * @return the error message
      */
-    String errorMessage() {
+    public String errorMessage() {
         switch (errorCode) {
             case OK:
                 return "Everything looks fine, you should not get here.";
             case INVALID_PORT:
                 return String.format("Given Port '%s' invalid.", errorParameter);
+            case TOO_MANY_ARGUMENTS:
+                return "Too many arguments given.";
         }
         return "";
     }
@@ -49,6 +51,6 @@ class TalkException extends Exception {
      * The Error Codes
      */
     public enum ErrorCode {
-        OK, INVALID_PORT
+        OK, INVALID_PORT, TOO_MANY_ARGUMENTS
     }
 }
