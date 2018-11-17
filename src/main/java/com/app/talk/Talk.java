@@ -34,6 +34,10 @@ class Talk {
         this.remoteHost = "localhost";
     }
 
+    int getListenPort() {
+        return this.listenPort;
+    }
+
     /**
      * A setter for the listening port.
      *
@@ -43,6 +47,10 @@ class Talk {
         this.listenPort = listenPort;
     }
 
+    int getTalkPort() {
+        return this.talkPort;
+    }
+
     /**
      * A setter for the talk port.
      *
@@ -50,6 +58,10 @@ class Talk {
      */
     private void setTalkPort(int talkPort) {
         this.talkPort = talkPort;
+    }
+
+    String getRemoteHost() {
+        return this.remoteHost;
     }
 
     /**

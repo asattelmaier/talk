@@ -87,7 +87,7 @@ public class Sender implements Runnable {
     private void establishConnection() throws IOException {
         try {
             this.connect();
-        } catch (IOException e) {
+        } catch (ConnectException e) {
             this.reconnect();
         }
     }
@@ -97,7 +97,7 @@ public class Sender implements Runnable {
      *
      * @throws IOException IOExceptions
      */
-    private void connect() throws IOException {
+    void connect() throws IOException {
         this.client = new Socket(this.remoteHost, this.port);
     }
 
