@@ -10,12 +10,12 @@ public class ConfigParser {
     /**
      * ConfigParser constructor with default values.
      */
-    public ConfigParser() {
+    public ConfigParser(String[] args) throws ConfigParserException {
         this.listenPort = 2048;
         this.talkPort = 2049;
         this.remoteHost = "localhost";
+        this.parseArgumentStrings(args);
     }
-
 
     /**
      * Return the configuration object, that hold the ports and host
@@ -31,7 +31,7 @@ public class ConfigParser {
      *
      * @param args the given Arguments
      */
-    public void parseArgumentStrings(String[] args) throws ConfigParserException {
+    private void parseArgumentStrings(String[] args) throws ConfigParserException {
         if (args.length > 0)
             this.listenPort = parseStringToInteger(args[0]);
         if (args.length > 1)

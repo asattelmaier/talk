@@ -50,23 +50,14 @@ public class Talk {
      *             args[1]: the port to talk to (default: 2049)
      *             args[2]: remoteHost of the machine to talk to (default: localhost)
      */
-    public static void main(String[] args) {
-        ConfigParser configParser = new ConfigParser();
-        User user = new User();
-        Config config;
-        Talk talk;
+    public static void main(String[] args) throws ConfigParserException {
+        ConfigParser configParser = new ConfigParser(args);
+        Config config = configParser.getConfig();
 
+        User user = new User();
         user.setNameFromUserInput();
 
-        try {
-            configParser.parseArgumentStrings(args);
-        } catch (ConfigParserException e) {
-            System.err.println(e.errorMessage());
-        }
-
-        config = configParser.getConfig();
-        talk = new Talk(config, user);
-
+        Talk talk = new Talk(config, user);
         talk.start();
     }
 }

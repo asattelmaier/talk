@@ -10,13 +10,16 @@ import org.junit.jupiter.api.Test;
 class ConfigParserTest {
     private int DEFAULT_TALK_PORT = 2049;
     private String DEFAULT_REMOTE_HOST = "localhost";
-    private ConfigParser configParser = new ConfigParser();
+    private ConfigParser configParser;
     private String[] args = new String[3];
 
     @Test
     @DisplayName("Arguments:")
-    void setDefaultValues() {
+    void setDefaultValues() throws ConfigParserException {
         int DEFAULT_LISTEN_PORT = 2048;
+        String[] args = {};
+
+        configParser = new ConfigParser(args);
 
         assertConfiguration(DEFAULT_LISTEN_PORT, DEFAULT_TALK_PORT, DEFAULT_REMOTE_HOST);
     }
@@ -26,7 +29,7 @@ class ConfigParserTest {
     void setListenPort() throws ConfigParserException {
         String[] args = {"3333"};
 
-        configParser.parseArgumentStrings(args);
+        configParser = new ConfigParser(args);
 
         assertConfiguration(3333, DEFAULT_TALK_PORT, DEFAULT_REMOTE_HOST);
     }
@@ -36,7 +39,7 @@ class ConfigParserTest {
     void setListenAndTalkPort() throws ConfigParserException {
         String[] args = {"3333", "9999"};
 
-        configParser.parseArgumentStrings(args);
+        configParser = new ConfigParser(args);
 
         assertConfiguration(3333, 9999, DEFAULT_REMOTE_HOST);
     }
@@ -46,17 +49,17 @@ class ConfigParserTest {
     void setPortsAndRemoteHost() throws ConfigParserException {
         String[] args = {"3333", "9999", "localhost"};
 
-        configParser.parseArgumentStrings(args);
+        configParser = new ConfigParser(args);
 
         assertConfiguration(3333, 9999, "localhost");
     }
 
     @Test
     @DisplayName("Arguments: #+*0")
-    void invalidListenPortGiven() {
+    void invalidListenPortGiven() throws ConfigParserException {
         String[] args = {"#+*0"};
 
-        Assertions.assertThrows(ConfigParserException.class, () -> configParser.parseArgumentStrings(args));
+        Assertions.assertThrows(ConfigParserException.class, () -> new ConfigParser(args));
     }
 
     @Test
@@ -64,7 +67,7 @@ class ConfigParserTest {
     void invalidTalkPortGiven() {
         String[] args = {"#+*0"};
 
-        Assertions.assertThrows(ConfigParserException.class, () -> configParser.parseArgumentStrings(args));
+        Assertions.assertThrows(ConfigParserException.class, () -> new ConfigParser(args));
     }
 
     @Test
@@ -72,7 +75,7 @@ class ConfigParserTest {
     void toManyArgumentsGiven() {
         String[] args = {"3333", "9999", "localhost", "test"};
 
-        Assertions.assertThrows(ConfigParserException.class, () -> configParser.parseArgumentStrings(args));
+        Assertions.assertThrows(ConfigParserException.class, () -> new ConfigParser(args));
     }
 
     private void assertConfiguration(int listenPort, int talkPort, String remoteHost) {
