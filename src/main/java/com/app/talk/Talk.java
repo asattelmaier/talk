@@ -1,8 +1,6 @@
 package com.app.talk;
 
-import com.app.talk.common.Config;
-
-import static com.app.talk.TalkException.ErrorCode.*;
+import com.app.talk.common.ConfigParser;
 
 import java.util.Scanner;
 
@@ -10,7 +8,7 @@ import java.util.Scanner;
  * A driver for a simple sender of network traffic.
  */
 public class Talk {
-    private Config config;
+    private ConfigParser config;
 
     /**
      * The name chosen by the user.
@@ -20,7 +18,7 @@ public class Talk {
     /**
      * A sender of information over the network.
      */
-    private Talk(Config config) {
+    private Talk(ConfigParser config) {
         this.config = config;
     }
 
@@ -64,7 +62,7 @@ public class Talk {
      *             args[2]: remoteHost of the machine to talk to (default: localhost)
      */
     public static void main(String[] args) {
-        Config config = new Config();
+        ConfigParser config = new ConfigParser();
 
         config.parseArgumentStrings(args);
 
