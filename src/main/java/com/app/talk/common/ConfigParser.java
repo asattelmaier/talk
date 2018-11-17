@@ -16,6 +16,12 @@ public class ConfigParser {
         this.remoteHost = "localhost";
     }
 
+
+    /**
+     * Return the configuration object, that hold the ports and host
+     *
+     * @return the configuration object
+     */
     public Config getConfig() {
         return new Config(this.listenPort, this.talkPort, this.remoteHost);
     }

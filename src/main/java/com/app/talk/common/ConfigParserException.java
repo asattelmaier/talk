@@ -46,7 +46,6 @@ public class ConfigParserException extends Exception {
         return "";
     }
 
-
     /**
      * The Error Codes
      */

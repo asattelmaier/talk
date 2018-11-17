@@ -3,6 +3,7 @@ package com.app.talk;
 import com.app.talk.common.Config;
 import com.app.talk.common.ConfigParser;
 import com.app.talk.common.ConfigParserException;
+import com.app.talk.common.User;
 
 import java.util.Scanner;
 
@@ -11,28 +12,14 @@ import java.util.Scanner;
  */
 public class Talk {
     private Config config;
-
-    /**
-     * The name chosen by the user.
-     */
-    private String userName;
+    private User user;
 
     /**
      * A sender of information over the network.
      */
-    private Talk(Config config) {
+    private Talk(Config config, User user) {
         this.config = config;
-    }
-
-    /**
-     * Gets User keyboard input and sets it as the username.
-     */
-    private void setUserNameFromUserInput() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter your username: ");
-
-        this.userName = scanner.nextLine();
+        this.user = user;
     }
 
     /**
@@ -42,7 +29,7 @@ public class Talk {
         Receiver receiver = new Receiver(this.config.getListenPort());
         Thread receiverThread = new Thread(receiver);
 
-        Sender sender = new Sender(this.config.getRemoteHost(), this.config.getTalkPort(), this.userName);
+        Sender sender = new Sender(this.config.getRemoteHost(), this.config.getTalkPort(), this.user.getName());
         Thread senderThread = new Thread(sender);
 
         receiverThread.start();
@@ -65,6 +52,11 @@ public class Talk {
      */
     public static void main(String[] args) {
         ConfigParser configParser = new ConfigParser();
+        User user = new User();
+        Config config;
+        Talk talk;
+
+        user.setNameFromUserInput();
 
         try {
             configParser.parseArgumentStrings(args);
@@ -72,11 +64,8 @@ public class Talk {
             System.err.println(e.errorMessage());
         }
 
-        Config config = configParser.getConfig();
-
-        Talk talk = new Talk(config);
-
-        talk.setUserNameFromUserInput();
+        config = configParser.getConfig();
+        talk = new Talk(config, user);
 
         talk.start();
     }
