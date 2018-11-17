@@ -52,9 +52,9 @@ class ConfigParserTest {
 
     private void assertConfiguration(int listenPort, int talkPort, String remoteHost) {
         assertAll("Talk configuration",
-                () -> assertEquals(listenPort, config.getListenPort()),
-                () -> assertEquals(talkPort, config.getTalkPort()),
-                () -> assertEquals(remoteHost, config.getRemoteHost())
+                () -> assertEquals(listenPort, config.getConfig().getListenPort()),
+                () -> assertEquals(talkPort, config.getConfig().getTalkPort()),
+                () -> assertEquals(remoteHost, config.getConfig().getRemoteHost())
         );
     }
 }

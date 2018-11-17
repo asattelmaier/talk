@@ -5,9 +5,8 @@ public class ConfigParser {
     private int talkPort = 0;
     private String remoteHost = null;
 
-
     /**
-     * ConfigParser Constructor with default values
+     * ConfigParser constructor with default values.
      */
     public ConfigParser() {
         this.listenPort = 2048;
@@ -15,31 +14,8 @@ public class ConfigParser {
         this.remoteHost = "localhost";
     }
 
-    /**
-     * Returns the listen port.
-     *
-     * @return the listen port
-     */
-    public int getListenPort() {
-        return this.listenPort;
-    }
-
-    /**
-     * Return the talk port.
-     *
-     * @return the talk port
-     */
-    public int getTalkPort() {
-        return this.talkPort;
-    }
-
-    /**
-     * Returns the remote host.
-     *
-     * @return the remote host
-     */
-    public String getRemoteHost() {
-        return this.remoteHost;
+    public Config getConfig() {
+        return new Config(this.listenPort, this.talkPort, this.remoteHost);
     }
 
     /**

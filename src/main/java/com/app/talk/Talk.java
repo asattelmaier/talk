@@ -1,5 +1,6 @@
 package com.app.talk;
 
+import com.app.talk.common.Config;
 import com.app.talk.common.ConfigParser;
 
 import java.util.Scanner;
@@ -8,7 +9,7 @@ import java.util.Scanner;
  * A driver for a simple sender of network traffic.
  */
 public class Talk {
-    private ConfigParser config;
+    private Config config;
 
     /**
      * The name chosen by the user.
@@ -18,7 +19,7 @@ public class Talk {
     /**
      * A sender of information over the network.
      */
-    private Talk(ConfigParser config) {
+    private Talk(Config config) {
         this.config = config;
     }
 
@@ -62,9 +63,11 @@ public class Talk {
      *             args[2]: remoteHost of the machine to talk to (default: localhost)
      */
     public static void main(String[] args) {
-        ConfigParser config = new ConfigParser();
+        ConfigParser configParser = new ConfigParser();
 
-        config.parseArgumentStrings(args);
+        configParser.parseArgumentStrings(args);
+
+        Config config = configParser.getConfig();
 
         Talk talk = new Talk(config);
 
