@@ -1,5 +1,7 @@
 package com.app.talk;
 
+import com.app.talk.command.ExitCommand;
+import com.app.talk.command.set.MessageCommand;
 import com.app.talk.common.Config;
 import com.app.talk.common.User;
 
@@ -9,13 +11,13 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import static com.app.talk.common.SystemExitCode.ABORT;
 import static com.app.talk.common.SystemExitCode.NORMAL;
 
 /**
  * A simple sender of network traffic.
  */
 public class Sender implements Runnable {
-
     /**
      * The ip-address of the other Host.
      */
@@ -32,11 +34,11 @@ public class Sender implements Runnable {
     /**
      * A DataOutputStream containing the OutputStream of the client Socket.
      */
-    private DataOutputStream outputStream = null;
+    private ObjectOutputStream outputStream = null;
     /**
      * The username of the sending host.
      */
-    private String userName;
+    private User user;
     /**
      * A scanner to receive User keyboard input
      */
@@ -47,12 +49,12 @@ public class Sender implements Runnable {
      * A sender of information over the network.
      *
      * @param config Configuration information
-     * @param user User object with user information
+     * @param user   User object with user information
      */
     Sender(Config config, User user) {
         this.remoteHost = config.getRemoteHost();
         this.port = config.getTalkPort();
-        this.userName = user.getName();
+        this.user = user;
     }
 
     /**
@@ -68,7 +70,7 @@ public class Sender implements Runnable {
 
             this.setOutputStream();
 
-            this.sendUserName();
+            this.sendUser();
 
             this.sendUserInput();
 
@@ -76,14 +78,15 @@ public class Sender implements Runnable {
             System.out.println("Connection closed.");
         } catch (IOException e) {
             System.err.println("IOException: " + e);
+            System.exit(ABORT.ordinal());
         }
     }
 
     /**
      * A method to send the username of the sending Host.
      */
-    private void sendUserName() throws IOException {
-        this.sendMsg("?userName&" + this.userName);
+    private void sendUser() throws IOException {
+        send(this.user);
     }
 
     /**
@@ -115,6 +118,7 @@ public class Sender implements Runnable {
             this.establishConnection();
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
+            System.exit(ABORT.ordinal());
         }
     }
 
@@ -122,7 +126,7 @@ public class Sender implements Runnable {
      * Initializes the outputStream of the Sender object
      */
     private void setOutputStream() throws IOException {
-        this.outputStream = new DataOutputStream(client.getOutputStream());
+        this.outputStream = new ObjectOutputStream(client.getOutputStream());
     }
 
     /**
@@ -135,10 +139,12 @@ public class Sender implements Runnable {
         while (true) {
             userInput = scanner.nextLine();
 
-            this.sendMsg(userInput);
-
             if (Objects.equals("exit.", userInput)) {
+                ExitCommand exitCommand = new ExitCommand();
+                send(exitCommand);
                 break;
+            } else {
+                this.sendMsg(userInput);
             }
         }
     }
@@ -149,7 +155,18 @@ public class Sender implements Runnable {
      * @param msg - message that should be sent to the other host.
      */
     private void sendMsg(String msg) throws IOException {
-        this.outputStream.writeBytes(msg + "\n");
+        MessageCommand messageCommand = new MessageCommand(msg);
+        send(messageCommand);
+    }
+
+    /**
+     * Sends a object to the output stream.
+     *
+     * @param object the object to send for.
+     * @throws IOException throws an IO Exception
+     */
+    private void send(Object object) throws IOException {
+        this.outputStream.writeObject(object);
         this.outputStream.flush();
     }
 

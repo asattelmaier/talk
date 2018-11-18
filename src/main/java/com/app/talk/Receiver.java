@@ -1,25 +1,31 @@
 package com.app.talk;
 
 import com.app.talk.common.Config;
-import static com.app.talk.common.SystemExitCode.*;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import com.app.talk.command.set.RemoteCommand;
+import com.app.talk.common.User;
+
+import static com.app.talk.common.SystemExitCode.ABORT;
+import static com.app.talk.common.SystemExitCode.NORMAL;
 
 /**
  * A simple receiver of network traffic.
  */
 public class Receiver implements Runnable {
-	/**
-	 * A ServerSockets that serves as the endingpoint of Communication for 
-	 * the other Host.
-	 */
+    /**
+     * A ServerSockets that serves as the endingpoint of Communication for
+     * the other Host.
+     */
     private ServerSocket serverSocket;
     /**
      * A buffered Reader for incoming messages.
      */
-    private BufferedReader inputReader = null;
+    private ObjectInputStream input = null;
     /**
      * The username of the other Host.
      */
@@ -35,11 +41,13 @@ public class Receiver implements Runnable {
             serverSocket = new ServerSocket(config.getListenPort());
         } catch (IOException e) {
             System.err.println("IOException:  " + e);
+            System.exit(ABORT.ordinal());
         }
     }
+
     /**
      * The the executing method of the class.
-     * This method is being called by the start()-method of a Thread object containing 
+     * This method is being called by the start()-method of a Thread object containing
      * a Receiver object to establish the incoming connection from the other host.
      */
     public void run() {
@@ -47,51 +55,58 @@ public class Receiver implements Runnable {
 
         try {
             clientSocket = serverSocket.accept();
-            this.inputReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            this.input = new ObjectInputStream(clientSocket.getInputStream());
+            this.getUserName();
             this.receive();
             this.closeConnection();
         } catch (IOException e) {
             System.err.println("IOException:  " + e);
+            System.exit(ABORT.ordinal());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(ABORT.ordinal());
         }
     }
+
+    private void getUserName() throws IOException, ClassNotFoundException {
+        User user = (User) this.input.readObject();
+
+        this.setRemoteUserName(user.getName());
+    }
+
     /**
      * Creates a loop in which the incoming messages are printed to the console.
      * If the incoming message contains "exit." gets an information that the other user
      * disconnected.
-     * @throws IOException IOExceptions 
+     *
+     * @throws IOException IOExceptions
      */
-    private void receive() throws IOException {
-        String response;
+    private void receive() throws IOException, ClassNotFoundException {
+        RemoteCommand response;
 
-        while ((response = inputReader.readLine()) != null) {
-            if (response.contains("?userName&")) {
-                this.setRemoteUserName(response);
-                System.out.println("New user connected: " + remoteUserName);
-            } else {
-                System.out.println(remoteUserName + ": " + response);
-            }
+        while ((response = (RemoteCommand) input.readObject()) != null) {
+            System.out.print(this.remoteUserName + ": ");
 
-            if (response.contains("exit.")) {
-                System.out.println("User disconnected: " + remoteUserName);
-                this.closeConnection();
-                break;
-            }
+            response.execute();
         }
     }
+
     /**
      * A simple setter for the remoteUserName
-     * @param response - the username gotten from the InputStream.
+     *
+     * @param userName - the username gotten from the InputStream.
      */
-    private void setRemoteUserName(String response) {
-        String[] splitResponse = response.split("&");
-        this.remoteUserName = splitResponse[1];
+    private void setRemoteUserName(String userName) {
+        this.remoteUserName = userName;
     }
+
     /**
-     * Closes the inputReader, as well as the serverSocket from the Receiver object.
-     * @throws IOException IOExceptions 
+     * Closes the input, as well as the serverSocket from the Receiver object.
+     *
+     * @throws IOException IOExceptions
      */
     private void closeConnection() throws IOException {
-        this.inputReader.close();
+        this.input.close();
         this.serverSocket.close();
         System.exit(NORMAL.ordinal());
     }
