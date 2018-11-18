@@ -159,6 +159,6 @@ public class Sender implements Runnable {
     private void closeConnection() throws IOException {
         this.client.close(); //closes OutputStream as well
         this.scanner.close();
-        System.exit(NORMAL.getCode());
+        System.exit(NORMAL.ordinal());
     }
 }

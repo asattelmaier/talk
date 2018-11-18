@@ -93,6 +93,6 @@ public class Receiver implements Runnable {
     private void closeConnection() throws IOException {
         this.inputReader.close();
         this.serverSocket.close();
-        System.exit(NORMAL.getCode());
+        System.exit(NORMAL.ordinal());
     }
 }
