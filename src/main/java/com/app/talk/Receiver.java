@@ -1,6 +1,7 @@
 package com.app.talk;
 
 import com.app.talk.common.Config;
+import static com.app.talk.common.SystemExitCode.*;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -92,6 +93,6 @@ public class Receiver implements Runnable {
     private void closeConnection() throws IOException {
         this.inputReader.close();
         this.serverSocket.close();
-        System.exit(0);
+        System.exit(NORMAL.getCode());
     }
 }

@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import static com.app.talk.common.SystemExitCode.NORMAL;
+
 /**
  * A simple sender of network traffic.
  */
@@ -157,6 +159,6 @@ public class Sender implements Runnable {
     private void closeConnection() throws IOException {
         this.client.close(); //closes OutputStream as well
         this.scanner.close();
-        System.exit(0);
+        System.exit(NORMAL.getCode());
     }
 }
