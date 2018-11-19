@@ -7,8 +7,8 @@ import java.io.Serializable;
 /**
  * Represents a command that will write a message to standard output.
  */
-public class MessageCommand extends RemoteCommand implements Serializable {
-    private static final long serialVersionUID = -6069480497833755234L;
+public class MessageCommand extends RemoteCommand {
+    private static final long serialVersionUID = 8308526182902674398L;
     private String message;
 
     /**
