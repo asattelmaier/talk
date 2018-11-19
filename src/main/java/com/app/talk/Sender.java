@@ -134,17 +134,18 @@ public class Sender implements Runnable {
      * sent to the other Host.
      */
     private void sendUserInput() throws IOException {
-        String userInput;
+        String userInput = "";
+        ExitCommand exitCommand = new ExitCommand();
+        boolean userExits = Objects.equals("exit.", userInput);
 
         while (true) {
             userInput = scanner.nextLine();
 
-            if (Objects.equals("exit.", userInput)) {
-                ExitCommand exitCommand = new ExitCommand();
+            if (userExits) {
                 send(exitCommand);
                 break;
             } else {
-                this.sendMsg(userInput);
+                this.sendMessage(userInput);
             }
         }
     }
@@ -152,10 +153,10 @@ public class Sender implements Runnable {
     /**
      * A method that receives a String message and writes it in sequences of bytes to the other host.
      *
-     * @param msg - message that should be sent to the other host.
+     * @param message - message that should be sent to the other host.
      */
-    private void sendMsg(String msg) throws IOException {
-        MessageCommand messageCommand = new MessageCommand(msg);
+    private void sendMessage(String message) throws IOException {
+        MessageCommand messageCommand = new MessageCommand(message);
         send(messageCommand);
     }
 

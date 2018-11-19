@@ -56,7 +56,7 @@ public class Receiver implements Runnable {
         try {
             clientSocket = serverSocket.accept();
             this.input = new ObjectInputStream(clientSocket.getInputStream());
-            this.getUserName();
+            this.receiveUserName();
             this.receive();
             this.closeConnection();
         } catch (IOException e) {
@@ -68,7 +68,13 @@ public class Receiver implements Runnable {
         }
     }
 
-    private void getUserName() throws IOException, ClassNotFoundException {
+    /**
+     * Receives the user name from socket.
+     *
+     * @throws IOException            read objects IO Exception
+     * @throws ClassNotFoundException User cast Exception
+     */
+    private void receiveUserName() throws IOException, ClassNotFoundException {
         User user = (User) this.input.readObject();
 
         this.setRemoteUserName(user.getName());
