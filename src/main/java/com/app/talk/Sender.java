@@ -1,6 +1,6 @@
 package com.app.talk;
 
-import com.app.talk.command.ExitCommand;
+import com.app.talk.command.set.ExitCommand;
 import com.app.talk.command.set.MessageCommand;
 import com.app.talk.common.Config;
 import com.app.talk.common.User;

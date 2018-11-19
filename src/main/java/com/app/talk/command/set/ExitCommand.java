@@ -1,6 +1,6 @@
-package com.app.talk.command;
+package com.app.talk.command.set;
 
-import com.app.talk.command.set.RemoteCommand;
+import com.app.talk.command.RemoteCommand;
 
 import java.io.Serializable;
 

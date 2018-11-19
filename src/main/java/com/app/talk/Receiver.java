@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.app.talk.command.set.RemoteCommand;
+import com.app.talk.command.RemoteCommand;
 import com.app.talk.common.User;
 
 import static com.app.talk.common.SystemExitCode.ABORT;
