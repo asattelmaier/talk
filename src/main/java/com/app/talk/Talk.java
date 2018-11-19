@@ -4,6 +4,8 @@ import com.app.talk.common.Config;
 import com.app.talk.common.ConfigParser;
 import com.app.talk.common.ConfigParserException;
 import com.app.talk.common.User;
+import com.app.talk.communication.Communicator;
+import com.app.talk.communication.CommunicatorFactory;
 
 /**
  * A driver for a simple sender of network traffic.
@@ -18,27 +20,10 @@ public class Talk {
     private Talk(Config config, User user) {
         this.config = config;
         this.user = user;
+        CommunicatorFactory.getInstance().createCommunicator(config, user);
     }
 
-    /**
-     * Creates a Sender and a Receiver object.
-     */
-    private void start() {
-        Receiver receiver = new Receiver(this.config);
-        Thread receiverThread = new Thread(receiver);
 
-        Sender sender = new Sender(this.config, this.user);
-        Thread senderThread = new Thread(sender);
-
-        receiverThread.start();
-        senderThread.start();
-
-        try {
-            senderThread.join();
-        } catch (InterruptedException e) {
-            System.out.print(e.getMessage());
-        }
-    }
 
     /**
      * A simple talk/chat application.
@@ -56,6 +41,5 @@ public class Talk {
         user.setNameFromUserInput();
 
         Talk talk = new Talk(config, user);
-        talk.start();
     }
 }

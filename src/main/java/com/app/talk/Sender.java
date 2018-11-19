@@ -51,7 +51,7 @@ public class Sender implements Runnable {
      * @param config Configuration information
      * @param user   User object with user information
      */
-    Sender(Config config, User user) {
+    public Sender(Config config, User user) {
         this.remoteHost = config.getRemoteHost();
         this.port = config.getTalkPort();
         this.user = user;

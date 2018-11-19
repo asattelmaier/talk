@@ -36,7 +36,7 @@ public class Receiver implements Runnable {
      *
      * @param config - configuration object.
      */
-    Receiver(Config config) {
+    public Receiver(Config config) {
         try {
             serverSocket = new ServerSocket(config.getListenPort());
         } catch (IOException e) {
