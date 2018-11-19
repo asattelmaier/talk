@@ -48,13 +48,4 @@ public class Config {
     public String getRemoteHost() {
         return this.remoteHost;
     }
-
-    /**
-     * Set the remote host.
-     *
-     * @param newRemoteHost the new reomte host
-     */
-    void setRemoteHost(String newRemoteHost) {
-        this.remoteHost = newRemoteHost;
-    }
 }
