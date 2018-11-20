@@ -134,12 +134,12 @@ public class Sender implements Runnable {
      * sent to the other Host.
      */
     private void sendUserInput() throws IOException {
-        String userInput = "";
+        String userInput;
         ExitCommand exitCommand = new ExitCommand();
-        boolean userExits = Objects.equals("exit.", userInput);
 
         while (true) {
             userInput = scanner.nextLine();
+            boolean userExits = userInput.equals("exit.");
 
             if (userExits) {
                 send(exitCommand);
