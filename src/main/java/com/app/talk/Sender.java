@@ -135,19 +135,27 @@ public class Sender implements Runnable {
      */
     private void sendUserInput() throws IOException {
         String userInput;
-        ExitCommand exitCommand = new ExitCommand();
+        boolean userExits;
 
         while (true) {
             userInput = scanner.nextLine();
-            boolean userExits = userInput.equals("exit.");
+            userExits = userInput.equals("exit.");
 
             if (userExits) {
-                send(exitCommand);
+                this.sendExit();
                 break;
             } else {
                 this.sendMessage(userInput);
             }
         }
+    }
+
+    /**
+     * Sends the exit command.
+     */
+    private void sendExit() throws IOException {
+        ExitCommand exitCommand = new ExitCommand();
+        send(exitCommand);
     }
 
     /**
