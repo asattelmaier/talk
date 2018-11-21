@@ -9,7 +9,7 @@ import static com.app.talk.common.SystemExitCode.NORMAL;
 /**
  * Exit command.
  */
-public class ExitCommand extends RemoteCommand {
+public class ExitCommand implements RemoteCommand {
     private static final long serialVersionUID = 7412994438667771531L;
 
     @Override
