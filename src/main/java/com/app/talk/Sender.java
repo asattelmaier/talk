@@ -2,12 +2,12 @@ package com.app.talk;
 
 import com.app.talk.command.set.ExitCommand;
 import com.app.talk.command.set.MessageCommand;
-import com.app.talk.common.Config;
 import com.app.talk.common.User;
 
-import java.net.*;
-import java.io.*;
-import java.util.Objects;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.ConnectException;
+import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -44,17 +44,18 @@ public class Sender implements Runnable {
      */
     private Scanner scanner = new Scanner(System.in);
 
+    /**
+     * The communicators socket.
+     */
+    private Socket socket;
 
     /**
      * A sender of information over the network.
      *
-     * @param config Configuration information
-     * @param user   User object with user information
+     * @param socket
      */
-    public Sender(Config config, User user) {
-        this.remoteHost = config.getRemoteHost();
-        this.port = config.getTalkPort();
-        this.user = user;
+    public Sender(Socket socket) throws IOException {
+        this.socket = socket;
     }
 
     /**
@@ -64,13 +65,11 @@ public class Sender implements Runnable {
      */
     public void run() {
         try {
-            System.out.println("Waiting for connection to: " + this.remoteHost + ":" + this.port + "...");
+            System.out.println("Waiting for connection to: " + this.socket.getInetAddress() + ":" + this.socket.getPort() + "...");
             this.establishConnection();
-            System.out.println("Connection established.");
+            System.out.println("Connection established to remote " + this.socket.getInetAddress() + ":" + this.socket.getPort() + " from local address " + this.socket.getLocalAddress() + ":" + this.socket.getLocalPort());
 
             this.setOutputStream();
-
-            this.sendUser();
 
             this.sendUserInput();
 
@@ -106,7 +105,7 @@ public class Sender implements Runnable {
      * @throws IOException IOExceptions
      */
     void connect() throws IOException {
-        this.client = new Socket(this.remoteHost, this.port);
+        this.client = this.socket;
     }
 
     /**

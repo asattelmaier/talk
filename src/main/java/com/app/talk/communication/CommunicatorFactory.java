@@ -1,7 +1,7 @@
 package com.app.talk.communication;
 
-import com.app.talk.common.Config;
-import com.app.talk.common.User;
+import java.io.IOException;
+import java.net.Socket;
 
 public class CommunicatorFactory {
 	
@@ -23,11 +23,10 @@ public class CommunicatorFactory {
 	/**
 	 * Creates a Communicator object.
 	 * 
-	 * @param config
-	 * @param user
+	 * @param socket
 	 * @return Communicator object
 	 */
-	public Communicator createCommunicator(Config config, User user) {		
-		return new Communicator(config, user);
+	public Communicator createCommunicator(Socket socket) throws IOException {
+		return new Communicator(socket);
 	}
 }

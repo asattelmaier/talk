@@ -1,14 +1,11 @@
 package com.app.talk;
 
-import com.app.talk.common.Config;
+import com.app.talk.command.RemoteCommand;
+import com.app.talk.common.User;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
-
-import com.app.talk.command.RemoteCommand;
-import com.app.talk.common.User;
 
 import static com.app.talk.common.SystemExitCode.ABORT;
 import static com.app.talk.common.SystemExitCode.NORMAL;
@@ -18,11 +15,6 @@ import static com.app.talk.common.SystemExitCode.NORMAL;
  */
 public class Receiver implements Runnable {
     /**
-     * A ServerSockets that serves as the endingpoint of Communication for
-     * the other Host.
-     */
-    private ServerSocket serverSocket;
-    /**
      * A buffered Reader for incoming messages.
      */
     private ObjectInputStream input = null;
@@ -30,19 +22,18 @@ public class Receiver implements Runnable {
      * The username of the other Host.
      */
     private String remoteUserName = null;
+    /**
+     * The communicators socket.
+     */
+    private Socket socket;
 
     /**
      * A main.java.Receiver of information from the network.
      *
-     * @param config - configuration object.
+     * @param socket - configuration object.
      */
-    public Receiver(Config config) {
-        try {
-            serverSocket = new ServerSocket(config.getListenPort());
-        } catch (IOException e) {
-            System.err.println("IOException:  " + e);
-            System.exit(ABORT.ordinal());
-        }
+    public Receiver(Socket socket) {
+        this.socket = socket;
     }
 
     /**
@@ -51,12 +42,9 @@ public class Receiver implements Runnable {
      * a Receiver object to establish the incoming connection from the other host.
      */
     public void run() {
-        Socket clientSocket;
 
         try {
-            clientSocket = serverSocket.accept();
-            this.input = new ObjectInputStream(clientSocket.getInputStream());
-            this.receiveUserName();
+            this.input = new ObjectInputStream(this.socket.getInputStream());
             this.receive();
             this.closeConnection();
         } catch (IOException e) {
@@ -113,7 +101,6 @@ public class Receiver implements Runnable {
      */
     private void closeConnection() throws IOException {
         this.input.close();
-        this.serverSocket.close();
         System.exit(NORMAL.ordinal());
     }
 }
