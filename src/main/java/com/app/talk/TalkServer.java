@@ -8,7 +8,13 @@ import com.app.talk.common.ConfigParserException;
  * A simple talk server.
  */
 public class TalkServer {
+    /**
+     * Configuration object.
+     */
     private Config config;
+    /**
+     * Server dispatcher instance.
+     */
     private Dispatcher dispatcher;
 
     /**
@@ -20,11 +26,13 @@ public class TalkServer {
         this.run();
     }
 
+    /**
+     * Creates and starts a thread for the servers Dispatcher instance.
+     */
     private void run() {
         Thread dispatcherThread = new Thread(this.dispatcher);
         dispatcherThread.start();
     }
-
 
     /**
      * Starts the server.

@@ -6,15 +6,26 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * The dispatcher waits for clients to connect to its serverSocket and creates a communicator for each connected client.
+ */
 public class Dispatcher implements Runnable {
     private static ServerSocket server;
     private static int port;
+    private static boolean acceptClients = true;
 
+    /**
+     * Dispatcher constructor.
+     * @param port The port to listen to.
+     */
     public Dispatcher(int port) {
         this.port = port;
         this.run();
     }
 
+    /**
+     * Runnable implementation.
+     */
     public void run() {
         try {
             this.listen();
@@ -25,14 +36,21 @@ public class Dispatcher implements Runnable {
         }
     }
 
+    /**
+     * Creates communicators for connected clients.
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void listen() throws IOException, ClassNotFoundException {
         server = new ServerSocket(this.port);
         System.out.println("Server started. Listening for incoming connection requests on port: " + this.port);
 
-        while(true) {
-            Socket socket = server.accept();
-            System.out.println("Connection request from " + socket.getInetAddress().toString() + ":" + socket.getPort());
-            CommunicatorFactory.getInstance().createCommunicator(socket);
+
+        while (acceptClients) {
+            Socket client = server.accept();
+
+            System.out.println("Connection request from " + client.getInetAddress().toString() + ":" + client.getPort());
+            CommunicatorFactory.getInstance().createCommunicator(client);
         }
     }
 }

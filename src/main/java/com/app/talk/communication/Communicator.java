@@ -35,11 +35,5 @@ public class Communicator {
 
         receiverThread.start();
         senderThread.start();
-
-        try {
-            senderThread.join();
-        } catch (InterruptedException e) {
-            System.out.print(e.getMessage());
-        }
     }
 }
