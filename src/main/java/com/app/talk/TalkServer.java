@@ -17,7 +17,7 @@ public class TalkServer {
      * Server constructor.
      */
     private TalkServer(Config config) {
-        this.dispatcher = new Dispatcher(config.getTalkPort());
+        this.dispatcher = new Dispatcher(config.getPort());
     }
 
     /**

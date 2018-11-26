@@ -25,11 +25,12 @@ public class TalkClient {
      * @throws IOException
      */
     private TalkClient(Config config) throws IOException {
-        this.socket = new Socket(config.getRemoteHost(), config.getTalkPort());
+        this.socket = new Socket(config.getRemoteHost(), config.getPort());
+                
     }
 
     private void run() throws IOException {
-        System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());
+        System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());        
         CommunicatorFactory.getInstance().createCommunicator(socket);
     }
 

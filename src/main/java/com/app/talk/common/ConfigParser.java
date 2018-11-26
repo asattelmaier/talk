@@ -3,16 +3,14 @@ package com.app.talk.common;
 import static com.app.talk.common.ConfigParserException.ErrorCode.*;
 
 public class ConfigParser {
-    private int listenPort = 0;
-    private int talkPort = 0;
+    private int port = 0;
     private String remoteHost = null;
 
     /**
      * ConfigParser constructor with default values.
      */
     public ConfigParser(String[] args) throws ConfigParserException {
-        this.listenPort = 2048;
-        this.talkPort = 2049;
+        this.port = 2048;
         this.remoteHost = "localhost";
         this.parseArgumentStrings(args);
     }
@@ -23,7 +21,7 @@ public class ConfigParser {
      * @return the configuration object
      */
     public Config getConfig() {
-        return new Config(this.listenPort, this.talkPort, this.remoteHost);
+        return new Config(this.port, this.remoteHost);
     }
 
     /**
@@ -33,12 +31,10 @@ public class ConfigParser {
      */
     private void parseArgumentStrings(String[] args) throws ConfigParserException {
         if (args.length > 0)
-            this.listenPort = parseStringToInteger(args[0]);
+            this.port = parseStringToInteger(args[0]);
         if (args.length > 1)
-            this.talkPort = parseStringToInteger(args[1]);
+            this.remoteHost = args[1];
         if (args.length > 2)
-            this.remoteHost = args[2];
-        if (args.length > 3)
             throw new ConfigParserException(INVALID_PORT);
     }
 
