@@ -9,7 +9,7 @@ import java.net.Socket;
 /**
  * A combination of a sender and a receiver threads.
  */
-public class Communicator {
+class Communicator {
 	
 	private Socket socket;
 
@@ -18,7 +18,7 @@ public class Communicator {
 	 * 
 	 * @param socket
 	 */
-	public Communicator(Socket socket) throws IOException {
+	Communicator(Socket socket) throws IOException {
 		this.socket = socket;
 		this.start();
 	}

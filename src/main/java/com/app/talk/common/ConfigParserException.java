@@ -6,6 +6,7 @@ import static com.app.talk.common.ConfigParserException.ErrorCode.*;
  * Exception handling for Talk.
  */
 public class ConfigParserException extends Exception {
+    private static final long serialVersionUID = 646024665573766896L;
     private ErrorCode errorCode = OK;
     private String errorParameter = null;
 

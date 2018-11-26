@@ -11,16 +11,16 @@ import java.net.Socket;
  */
 public class Dispatcher implements Runnable {
     private static ServerSocket server;
-    private static int port;
+    private int port;
     private static boolean acceptClients = true;
 
     /**
      * Dispatcher constructor.
+     *
      * @param port The port to listen to.
      */
-    public Dispatcher(int port) {
+    Dispatcher(int port) {
         this.port = port;
-        this.run();
     }
 
     /**
@@ -29,19 +29,18 @@ public class Dispatcher implements Runnable {
     public void run() {
         try {
             this.listen();
-        } catch(IOException e) {
-            System.err.println(e);
-        } catch(ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             System.err.println(e);
         }
     }
 
     /**
      * Creates communicators for connected clients.
+     *
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public void listen() throws IOException, ClassNotFoundException {
+    private void listen() throws IOException, ClassNotFoundException {
         server = new ServerSocket(this.port);
         System.out.println("Server started. Listening for incoming connection requests on port: " + this.port);
 
