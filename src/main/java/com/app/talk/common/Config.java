@@ -27,7 +27,7 @@ public class Config {
      *
      * @return the listen port
      */
-    public int getListenPort() {
+    int getListenPort() {
         return this.listenPort;
     }
 

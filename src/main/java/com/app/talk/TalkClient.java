@@ -14,28 +14,28 @@ import java.net.Socket;
  */
 public class TalkClient {
     /**
-     * Configuration object.
-     */
-    private Config config;
-    /**
      * Client socket.
      */
     private Socket socket;
 
     /**
      * Client constructor.
-     * @param config
+     *
+     * @param config client configuration
      * @throws IOException
      */
     private TalkClient(Config config) throws IOException {
-        this.config = config;
         this.socket = new Socket(config.getRemoteHost(), config.getTalkPort());
+    }
+
+    private void run() throws IOException {
         System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());
         CommunicatorFactory.getInstance().createCommunicator(socket);
     }
 
     /**
      * Starts the client.
+     *
      * @param args
      * @throws ConfigParserException
      * @throws IOException
@@ -46,6 +46,8 @@ public class TalkClient {
 
         User user = new User();
         user.setNameFromUserInput();
+
         TalkClient client = new TalkClient(config);
+        client.run();
     }
 }

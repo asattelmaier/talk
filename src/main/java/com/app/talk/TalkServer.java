@@ -9,10 +9,6 @@ import com.app.talk.common.ConfigParserException;
  */
 public class TalkServer {
     /**
-     * Configuration object.
-     */
-    private Config config;
-    /**
      * Server dispatcher instance.
      */
     private Dispatcher dispatcher;
@@ -21,9 +17,7 @@ public class TalkServer {
      * Server constructor.
      */
     private TalkServer(Config config) {
-        this.config = config;
         this.dispatcher = new Dispatcher(config.getTalkPort());
-        this.run();
     }
 
     /**
@@ -47,5 +41,6 @@ public class TalkServer {
         Config config = configParser.getConfig();
 
         TalkServer talkServer = new TalkServer(config);
+        talkServer.run();
     }
 }
