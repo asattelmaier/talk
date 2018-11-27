@@ -2,7 +2,7 @@ package com.app.talk.command.set;
 
 import com.app.talk.command.RemoteCommand;
 
-import java.io.Serializable;
+
 
 /**
  * Represents a command that will write a message to standard output.

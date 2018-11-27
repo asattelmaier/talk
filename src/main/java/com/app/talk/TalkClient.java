@@ -17,7 +17,10 @@ public class TalkClient {
      * Client socket.
      */
     private Socket socket;
-
+    /**
+     * User Object containing username.
+     */
+    static User user = null;
     /**
      * Client constructor.
      *
@@ -25,8 +28,11 @@ public class TalkClient {
      * @throws IOException
      */
     private TalkClient(Config config) throws IOException {
+    	TalkClient.user = new User();
+        user.setNameFromUserInput();
         this.socket = new Socket(config.getRemoteHost(), config.getPort());
-                
+        
+        
     }
 
     private void run() throws IOException {
@@ -44,10 +50,8 @@ public class TalkClient {
     public static void main(String[] args) throws ConfigParserException, IOException {
         ConfigParser configParser = new ConfigParser(args);
         Config config = configParser.getConfig();
-
-        User user = new User();
-        user.setNameFromUserInput();
-
+        
+        
         TalkClient client = new TalkClient(config);
         client.run();
     }

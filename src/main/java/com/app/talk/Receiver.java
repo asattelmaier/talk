@@ -1,7 +1,7 @@
 package com.app.talk;
 
 import com.app.talk.command.RemoteCommand;
-import com.app.talk.common.User;
+
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,10 +18,6 @@ public class Receiver implements Runnable {
      * A buffered Reader for incoming messages.
      */
     private ObjectInputStream input = null;
-    /**
-     * The username of the other Host.
-     */
-    private String remoteUserName = null;
     /**
      * The communicators socket.
      */
@@ -57,18 +53,6 @@ public class Receiver implements Runnable {
     }
 
     /**
-     * Receives the user name from socket.
-     *
-     * @throws IOException            read objects IO Exception
-     * @throws ClassNotFoundException User cast Exception
-     */
-    private void receiveUserName() throws IOException, ClassNotFoundException {
-        User user = (User) this.input.readObject();
-
-        this.setRemoteUserName(user.getName());
-    }
-
-    /**
      * Creates a loop in which the incoming messages are printed to the console.
      * If the incoming message contains "exit." gets an information that the other user
      * disconnected.
@@ -79,19 +63,8 @@ public class Receiver implements Runnable {
         RemoteCommand response;
 
         while ((response = (RemoteCommand) input.readObject()) != null) {
-            System.out.print(this.remoteUserName + ": ");
-
             response.execute();
         }
-    }
-
-    /**
-     * A simple setter for the remoteUserName
-     *
-     * @param userName - the username gotten from the InputStream.
-     */
-    private void setRemoteUserName(String userName) {
-        this.remoteUserName = userName;
     }
 
     /**

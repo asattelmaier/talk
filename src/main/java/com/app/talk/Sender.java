@@ -2,7 +2,7 @@ package com.app.talk;
 
 import com.app.talk.command.set.ExitCommand;
 import com.app.talk.command.set.MessageCommand;
-import com.app.talk.common.User;
+
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -19,14 +19,6 @@ import static com.app.talk.common.SystemExitCode.NORMAL;
  */
 public class Sender implements Runnable {
     /**
-     * The ip-address of the other Host.
-     */
-    private String remoteHost;
-    /**
-     * The port which the addressed host listens to.
-     */
-    private int port;
-    /**
      * A dummy Socket that represents the receiving Socket of the other Host.
      * Contains the ip-address and listening port of the other Host.
      */
@@ -35,10 +27,6 @@ public class Sender implements Runnable {
      * A DataOutputStream containing the OutputStream of the client Socket.
      */
     private ObjectOutputStream outputStream = null;
-    /**
-     * The username of the sending host.
-     */
-    private User user;
     /**
      * A scanner to receive User keyboard input
      */
@@ -70,7 +58,7 @@ public class Sender implements Runnable {
             System.out.println("Connection established to remote " + this.socket.getInetAddress() + ":" + this.socket.getPort() + " from local address " + this.socket.getLocalAddress() + ":" + this.socket.getLocalPort());
 
             this.setOutputStream();
-
+            
             this.sendUserInput();
 
             this.closeConnection();
@@ -79,13 +67,6 @@ public class Sender implements Runnable {
             System.err.println("IOException: " + e);
             System.exit(ABORT.ordinal());
         }
-    }
-
-    /**
-     * A method to send the username of the sending Host.
-     */
-    private void sendUser() throws IOException {
-        send(this.user);
     }
 
     /**
@@ -163,7 +144,7 @@ public class Sender implements Runnable {
      * @param message - message that should be sent to the other host.
      */
     private void sendMessage(String message) throws IOException {
-        MessageCommand messageCommand = new MessageCommand(message);
+        MessageCommand messageCommand = new MessageCommand("[" + TalkClient.user.getName() + "]: " + message);
         send(messageCommand);
     }
 
