@@ -3,30 +3,33 @@ package com.app.talk;
 import com.app.talk.common.Config;
 import com.app.talk.common.ConfigParser;
 import com.app.talk.common.ConfigParserException;
-import com.app.talk.common.User;
-import com.app.talk.communication.Communicator;
-import com.app.talk.communication.CommunicatorFactory;
 
 /**
- * A driver for a simple sender of network traffic.
+ * A simple talk server.
  */
-public class Talk {
-    private Config config;
-    private User user;
+public class TalkServer {
+    /**
+     * Server dispatcher instance.
+     */
+    private Dispatcher dispatcher;
 
     /**
-     * A sender of information over the network.
+     * Server constructor.
      */
-    private Talk(Config config, User user) {
-        this.config = config;
-        this.user = user;
-        CommunicatorFactory.getInstance().createCommunicator(config, user);
+    private TalkServer(Config config) {
+        this.dispatcher = new Dispatcher(config.getPort());
     }
 
-
+    /**
+     * Creates and starts a thread for the servers Dispatcher instance.
+     */
+    private void run() {
+        Thread dispatcherThread = new Thread(this.dispatcher);
+        dispatcherThread.start();
+    }
 
     /**
-     * A simple talk/chat application.
+     * Starts the server.
      *
      * @param args - arguments transferred from the operating system
      *             args[0]: the port to listen to (default: 2048)
@@ -37,9 +40,7 @@ public class Talk {
         ConfigParser configParser = new ConfigParser(args);
         Config config = configParser.getConfig();
 
-        User user = new User();
-        user.setNameFromUserInput();
-
-        Talk talk = new Talk(config, user);
+        TalkServer talkServer = new TalkServer(config);
+        talkServer.run();
     }
 }

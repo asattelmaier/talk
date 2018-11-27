@@ -2,12 +2,12 @@ package com.app.talk;
 
 import com.app.talk.command.set.ExitCommand;
 import com.app.talk.command.set.MessageCommand;
-import com.app.talk.common.Config;
-import com.app.talk.common.User;
 
-import java.net.*;
-import java.io.*;
-import java.util.Objects;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.ConnectException;
+import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -19,14 +19,6 @@ import static com.app.talk.common.SystemExitCode.NORMAL;
  */
 public class Sender implements Runnable {
     /**
-     * The ip-address of the other Host.
-     */
-    private String remoteHost;
-    /**
-     * The port which the addressed host listens to.
-     */
-    private int port;
-    /**
      * A dummy Socket that represents the receiving Socket of the other Host.
      * Contains the ip-address and listening port of the other Host.
      */
@@ -36,25 +28,22 @@ public class Sender implements Runnable {
      */
     private ObjectOutputStream outputStream = null;
     /**
-     * The username of the sending host.
-     */
-    private User user;
-    /**
      * A scanner to receive User keyboard input
      */
     private Scanner scanner = new Scanner(System.in);
 
+    /**
+     * The communicators socket.
+     */
+    private Socket socket;
 
     /**
      * A sender of information over the network.
      *
-     * @param config Configuration information
-     * @param user   User object with user information
+     * @param socket
      */
-    public Sender(Config config, User user) {
-        this.remoteHost = config.getRemoteHost();
-        this.port = config.getTalkPort();
-        this.user = user;
+    public Sender(Socket socket) throws IOException {
+        this.socket = socket;
     }
 
     /**
@@ -64,14 +53,12 @@ public class Sender implements Runnable {
      */
     public void run() {
         try {
-            System.out.println("Waiting for connection to: " + this.remoteHost + ":" + this.port + "...");
+            System.out.println("Waiting for connection to: " + this.socket.getInetAddress() + ":" + this.socket.getPort() + "...");
             this.establishConnection();
-            System.out.println("Connection established.");
+            System.out.println("Connection established to remote " + this.socket.getInetAddress() + ":" + this.socket.getPort() + " from local address " + this.socket.getLocalAddress() + ":" + this.socket.getLocalPort());
 
             this.setOutputStream();
-
-            this.sendUser();
-
+            
             this.sendUserInput();
 
             this.closeConnection();
@@ -80,13 +67,6 @@ public class Sender implements Runnable {
             System.err.println("IOException: " + e);
             System.exit(ABORT.ordinal());
         }
-    }
-
-    /**
-     * A method to send the username of the sending Host.
-     */
-    private void sendUser() throws IOException {
-        send(this.user);
     }
 
     /**
@@ -106,7 +86,7 @@ public class Sender implements Runnable {
      * @throws IOException IOExceptions
      */
     void connect() throws IOException {
-        this.client = new Socket(this.remoteHost, this.port);
+        this.client = this.socket;
     }
 
     /**
@@ -164,7 +144,7 @@ public class Sender implements Runnable {
      * @param message - message that should be sent to the other host.
      */
     private void sendMessage(String message) throws IOException {
-        MessageCommand messageCommand = new MessageCommand(message);
+        MessageCommand messageCommand = new MessageCommand("[" + TalkClient.user.getName() + "]: " + message);
         send(messageCommand);
     }
 

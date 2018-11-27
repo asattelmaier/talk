@@ -2,7 +2,6 @@ package com.app.talk.command.set;
 
 import com.app.talk.command.RemoteCommand;
 
-import java.io.Serializable;
 
 import static com.app.talk.common.SystemExitCode.NORMAL;
 

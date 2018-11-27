@@ -1,56 +1,39 @@
 package com.app.talk.communication;
 
-import static com.app.talk.common.SystemExitCode.ABORT;
-
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.ConnectException;
-import java.net.Socket;
-import java.util.concurrent.TimeUnit;
-
 import com.app.talk.Receiver;
 import com.app.talk.Sender;
-import com.app.talk.common.Config;
-import com.app.talk.common.User;
+
+import java.io.IOException;
+import java.net.Socket;
 
 /**
  * A combination of a sender and a receiver threads.
  */
-public class Communicator {
+class Communicator {
 	
-	private Config config;
-	
-	private User user;
-	
+	private Socket socket;
+
 	/**
 	 * The constructor creates and activates the two threads. One for the sender (+ given user name), one for the receiver
 	 * 
-	 * @param config
-	 * @param user
+	 * @param socket
 	 */
-	public Communicator(Config config, User user) {
-		this.config = config;
-		this.user = user;
+	Communicator(Socket socket) throws IOException {
+		this.socket = socket;
 		this.start();
 	}
 	
     /**
      * Creates a Sender and a Receiver object.
      */
-    private void start() {
-        Receiver receiver = new Receiver(this.config);
+    private void start() throws IOException {
+        Receiver receiver = new Receiver(this.socket);
         Thread receiverThread = new Thread(receiver);
 
-        Sender sender = new Sender(this.config, this.user);
+        Sender sender = new Sender(this.socket);
         Thread senderThread = new Thread(sender);
 
         receiverThread.start();
         senderThread.start();
-
-        try {
-            senderThread.join();
-        } catch (InterruptedException e) {
-            System.out.print(e.getMessage());
-        }
     }
 }
