@@ -1,4 +1,4 @@
-package com.app.talk.command.set;
+package com.app.talk.server.command.set;
 
 import com.app.talk.command.RemoteCommand;
 

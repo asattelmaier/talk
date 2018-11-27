@@ -1,8 +1,13 @@
 package com.app.talk;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import com.app.talk.client.command.set.MessageCommand;
 import com.app.talk.common.Config;
 import com.app.talk.common.ConfigParser;
 import com.app.talk.common.ConfigParserException;
+import com.app.talk.communication.Communicator;
 
 /**
  * A simple talk server.
@@ -12,7 +17,9 @@ public class TalkServer {
      * Server dispatcher instance.
      */
     private Dispatcher dispatcher;
-
+    
+    private static ArrayList<Communicator> clientList = new ArrayList<Communicator>(); //TODO: make Thread safe, visiblity
+    
     /**
      * Server constructor.
      */
@@ -26,6 +33,35 @@ public class TalkServer {
     private void run() {
         Thread dispatcherThread = new Thread(this.dispatcher);
         dispatcherThread.start();
+    }
+    
+    /**
+     * @param client 
+     */
+    synchronized public static void addClient(Communicator client) { //TODO: synchronized may not be thread safe
+    	TalkServer.clientList.add(client);
+    }
+    
+    /**
+     * @param client
+     */
+    synchronized public static void removeClient(Communicator client) { //TODO: synchronized may not be thread safe
+    	TalkServer.clientList.remove(client);
+    }
+    
+    /**
+     * @param message
+     * @throws IOException 
+     */
+    synchronized public static void broadcast(String message) { //TODO: synchronized may not be thread safe
+    	for (Communicator communicator : clientList) {
+    		try {
+				communicator.getSender().send(new MessageCommand(message));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			};
+		}
     }
 
     /**

@@ -1,14 +1,16 @@
 package com.app.talk;
 
-import com.app.talk.command.set.ExitCommand;
-import com.app.talk.command.set.MessageCommand;
-
+import com.app.talk.client.command.set.MessageCommand;
+import com.app.talk.command.RemoteCommand;
+import com.app.talk.server.command.set.ExitCommand;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import static com.app.talk.common.SystemExitCode.ABORT;
@@ -36,6 +38,8 @@ public class Sender implements Runnable {
      * The communicators socket.
      */
     private Socket socket;
+    
+    private LinkedBlockingQueue<Object> commandQueue = new LinkedBlockingQueue<Object>();
 
     /**
      * A sender of information over the network.
@@ -59,14 +63,26 @@ public class Sender implements Runnable {
 
             this.setOutputStream();
             
-            this.sendUserInput();
-
+            
+            while(true) {
+            	Object object = commandQueue.take();
+            	this.outputStream.writeObject(object);
+                this.outputStream.flush();
+            	
+            	if(false) {
+            		break;
+            	}
+            }
+            
             this.closeConnection();
             System.out.println("Connection closed.");
         } catch (IOException e) {
             System.err.println("IOException: " + e);
             System.exit(ABORT.ordinal());
-        }
+        } catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -110,40 +126,11 @@ public class Sender implements Runnable {
     }
 
     /**
-     * A method that creates a loop in which the user keyboard input is being taken in and
-     * sent to the other Host.
-     */
-    private void sendUserInput() throws IOException {
-        String userInput;
-        boolean userExits;
-
-        while (true) {
-            userInput = scanner.nextLine();
-            userExits = userInput.equals("exit.");
-
-            if (userExits) {
-                this.sendExit();
-                break;
-            } else {
-                this.sendMessage(userInput);
-            }
-        }
-    }
-
-    /**
-     * Sends the exit command.
-     */
-    private void sendExit() throws IOException {
-        ExitCommand exitCommand = new ExitCommand();
-        send(exitCommand);
-    }
-
-    /**
      * A method that receives a String message and writes it in sequences of bytes to the other host.
      *
      * @param message - message that should be sent to the other host.
      */
-    private void sendMessage(String message) throws IOException {
+    public void sendMessage(String message) throws IOException {
         MessageCommand messageCommand = new MessageCommand("[" + TalkClient.user.getName() + "]: " + message);
         send(messageCommand);
     }
@@ -154,9 +141,8 @@ public class Sender implements Runnable {
      * @param object the object to send for.
      * @throws IOException throws an IO Exception
      */
-    private void send(Object object) throws IOException {
-        this.outputStream.writeObject(object);
-        this.outputStream.flush();
+    void send(Object object) throws IOException {
+    	commandQueue.offer(object);
     }
 
     /**

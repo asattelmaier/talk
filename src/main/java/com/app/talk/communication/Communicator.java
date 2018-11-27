@@ -9,9 +9,16 @@ import java.net.Socket;
 /**
  * A combination of a sender and a receiver threads.
  */
-class Communicator {
+public class Communicator {
 	
 	private Socket socket;
+	
+	private Sender sender;
+	
+	private Receiver receiver;
+
+
+
 
 	/**
 	 * The constructor creates and activates the two threads. One for the sender (+ given user name), one for the receiver
@@ -23,17 +30,27 @@ class Communicator {
 		this.start();
 	}
 	
+	public Sender getSender() {
+		return sender;
+	}
+
+	public Receiver getReceiver() {
+		return receiver;
+	}
+	
     /**
      * Creates a Sender and a Receiver object.
      */
     private void start() throws IOException {
-        Receiver receiver = new Receiver(this.socket);
+        this.receiver = new Receiver(this.socket);
         Thread receiverThread = new Thread(receiver);
 
-        Sender sender = new Sender(this.socket);
+        this.sender = new Sender(this.socket);
         Thread senderThread = new Thread(sender);
 
         receiverThread.start();
         senderThread.start();
     }
+    
+    
 }

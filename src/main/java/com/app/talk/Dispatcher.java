@@ -49,7 +49,7 @@ public class Dispatcher implements Runnable {
             Socket client = server.accept();
 
             System.out.println("Connection request from " + client.getInetAddress().toString() + ":" + client.getPort());
-            CommunicatorFactory.getInstance().createCommunicator(client);
+            TalkServer.addClient(CommunicatorFactory.getInstance().createCommunicator(client));
         }
     }
 }
