@@ -37,18 +37,14 @@ public class TalkClient {
      * @param config client configuration
      * @throws IOException
      */
-    private TalkClient(Config config) {
+    private TalkClient(Config config) throws InterruptedException {
     	user = new User();
         user.setNameFromUserInput();
         while(socket == null) {
         	try {
      			this.socket = new Socket(config.getRemoteHost(), config.getPort());
      		} catch (Exception e) {
-     			try {
-					TimeUnit.SECONDS.sleep(10);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				} //try-catch
+				TimeUnit.SECONDS.sleep(10);
      		} //try-catch
         } //while  
     } //TalkClient Constructor
@@ -108,8 +104,9 @@ public class TalkClient {
      * @param args
      * @throws ConfigParserException
      * @throws IOException
+     * @throws InterruptedException 
      */
-    public static void main(String[] args) throws ConfigParserException, IOException {
+    public static void main(String[] args) throws ConfigParserException, IOException, InterruptedException {
         ConfigParser configParser = new ConfigParser(args);
         Config config = configParser.getConfig();
         
