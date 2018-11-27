@@ -30,7 +30,7 @@ public class Dispatcher implements Runnable {
         try {
             this.listen();
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println(e);
+        	e.printStackTrace();
         }
     }
 

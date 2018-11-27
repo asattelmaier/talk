@@ -42,7 +42,8 @@ public class Communicator {
      * Creates a Sender and a Receiver object.
      */
     private void start() throws IOException {
-        this.receiver = new Receiver(this.socket);
+    	System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());
+    	this.receiver = new Receiver(this.socket);
         Thread receiverThread = new Thread(receiver);
 
         this.sender = new Sender(this.socket);

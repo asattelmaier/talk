@@ -1,20 +1,15 @@
 package com.app.talk;
 
-import com.app.talk.client.command.set.MessageCommand;
-import com.app.talk.command.RemoteCommand;
-import com.app.talk.server.command.set.ExitCommand;
+import static com.app.talk.common.SystemExitCode.ABORT;
+import static com.app.talk.common.SystemExitCode.NORMAL;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
-import static com.app.talk.common.SystemExitCode.ABORT;
-import static com.app.talk.common.SystemExitCode.NORMAL;
+import com.app.talk.client.command.set.MessageCommand;
 
 /**
  * A simple sender of network traffic.
@@ -24,7 +19,7 @@ public class Sender implements Runnable {
      * A dummy Socket that represents the receiving Socket of the other Host.
      * Contains the ip-address and listening port of the other Host.
      */
-    private Socket client = null;
+    //private Socket socket = null;
     /**
      * A DataOutputStream containing the OutputStream of the client Socket.
      */
@@ -57,72 +52,30 @@ public class Sender implements Runnable {
      */
     public void run() {
         try {
-            System.out.println("Waiting for connection to: " + this.socket.getInetAddress() + ":" + this.socket.getPort() + "...");
-            this.establishConnection();
-            System.out.println("Connection established to remote " + this.socket.getInetAddress() + ":" + this.socket.getPort() + " from local address " + this.socket.getLocalAddress() + ":" + this.socket.getLocalPort());
+        	System.out.println("Connection established to remote " + this.socket.getInetAddress() + ":" + this.socket.getPort() + " from local address " + this.socket.getLocalAddress() + ":" + this.socket.getLocalPort());
 
             this.setOutputStream();
-            
-            
-            while(true) {
+                        
+            while(!Thread.currentThread().isInterrupted()) {
             	Object object = commandQueue.take();
             	this.outputStream.writeObject(object);
                 this.outputStream.flush();
-            	
-            	if(false) {
-            		break;
-            	}
-            }
-            
+            } //while
             this.closeConnection();
             System.out.println("Connection closed.");
         } catch (IOException e) {
-            System.err.println("IOException: " + e);
+        	e.printStackTrace();
             System.exit(ABORT.ordinal());
         } catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-    }
-
-    /**
-     * A method to establish the connection to another host over the network.
-     */
-    private void establishConnection() throws IOException {
-        try {
-            this.connect();
-        } catch (ConnectException e) {
-            this.reconnect();
-        }
-    }
-
-    /**
-     * A method that creates a dummy Socket as a receiving end for outgoing communication.
-     *
-     * @throws IOException IOExceptions
-     */
-    void connect() throws IOException {
-        this.client = this.socket;
-    }
-
-    /**
-     * A method that tries to reconnect after 10 seconds
-     */
-    private void reconnect() throws IOException {
-        try {
-            TimeUnit.SECONDS.sleep(10);
-            this.establishConnection();
-        } catch (InterruptedException e) {
-            System.err.println(e.getMessage());
-            System.exit(ABORT.ordinal());
-        }
-    }
+		} //try-catch
+    } //run
 
     /**
      * Initializes the outputStream of the Sender object
      */
     private void setOutputStream() throws IOException {
-        this.outputStream = new ObjectOutputStream(client.getOutputStream());
+        this.outputStream = new ObjectOutputStream(socket.getOutputStream());
     }
 
     /**
@@ -149,8 +102,8 @@ public class Sender implements Runnable {
      * Closes the client Socket as well as its OutputStream.
      */
     private void closeConnection() throws IOException {
-        this.client.close(); //closes OutputStream as well
+        this.socket.close(); //closes OutputStream as well
         this.scanner.close();
         System.exit(NORMAL.ordinal());
     }
-}
+} //Sender Class

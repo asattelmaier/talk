@@ -54,11 +54,13 @@ public class TalkServer {
      * @throws IOException 
      */
     synchronized public static void broadcast(String message) { //TODO: synchronized may not be thread safe
+    	int counter = 0;
+    	System.out.println("Message: \"" + message + "\" received.");
     	for (Communicator communicator : clientList) {
     		try {
 				communicator.getSender().send(new MessageCommand(message));
+				System.out.println(" -> redirect to client " + counter++);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			};
 		}

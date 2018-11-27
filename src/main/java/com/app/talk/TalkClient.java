@@ -1,6 +1,10 @@
 package com.app.talk;
 
-import com.app.talk.client.command.set.MessageCommand;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+
 import com.app.talk.common.Config;
 import com.app.talk.common.ConfigParser;
 import com.app.talk.common.ConfigParserException;
@@ -10,10 +14,6 @@ import com.app.talk.communication.CommunicatorFactory;
 import com.app.talk.server.command.set.BroadcastCommand;
 import com.app.talk.server.command.set.ExitCommand;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.Scanner;
-
 /**
  * A client to connect to a TalkServer.
  */
@@ -21,7 +21,7 @@ public class TalkClient {
     /**
      * Client socket.
      */
-    private Socket socket;
+    private Socket socket = null;
     /**
      * User Object containing username.
      */
@@ -29,7 +29,7 @@ public class TalkClient {
     
     private Scanner scanner = new Scanner(System.in);
     
-    private Communicator client;
+    private Communicator communicator;
     
     /**
      * Client constructor.
@@ -37,22 +37,30 @@ public class TalkClient {
      * @param config client configuration
      * @throws IOException
      */
-    private TalkClient(Config config) throws IOException {
-    	TalkClient.user = new User();
+    private TalkClient(Config config) {
+    	user = new User();
         user.setNameFromUserInput();
-        this.socket = new Socket(config.getRemoteHost(), config.getPort());
-        
-        
-    }
+        while(socket == null) {
+        	try {
+     			this.socket = new Socket(config.getRemoteHost(), config.getPort());
+     		} catch (Exception e) {
+     			try {
+					TimeUnit.SECONDS.sleep(10);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				} //try-catch
+     		} //try-catch
+        } //while  
+    } //TalkClient Constructor
     
     /**
      * @throws IOException
      */
     private void init() throws IOException {
-        System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());        
-        this.client = CommunicatorFactory.getInstance().createCommunicator(socket);
+        System.out.println("End communication with line = \"exit.\"");
+        this.communicator = CommunicatorFactory.getInstance().createCommunicator(socket);
         
-    }
+    } //init
     
     /**
      * A method that creates a loop in which the user keyboard input is being taken in and
@@ -73,14 +81,14 @@ public class TalkClient {
                 sendMessage(userInput);
             }
         }
-    }
+    } //sendUserInput
     
     /**
      * Sends the exit command.
      */
     private void sendExit() throws IOException {
         ExitCommand exitCommand = new ExitCommand();
-        this.client.getSender().send(exitCommand);
+        this.communicator.getSender().send(exitCommand);
     }
 
     /**
@@ -90,7 +98,7 @@ public class TalkClient {
      */
     public void sendMessage(String message) throws IOException {
         BroadcastCommand messageCommand = new BroadcastCommand("[" + TalkClient.user.getName() + "]: " + message);
-        this.client.getSender().send(messageCommand);
+        this.communicator.getSender().send(messageCommand);
     }
 
     
@@ -108,5 +116,6 @@ public class TalkClient {
         
         TalkClient client = new TalkClient(config);
         client.init();
+        client.sendUserInput();
     }
 }

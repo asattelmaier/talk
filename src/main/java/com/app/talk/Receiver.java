@@ -44,7 +44,7 @@ public class Receiver implements Runnable {
             this.receive();
             this.closeConnection();
         } catch (IOException e) {
-            System.err.println("IOException:  " + e);
+        	e.printStackTrace();
             System.exit(ABORT.ordinal());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
