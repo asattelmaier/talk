@@ -22,13 +22,20 @@ public class TalkClient {
      * Client socket.
      */
     private Socket socket = null;
+    
     /**
      * User Object containing username.
      */
     static User user = null;
     
+    /**
+     * Reads keyboard input.
+     */
     private Scanner scanner = new Scanner(System.in);
     
+    /**
+     * Connection Handler for out- and incoming traffic.
+     */
     private Communicator communicator;
     
     /**
@@ -40,13 +47,7 @@ public class TalkClient {
     private TalkClient(Config config) throws InterruptedException {
     	user = new User();
         user.setNameFromUserInput();
-        while(socket == null) {
-        	try {
-     			this.socket = new Socket(config.getRemoteHost(), config.getPort());
-     		} catch (Exception e) {
-				TimeUnit.SECONDS.sleep(10);
-     		} //try-catch
-        } //while  
+        connect(config);
     } //TalkClient Constructor
     
     /**
@@ -96,7 +97,22 @@ public class TalkClient {
         BroadcastCommand messageCommand = new BroadcastCommand("[" + TalkClient.user.getName() + "]: " + message);
         this.communicator.getSender().send(messageCommand);
     }
-
+    
+    /**
+     * establishes the connection to server and tries to reconnect.
+     * @param config includes port and ip of the server
+     * @throws InterruptedException wont happen
+     */
+    private void connect(Config config) throws InterruptedException  {
+    	while(socket == null) {
+        	try {
+     			this.socket = new Socket(config.getRemoteHost(), config.getPort());
+     		} catch (Exception e) {
+				TimeUnit.SECONDS.sleep(10);
+     		} //try-catch
+        } //while  
+    } //connect
+    
     
     /**
      * Starts the client.
@@ -109,7 +125,6 @@ public class TalkClient {
     public static void main(String[] args) throws ConfigParserException, IOException, InterruptedException {
         ConfigParser configParser = new ConfigParser(args);
         Config config = configParser.getConfig();
-        
         
         TalkClient client = new TalkClient(config);
         client.init();
