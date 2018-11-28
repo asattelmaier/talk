@@ -17,7 +17,9 @@ public class TalkServer {
      * Server dispatcher instance.
      */
     private Dispatcher dispatcher;
-    
+    /**
+     * stores chat clients, represented by communicator objects.
+     */
     private static ArrayList<Communicator> clientList = new ArrayList<Communicator>(); //TODO: make Thread safe, visiblity
     
     /**
@@ -36,21 +38,24 @@ public class TalkServer {
     }
     
     /**
-     * @param client 
+     * adds a chat client to the list of clients.
+     * @param client communicator object representing the specific chat client.
      */
     synchronized public static void addClient(Communicator client) { //TODO: synchronized may not be thread safe
     	TalkServer.clientList.add(client);
     }
     
     /**
-     * @param client
+     * removes a specific chat client from the list of clients.
+     * @param client communicator object representing the specific chat client.
      */
     synchronized public static void removeClient(Communicator client) { //TODO: synchronized may not be thread safe
     	TalkServer.clientList.remove(client);
     }
     
     /**
-     * @param message
+     * sends a received message to all known chat clients.
+     * @param message textual message to be sent.
      * @throws IOException 
      */
     synchronized public static void broadcast(String message) { //TODO: synchronized may not be thread safe
@@ -62,9 +67,9 @@ public class TalkServer {
 				System.out.println(" -> redirect to client " + counter++);
 			} catch (Exception e) {
 				e.printStackTrace();
-			};
-		}
-    }
+			} //try-catch
+		} //for
+    } //broadcast
 
     /**
      * Starts the server.
@@ -80,5 +85,5 @@ public class TalkServer {
 
         TalkServer talkServer = new TalkServer(config);
         talkServer.run();
-    }
-}
+    } //main
+} //TalkServer Class

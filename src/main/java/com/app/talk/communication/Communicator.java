@@ -12,13 +12,8 @@ import java.net.Socket;
 public class Communicator {
 	
 	private Socket socket;
-	
 	private Sender sender;
-	
 	private Receiver receiver;
-
-
-
 
 	/**
 	 * The constructor creates and activates the two threads. One for the sender (+ given user name), one for the receiver
@@ -28,15 +23,21 @@ public class Communicator {
 	Communicator(Socket socket) throws IOException {
 		this.socket = socket;
 		this.start();
-	}
-	
+	} //constructor
+	/**
+	 * fetches sender.
+	 * @return sender object.
+	 */
 	public Sender getSender() {
 		return sender;
-	}
-
+	} 
+	/**
+	 * fetches receiver.
+	 * @return receiver object.
+	 */
 	public Receiver getReceiver() {
 		return receiver;
-	}
+	} 
 	
     /**
      * Creates a Sender and a Receiver object.
@@ -51,7 +52,5 @@ public class Communicator {
 
         receiverThread.start();
         senderThread.start();
-    }
-    
-    
-}
+    } //start    
+} //Communicator Class

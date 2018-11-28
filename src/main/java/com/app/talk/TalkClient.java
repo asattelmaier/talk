@@ -48,7 +48,7 @@ public class TalkClient {
     	user = new User();
         user.setNameFromUserInput();
         connect(config);
-    } //TalkClient Constructor
+    } //constructor
     
     /**
      * @throws IOException
@@ -86,7 +86,7 @@ public class TalkClient {
     private void sendExit() throws IOException {
         ExitCommand exitCommand = new ExitCommand();
         this.communicator.getSender().send(exitCommand);
-    }
+    } //sendExit
 
     /**
      * A method that receives a String message and writes it in sequences of bytes to the other host.
@@ -96,11 +96,11 @@ public class TalkClient {
     public void sendMessage(String message) throws IOException {
         BroadcastCommand messageCommand = new BroadcastCommand("[" + TalkClient.user.getName() + "]: " + message);
         this.communicator.getSender().send(messageCommand);
-    }
+    } //sendMessage
     
     /**
      * establishes the connection to server and tries to reconnect.
-     * @param config includes port and ip of the server
+     * @param config includes port and ip of server
      * @throws InterruptedException wont happen
      */
     private void connect(Config config) throws InterruptedException  {
@@ -129,5 +129,5 @@ public class TalkClient {
         TalkClient client = new TalkClient(config);
         client.init();
         client.sendUserInput();
-    }
-}
+    } //main
+} //TalkClient Class

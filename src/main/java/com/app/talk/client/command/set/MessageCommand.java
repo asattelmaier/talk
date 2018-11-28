@@ -2,13 +2,14 @@ package com.app.talk.client.command.set;
 
 import com.app.talk.command.RemoteCommand;
 
-
-
 /**
  * Represents a command that will write a message to standard output.
  */
 public class MessageCommand implements RemoteCommand {
     private static final long serialVersionUID = 8308526182902674398L;
+    /**
+     * textual message to be shown.
+     */
     private String message;
 
     /**
@@ -24,4 +25,4 @@ public class MessageCommand implements RemoteCommand {
     public void execute() {
         System.out.println(message);
     }
-}
+} //MessageCommand Class

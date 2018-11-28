@@ -16,11 +16,6 @@ import com.app.talk.client.command.set.MessageCommand;
  */
 public class Sender implements Runnable {
     /**
-     * A dummy Socket that represents the receiving Socket of the other Host.
-     * Contains the ip-address and listening port of the other Host.
-     */
-    //private Socket socket = null;
-    /**
      * A DataOutputStream containing the OutputStream of the client Socket.
      */
     private ObjectOutputStream outputStream = null;
@@ -28,12 +23,13 @@ public class Sender implements Runnable {
      * A scanner to receive User keyboard input
      */
     private Scanner scanner = new Scanner(System.in);
-
     /**
-     * The communicators socket.
+     * once initialized, establishes connection.
      */
     private Socket socket;
-    
+    /**
+     * queues the given commands.
+     */
     private LinkedBlockingQueue<Object> commandQueue = new LinkedBlockingQueue<Object>();
 
     /**
@@ -43,7 +39,7 @@ public class Sender implements Runnable {
      */
     public Sender(Socket socket) throws IOException {
         this.socket = socket;
-    }
+    } //contructor
 
     /**
      * The the executing method of the class.
@@ -53,7 +49,6 @@ public class Sender implements Runnable {
     public void run() {
         try {
         	System.out.println("Connection established to remote " + this.socket.getInetAddress() + ":" + this.socket.getPort() + " from local address " + this.socket.getLocalAddress() + ":" + this.socket.getLocalPort());
-
             this.setOutputStream();
                         
             while(!Thread.currentThread().isInterrupted()) {
@@ -72,38 +67,38 @@ public class Sender implements Runnable {
     } //run
 
     /**
-     * Initializes the outputStream of the Sender object
+     * initializes the OutputStream of the Sender object
      */
     private void setOutputStream() throws IOException {
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
-    }
+    } //setOutputStream
 
     /**
-     * A method that receives a String message and writes it in sequences of bytes to the other host.
+     * receives a String message and writes it in sequences of bytes to the other host.
      *
      * @param message - message that should be sent to the other host.
      */
     public void sendMessage(String message) throws IOException {
         MessageCommand messageCommand = new MessageCommand("[" + TalkClient.user.getName() + "]: " + message);
         send(messageCommand);
-    }
+    } //sendMessage
 
     /**
-     * Sends a object to the output stream.
+     * sends a object to the outputstream.
      *
      * @param object the object to send for.
      * @throws IOException throws an IO Exception
      */
     void send(Object object) throws IOException {
     	commandQueue.offer(object);
-    }
+    } //send
 
     /**
-     * Closes the client Socket as well as its OutputStream.
+     * closes the client Socket as well as its OutputStream.
      */
     private void closeConnection() throws IOException {
         this.socket.close(); //closes OutputStream as well
         this.scanner.close();
         System.exit(NORMAL.ordinal());
-    }
+    } //closeConnection
 } //Sender Class
