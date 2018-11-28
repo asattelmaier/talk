@@ -44,7 +44,6 @@ public class Dispatcher implements Runnable {
         server = new ServerSocket(this.port);
         System.out.println("Server started. Listening for incoming connection requests on port: " + this.port);
 
-
         while (acceptClients) {
             Socket client = server.accept();
 
