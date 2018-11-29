@@ -30,7 +30,7 @@ public class Receiver implements Runnable {
      */
     public Receiver(Socket socket) {
         this.socket = socket;
-    }
+    } //constructor
 
     /**
      * The the executing method of the class.
@@ -44,13 +44,13 @@ public class Receiver implements Runnable {
             this.receive();
             this.closeConnection();
         } catch (IOException e) {
-            System.err.println("IOException:  " + e);
+        	e.printStackTrace();
             System.exit(ABORT.ordinal());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             System.exit(ABORT.ordinal());
-        }
-    }
+        } //try-ctach
+    } //run
 
     /**
      * Creates a loop in which the incoming messages are printed to the console.
@@ -64,8 +64,8 @@ public class Receiver implements Runnable {
 
         while ((response = (RemoteCommand) input.readObject()) != null) {
             response.execute();
-        }
-    }
+        } //while
+    } //receive
 
     /**
      * Closes the input, as well as the serverSocket from the Receiver object.
@@ -75,5 +75,5 @@ public class Receiver implements Runnable {
     private void closeConnection() throws IOException {
         this.input.close();
         System.exit(NORMAL.ordinal());
-    }
+    } //closeConnection
 }

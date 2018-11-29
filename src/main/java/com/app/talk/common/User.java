@@ -29,7 +29,8 @@ public class User implements Serializable {
      * Gets User keyboard input and sets it as the username.
      */
     public void setNameFromUserInput() {
-        Scanner scanner = new Scanner(System.in);
+        @SuppressWarnings("resource")
+		Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter your username: ");
 

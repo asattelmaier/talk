@@ -10,7 +10,7 @@ import java.net.Socket;
  * The dispatcher waits for clients to connect to its serverSocket and creates a communicator for each connected client.
  */
 public class Dispatcher implements Runnable {
-    private static ServerSocket server;
+	private static ServerSocket server;
     private int port;
     private static boolean acceptClients = true;
 
@@ -21,7 +21,7 @@ public class Dispatcher implements Runnable {
      */
     Dispatcher(int port) {
         this.port = port;
-    }
+    } //constructor
 
     /**
      * Runnable implementation.
@@ -30,9 +30,9 @@ public class Dispatcher implements Runnable {
         try {
             this.listen();
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println(e);
-        }
-    }
+        	e.printStackTrace();
+        } //try-catch
+    } //run
 
     /**
      * Creates communicators for connected clients.
@@ -44,12 +44,11 @@ public class Dispatcher implements Runnable {
         server = new ServerSocket(this.port);
         System.out.println("Server started. Listening for incoming connection requests on port: " + this.port);
 
-
         while (acceptClients) {
             Socket client = server.accept();
 
             System.out.println("Connection request from " + client.getInetAddress().toString() + ":" + client.getPort());
-            CommunicatorFactory.getInstance().createCommunicator(client);
-        }
-    }
-}
+            TalkServer.addClient(CommunicatorFactory.getInstance().createCommunicator(client));
+        } //while
+    } //listen
+} //Dispatcher Class
