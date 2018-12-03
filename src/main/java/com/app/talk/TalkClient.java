@@ -56,7 +56,6 @@ public class TalkClient {
     private void init() throws IOException {
         System.out.println("End communication with line = \"exit.\"");
         this.communicator = CommunicatorFactory.getInstance().createCommunicator(socket);
-        
     } //init
     
     /**
@@ -72,6 +71,8 @@ public class TalkClient {
             userExits = userInput.equals("exit.");
 
             if (userExits) {
+            	// Steffi: Informs other clients that someone left - only works if you send and received something (dunno why)
+            	sendMessage(TalkClient.user.getName() + " has left.");
                 sendExit();
                 break;
             } else {
@@ -84,8 +85,9 @@ public class TalkClient {
      * Sends the exit command.
      */
     private void sendExit() throws IOException {
-        ExitCommand exitCommand = new ExitCommand();
-        this.communicator.getSender().send(exitCommand);
+        ExitCommand exitCommand = new ExitCommand(this.communicator);        
+        // Steffi: Runs exitCommand directly instead of sending it through broadcast
+        exitCommand.execute();
     } //sendExit
 
     /**

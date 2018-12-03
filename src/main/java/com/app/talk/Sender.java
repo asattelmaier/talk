@@ -1,6 +1,5 @@
 package com.app.talk;
 
-import static com.app.talk.common.SystemExitCode.ABORT;
 import static com.app.talk.common.SystemExitCode.NORMAL;
 
 import java.io.IOException;
@@ -31,7 +30,7 @@ public class Sender implements Runnable {
      * queues the given commands.
      */
     private LinkedBlockingQueue<Object> commandQueue = new LinkedBlockingQueue<Object>();
-
+        
     /**
      * A sender of information over the network.
      *
@@ -39,7 +38,7 @@ public class Sender implements Runnable {
      */
     public Sender(Socket socket) throws IOException {
         this.socket = socket;
-    } //contructor
+    } //constructor
 
     /**
      * The the executing method of the class.
@@ -54,16 +53,15 @@ public class Sender implements Runnable {
             while(!Thread.currentThread().isInterrupted()) {
             	Object object = commandQueue.take();
             	this.outputStream.writeObject(object);
-                this.outputStream.flush();
+                this.outputStream.flush();         		        
             } //while
-            this.closeConnection();
             System.out.println("Connection closed.");
         } catch (IOException e) {
-        	e.printStackTrace();
-            System.exit(ABORT.ordinal());
+        	// This is fine - Server realizes that the client socket is gone
         } catch (InterruptedException e) {
-			e.printStackTrace();
-		} //try-catch
+			// This is fine - Thread is interrupted and should be gone
+		} 
+		
     } //run
 
     /**
@@ -96,8 +94,8 @@ public class Sender implements Runnable {
     /**
      * closes the client Socket as well as its OutputStream.
      */
-    private void closeConnection() throws IOException {
-        this.socket.close(); //closes OutputStream as well
+    public void closeConnection() throws IOException {
+    	this.socket.close(); //closes OutputStream as well
         this.scanner.close();
         System.exit(NORMAL.ordinal());
     } //closeConnection

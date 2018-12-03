@@ -1,14 +1,14 @@
 package com.app.talk;
 
-import com.app.talk.command.RemoteCommand;
+import static com.app.talk.common.SystemExitCode.ABORT;
 
-
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
-import static com.app.talk.common.SystemExitCode.ABORT;
-import static com.app.talk.common.SystemExitCode.NORMAL;
+import com.app.talk.command.RemoteCommand;
 
 /**
  * A simple receiver of network traffic.
@@ -42,14 +42,14 @@ public class Receiver implements Runnable {
         try {
             this.input = new ObjectInputStream(this.socket.getInputStream());
             this.receive();
-            this.closeConnection();
+            // Steffi: Moved this.closeconnection() to finally block from receive()
         } catch (IOException e) {
         	e.printStackTrace();
             System.exit(ABORT.ordinal());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             System.exit(ABORT.ordinal());
-        } //try-ctach
+        } //try-catch
     } //run
 
     /**
@@ -61,10 +61,18 @@ public class Receiver implements Runnable {
      */
     private void receive() throws IOException, ClassNotFoundException {
         RemoteCommand response;
-
-        while ((response = (RemoteCommand) input.readObject()) != null) {
-            response.execute();
-        } //while
+        
+        try{
+        	while ((response = (RemoteCommand) input.readObject()) != null) {
+                response.execute();
+            } //while
+        } catch(EOFException e) {
+        	// This is fine - nothing more to read
+        } catch (SocketException e){
+        	System.out.println(this.socket.getLocalPort() + " - Client socket closed");
+        } finally {
+            this.closeConnection();
+        } //try-catch
     } //receive
 
     /**
@@ -72,8 +80,8 @@ public class Receiver implements Runnable {
      *
      * @throws IOException IOExceptions
      */
-    private void closeConnection() throws IOException {
+    public void closeConnection() throws IOException {
         this.input.close();
-        System.exit(NORMAL.ordinal());
+        // Steffi: Removed system.exit(NORMAL.ordinal()) because it stopped the server for any reason
     } //closeConnection
 }

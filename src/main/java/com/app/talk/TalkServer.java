@@ -54,6 +54,23 @@ public class TalkServer {
     }
     
     /**
+     * set the client list
+     * @param clientlist the list to set
+     * 
+     */
+    synchronized public static void setClientList(ArrayList<Communicator> clientList) { //TODO: synchronized may not be thread safe
+    	TalkServer.clientList = clientList;
+    }
+    
+    /**
+     * returns the client list of the server.
+     * 
+     */
+    synchronized public static ArrayList<Communicator> getClients() { //TODO: synchronized may not be thread safe
+    	return TalkServer.clientList;
+    }
+    
+    /**
      * sends a received message to all known chat clients.
      * @param message textual message to be sent.
      * @throws IOException 
@@ -64,7 +81,7 @@ public class TalkServer {
     	for (Communicator communicator : clientList) {
     		try {
 				communicator.getSender().send(new MessageCommand(message));
-				System.out.println(" -> redirect to client " + counter++);
+				System.out.println(" -> redirect to client " + counter++);    			
 			} catch (Exception e) {
 				e.printStackTrace();
 			} //try-catch

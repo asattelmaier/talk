@@ -14,7 +14,9 @@ public class Communicator {
 	private Socket socket;
 	private Sender sender;
 	private Receiver receiver;
-
+    // Steffi: Added the senderThread globally to be able to interrupt it from outside
+	private Thread senderThread;
+	
 	/**
 	 * The constructor creates and activates the two threads. One for the sender (+ given user name), one for the receiver
 	 * 
@@ -24,6 +26,14 @@ public class Communicator {
 		this.socket = socket;
 		this.start();
 	} //constructor
+	
+	/**
+	 * fetches socket
+	 * @return socket object.
+	 */
+	public Socket getSocket(){
+		return socket;
+	}
 	/**
 	 * fetches sender.
 	 * @return sender object.
@@ -38,6 +48,13 @@ public class Communicator {
 	public Receiver getReceiver() {
 		return receiver;
 	} 
+	/**
+	 * fetches sender thread
+	 * @return thread object.
+	 */
+	public Thread getSenderThread(){
+		return senderThread;
+	}
 	
     /**
      * Creates a Sender and a Receiver object.
@@ -48,9 +65,14 @@ public class Communicator {
         Thread receiverThread = new Thread(receiver);
 
         this.sender = new Sender(this.socket);
-        Thread senderThread = new Thread(sender);
+        senderThread = new Thread(sender);
 
+        // Steffi: Given the thread a name
+        receiverThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Receiver");
+        senderThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Sender");
+        
         receiverThread.start();
         senderThread.start();
-    } //start    
+        
+    } //start
 } //Communicator Class
