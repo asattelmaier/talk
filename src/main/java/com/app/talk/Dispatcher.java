@@ -60,7 +60,6 @@ public class Dispatcher implements Runnable {
         	// Steffi: catching exception if check client thread stops dispatcher
         	try{
         		Socket client = server.accept();
-                
                 System.out.println("Connection request from " + client.getInetAddress().toString() + ":" + client.getPort());
                 TalkServer.addClient(CommunicatorFactory.getInstance().createCommunicator(client));
                 

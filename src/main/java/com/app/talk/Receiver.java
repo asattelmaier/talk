@@ -7,13 +7,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Observable;
 
 import com.app.talk.command.RemoteCommand;
 
 /**
  * A simple receiver of network traffic.
  */
-public class Receiver implements Runnable {
+public class Receiver extends Observable implements Runnable {
     /**
      * A buffered Reader for incoming messages.
      */
@@ -64,7 +65,8 @@ public class Receiver implements Runnable {
         
         try{
         	while ((response = (RemoteCommand) input.readObject()) != null) {
-                response.execute();
+        		setChanged();
+        		notifyObservers(response);
             } //while
         } catch(EOFException e) {
         	// This is fine - nothing more to read

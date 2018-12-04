@@ -2,9 +2,12 @@ package com.app.talk.communication;
 
 import com.app.talk.Receiver;
 import com.app.talk.Sender;
+import com.app.talk.command.RemoteCommand;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * A combination of a sender and a receiver threads.
@@ -16,6 +19,7 @@ public class Communicator {
 	private Receiver receiver;
     // Steffi: Added the senderThread globally to be able to interrupt it from outside
 	private Thread senderThread;
+	private Thread receiverThread;
 	
 	/**
 	 * The constructor creates and activates the two threads. One for the sender (+ given user name), one for the receiver
@@ -24,7 +28,7 @@ public class Communicator {
 	 */
 	Communicator(Socket socket) throws IOException {
 		this.socket = socket;
-		this.start();
+		this.init();
 	} //constructor
 	
 	/**
@@ -59,10 +63,20 @@ public class Communicator {
     /**
      * Creates a Sender and a Receiver object.
      */
-    private void start() throws IOException {
+    private void init() throws IOException {
     	System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());
     	this.receiver = new Receiver(this.socket);
-        Thread receiverThread = new Thread(receiver);
+    	Observer observer = new Observer() {
+			
+			@Override
+			public void update(Observable o, Object arg) {
+				RemoteCommand remoteCommand = (RemoteCommand)arg;
+				remoteCommand.execute(Communicator.this);
+			}
+		};
+    	
+		this.receiver.addObserver(observer);
+        receiverThread = new Thread(receiver);
 
         this.sender = new Sender(this.socket);
         senderThread = new Thread(sender);
@@ -71,8 +85,38 @@ public class Communicator {
         receiverThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Receiver");
         senderThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Sender");
         
-        receiverThread.start();
-        senderThread.start();
+
         
     } //start
+
+    
+    void start() {
+        receiverThread.start();
+        senderThread.start();
+	}
+    
+	/**
+     *   
+     * @param heartbeat the timeout to set
+     */
+    void setHeartbeat(RemoteCommand heartbeat) {
+		this.sender.setHeartbeat(heartbeat);
+	}
+
+	/**
+	 * @param timeout the timeout to set
+	 */
+	void setHeartbeatTimeout(long timeout) {
+		this.sender.setTimeout(timeout);
+	}
+    
+	public void close() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
+		senderThread.interrupt();
+		
+	}
 } //Communicator Class

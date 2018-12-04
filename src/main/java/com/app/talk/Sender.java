@@ -7,8 +7,11 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import com.app.talk.client.command.set.MessageCommand;
+import com.app.talk.command.RemoteCommand;
+import com.app.talk.server.command.set.ExitCommand;
 
 /**
  * A simple sender of network traffic.
@@ -30,8 +33,12 @@ public class Sender implements Runnable {
      * queues the given commands.
      */
     private LinkedBlockingQueue<Object> commandQueue = new LinkedBlockingQueue<Object>();
-        
-    /**
+	private long timeout;
+	
+	private RemoteCommand heartbeat;
+    
+    
+	/**
      * A sender of information over the network.
      *
      * @param socket
@@ -51,9 +58,12 @@ public class Sender implements Runnable {
             this.setOutputStream();
                         
             while(!Thread.currentThread().isInterrupted()) {
-            	Object object = commandQueue.take();
+            	Object object = commandQueue.poll(timeout, TimeUnit.MILLISECONDS);
+            	if (object == null) {
+            		object = heartbeat;
+            	}	
             	this.outputStream.writeObject(object);
-                this.outputStream.flush();         		        
+                this.outputStream.flush();              
             } //while
             System.out.println("Connection closed.");
         } catch (IOException e) {
@@ -70,7 +80,22 @@ public class Sender implements Runnable {
     private void setOutputStream() throws IOException {
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
     } //setOutputStream
+  
+	/**
+     *   
+     * @param heartbeat the timeout to set
+     */
+    public void setHeartbeat(RemoteCommand heartbeat) {
+		this.heartbeat = heartbeat;
+	}
 
+	/**
+	 * @param timeout the timeout to set
+	 */
+    public void setTimeout(long timeout) {
+		this.timeout = timeout;
+	}
+	
     /**
      * receives a String message and writes it in sequences of bytes to the other host.
      *

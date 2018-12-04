@@ -5,6 +5,7 @@ package com.app.talk.server.command.set;
 
 import com.app.talk.TalkServer;
 import com.app.talk.command.RemoteCommand;
+import com.app.talk.communication.Communicator;
 
 /**
  * Broadcasts a given textual massage to every known chat client.
@@ -30,7 +31,7 @@ public class BroadcastCommand implements RemoteCommand {
 	 * executes the specified command to broadcast.
 	 */
 	@Override
-	public void execute() {
+	public void execute(Communicator communicator) {
 		TalkServer.broadcast(this.message);
 	} //execute	
 } //BroadcastCommand

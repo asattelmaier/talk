@@ -85,9 +85,19 @@ public class TalkClient {
      * Sends the exit command.
      */
     private void sendExit() throws IOException {
-        ExitCommand exitCommand = new ExitCommand(this.communicator);        
-        // Steffi: Runs exitCommand directly instead of sending it through broadcast
-        exitCommand.execute();
+        ExitCommand exitCommand = new ExitCommand();    
+        communicator.getSender().send(exitCommand);
+        
+        try {
+			Thread.currentThread().sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        Thread.currentThread().interrupt();
+    	communicator.getSenderThread().interrupt();
+    	socket.close();
+        
     } //sendExit
 
     /**

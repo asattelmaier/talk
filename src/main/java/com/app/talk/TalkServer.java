@@ -50,7 +50,10 @@ public class TalkServer {
      * @param client communicator object representing the specific chat client.
      */
     synchronized public static void removeClient(Communicator client) { //TODO: synchronized may not be thread safe
-    	TalkServer.clientList.remove(client);
+    	boolean removed = TalkServer.clientList.remove(client);
+    	if (removed) {
+			client.close();
+    	}
     }
     
     /**

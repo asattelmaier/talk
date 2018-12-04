@@ -2,6 +2,8 @@ package com.app.talk.command;
 
 import java.io.Serializable;
 
+import com.app.talk.communication.Communicator;
+
 /**
  * Command pattern implementation.
  */
@@ -12,5 +14,5 @@ public interface RemoteCommand extends Serializable {
     /**
      * Executes the command.
      */
-    void execute();
+    void execute(Communicator command);
 }
