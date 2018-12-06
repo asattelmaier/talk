@@ -43,7 +43,6 @@ public class Receiver extends Observable implements Runnable {
         try {
             this.input = new ObjectInputStream(this.socket.getInputStream());
             this.receive();
-            // Steffi: Moved this.closeconnection() to finally block from receive()
         } catch (IOException e) {
         	e.printStackTrace();
             System.exit(ABORT.ordinal());
@@ -83,7 +82,6 @@ public class Receiver extends Observable implements Runnable {
      * @throws IOException IOExceptions
      */
     public void closeConnection() throws IOException {
-        this.input.close();
-        // Steffi: Removed system.exit(NORMAL.ordinal()) because it stopped the server for any reason
+        this.input.close();        
     } //closeConnection
 }
