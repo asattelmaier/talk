@@ -16,11 +16,11 @@ public class TalkServer {
     /**
      * Server dispatcher instance.
      */
-    private Dispatcher dispatcher;
+    private static Dispatcher dispatcher;
     /**
      * stores chat clients, represented by communicator objects.
      */
-    private static ArrayList<Communicator> clientList = new ArrayList<Communicator>(); //TODO: make Thread safe, visiblity
+    private static ArrayList<Communicator> clientList = new ArrayList<Communicator>();
     
     /**
      * Server constructor.
@@ -41,7 +41,7 @@ public class TalkServer {
      * adds a chat client to the list of clients.
      * @param client communicator object representing the specific chat client.
      */
-    synchronized public static void addClient(Communicator client) { //TODO: synchronized may not be thread safe
+    synchronized public static void addClient(Communicator client) {
     	TalkServer.clientList.add(client);
     }
     
@@ -49,10 +49,14 @@ public class TalkServer {
      * removes a specific chat client from the list of clients.
      * @param client communicator object representing the specific chat client.
      */
-    synchronized public static void removeClient(Communicator client) { //TODO: synchronized may not be thread safe
+    synchronized public static void removeClient(Communicator client) {
     	boolean removed = TalkServer.clientList.remove(client);
     	if (removed) {
 			client.close();
+    	}
+    	if (TalkServer.clientList.size() == 0) {
+    		System.out.println("No more clients available - shutting down server.");
+    		dispatcher.close();
     	}
     }
     
@@ -61,7 +65,7 @@ public class TalkServer {
      * @param clientlist the list to set
      * 
      */
-    synchronized public static void setClientList(ArrayList<Communicator> clientList) { //TODO: synchronized may not be thread safe
+    synchronized public static void setClientList(ArrayList<Communicator> clientList) {
     	TalkServer.clientList = clientList;
     }
     
@@ -69,7 +73,7 @@ public class TalkServer {
      * returns the client list of the server.
      * 
      */
-    synchronized public static ArrayList<Communicator> getClients() { //TODO: synchronized may not be thread safe
+    synchronized public static ArrayList<Communicator> getClients() {
     	return TalkServer.clientList;
     }
     
@@ -78,7 +82,7 @@ public class TalkServer {
      * @param message textual message to be sent.
      * @throws IOException 
      */
-    synchronized public static void broadcast(String message) { //TODO: synchronized may not be thread safe
+    synchronized public static void broadcast(String message) {
     	int counter = 0;
     	System.out.println("Message: \"" + message + "\" received.");
     	for (Communicator communicator : clientList) {

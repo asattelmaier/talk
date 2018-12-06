@@ -1,7 +1,5 @@
 package com.app.talk.server.command.set;
 
-import java.io.IOException;
-
 import com.app.talk.TalkServer;
 import com.app.talk.command.RemoteCommand;
 import com.app.talk.communication.Communicator;

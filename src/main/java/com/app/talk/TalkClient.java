@@ -71,8 +71,6 @@ public class TalkClient {
             userExits = userInput.equals("exit.");
 
             if (userExits) {
-            	// Steffi: Informs other clients that someone left - only works if you send and received something (dunno why)
-            	sendMessage(TalkClient.user.getName() + " has left.");
                 sendExit();
                 break;
             } else {
@@ -89,7 +87,8 @@ public class TalkClient {
         communicator.getSender().send(exitCommand);
         
         try {
-			Thread.currentThread().sleep(2000);
+        	//give the Sender time so send the ExitCommand
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,17 +1,13 @@
 package com.app.talk;
 
-import static com.app.talk.common.SystemExitCode.NORMAL;
-
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import com.app.talk.client.command.set.MessageCommand;
 import com.app.talk.command.RemoteCommand;
-import com.app.talk.server.command.set.ExitCommand;
 
 /**
  * A simple sender of network traffic.
@@ -22,10 +18,6 @@ public class Sender implements Runnable {
      */
     private ObjectOutputStream outputStream = null;
     /**
-     * A scanner to receive User keyboard input
-     */
-    private Scanner scanner = new Scanner(System.in);
-    /**
      * once initialized, establishes connection.
      */
     private Socket socket;
@@ -33,8 +25,13 @@ public class Sender implements Runnable {
      * queues the given commands.
      */
     private LinkedBlockingQueue<Object> commandQueue = new LinkedBlockingQueue<Object>();
-	private long timeout;
-	
+	/**
+	 * Timeout before heartbeat/keepalive.
+	 */
+    private long timeout;
+	/**
+	 * The Object to be sent as heartbeat/keepalive.
+	 */
 	private RemoteCommand heartbeat;
     
     
@@ -48,9 +45,7 @@ public class Sender implements Runnable {
     } //constructor
 
     /**
-     * The the executing method of the class.
-     * This method is being called by the start()-method of a Thread object containing
-     * a Sender object to establish the outgoing connection to the other host.
+     * An endless loop checking comandQueue end sending RemoteCommands.
      */
     public void run() {
         try {
@@ -115,13 +110,4 @@ public class Sender implements Runnable {
     void send(Object object) throws IOException {
     	commandQueue.offer(object);
     } //send
-
-    /**
-     * closes the client Socket as well as its OutputStream.
-     */
-    public void closeConnection() throws IOException {
-    	this.socket.close(); //closes OutputStream as well
-        this.scanner.close();
-        System.exit(NORMAL.ordinal());
-    } //closeConnection
 } //Sender Class

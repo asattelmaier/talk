@@ -17,7 +17,6 @@ public class Communicator {
 	private Socket socket;
 	private Sender sender;
 	private Receiver receiver;
-    // Steffi: Added the senderThread globally to be able to interrupt it from outside
 	private Thread senderThread;
 	private Thread receiverThread;
 	
@@ -81,7 +80,7 @@ public class Communicator {
         this.sender = new Sender(this.socket);
         senderThread = new Thread(sender);
 
-        // Steffi: Given the thread a name
+        // Given the thread a name
         receiverThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Receiver");
         senderThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Sender");
         

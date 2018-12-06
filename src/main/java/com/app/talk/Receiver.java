@@ -71,7 +71,7 @@ public class Receiver extends Observable implements Runnable {
         } catch(EOFException e) {
         	// This is fine - nothing more to read
         } catch (SocketException e){
-        	System.out.println(this.socket.getLocalPort() + " - Client socket closed");
+        	//client socket closed
         } finally {
             this.closeConnection();
         } //try-catch
