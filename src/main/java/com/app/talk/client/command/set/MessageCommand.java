@@ -1,5 +1,6 @@
 package com.app.talk.client.command.set;
 
+import com.app.talk.command.Context;
 import com.app.talk.command.RemoteCommand;
 import com.app.talk.communication.Communicator;
 
@@ -8,6 +9,8 @@ import com.app.talk.communication.Communicator;
  */
 public class MessageCommand implements RemoteCommand {
     private static final long serialVersionUID = 8308526182902674398L;
+
+    private Context context;
     /**
      * textual message to be shown.
      */
@@ -18,12 +21,13 @@ public class MessageCommand implements RemoteCommand {
      *
      * @param message the message to send
      */
-    public MessageCommand(String message) {
+    public MessageCommand(Context context, String message) {
+    	this.context = context;
         this.message = message;
     }
 
     @Override
-    public void execute(Communicator communicator) {
+    public void execute(Context context) {
         System.out.println(message);
     }
 } //MessageCommand Class

@@ -16,7 +16,7 @@ public class Sender implements Runnable {
     /**
      * A DataOutputStream containing the OutputStream of the client Socket.
      */
-    private ObjectOutputStream outputStream = null;
+    private final ObjectOutputStream outputStream;
     /**
      * once initialized, establishes connection.
      */
@@ -42,6 +42,8 @@ public class Sender implements Runnable {
      */
     public Sender(Socket socket) throws IOException {
         this.socket = socket;
+        this.outputStream = new ObjectOutputStream(socket.getOutputStream());
+        this.outputStream.flush();
     } //constructor
 
     /**
@@ -49,16 +51,16 @@ public class Sender implements Runnable {
      */
     public void run() {
         try {
-        	System.out.println("Connection established to remote " + this.socket.getInetAddress() + ":" + this.socket.getPort() + " from local address " + this.socket.getLocalAddress() + ":" + this.socket.getLocalPort());
-            this.setOutputStream();
-                        
+        	System.out.println("Connection established to remote " + this.socket.getInetAddress() + ":" + this.socket.getPort() + " from local address " + this.socket.getLocalAddress() + ":" + this.socket.getLocalPort());            
+        	
             while(!Thread.currentThread().isInterrupted()) {
             	Object object = commandQueue.poll(timeout, TimeUnit.MILLISECONDS);
             	if (object == null) {
             		object = heartbeat;
             	}	
             	this.outputStream.writeObject(object);
-                this.outputStream.flush();              
+                this.outputStream.flush();
+//                System.out.println("DEBUG: sent " + object);
             } //while
             System.out.println("Connection closed.");
         } catch (IOException e) {
@@ -69,13 +71,6 @@ public class Sender implements Runnable {
 		
     } //run
 
-    /**
-     * initializes the OutputStream of the Sender object
-     */
-    private void setOutputStream() throws IOException {
-        this.outputStream = new ObjectOutputStream(socket.getOutputStream());
-    } //setOutputStream
-  
 	/**
      *   
      * @param heartbeat the timeout to set
@@ -92,22 +87,12 @@ public class Sender implements Runnable {
 	}
 	
     /**
-     * receives a String message and writes it in sequences of bytes to the other host.
-     *
-     * @param message - message that should be sent to the other host.
-     */
-    public void sendMessage(String message) throws IOException {
-        MessageCommand messageCommand = new MessageCommand("[" + TalkClient.user.getName() + "]: " + message);
-        send(messageCommand);
-    } //sendMessage
-
-    /**
      * sends a object to the outputstream.
      *
      * @param object the object to send for.
      * @throws IOException throws an IO Exception
      */
-    void send(Object object) throws IOException {
+    public void send(Object object) throws IOException {    	
     	commandQueue.offer(object);
     } //send
 } //Sender Class
