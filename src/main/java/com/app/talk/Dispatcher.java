@@ -14,7 +14,7 @@ import com.app.talk.communication.CommunicatorFactory;
  * The dispatcher waits for clients to connect to its serverSocket and creates a communicator for each connected client.
  */
 public class Dispatcher implements Runnable {
-	private ServerSocket server;
+	private static ServerSocket server;
     private int port;
 	/**
 	 * stores chat clients, represented by communicator objects.
@@ -63,7 +63,7 @@ public class Dispatcher implements Runnable {
         } //while
     } //listen
 
-	public void close() {
+	public static void close() {
 		try {
 			acceptClients = false;
 			server.close();
@@ -101,7 +101,7 @@ public class Dispatcher implements Runnable {
 		}
 		if (Dispatcher.clientList.size() == 0) {
 			System.out.println("No more clients available - shutting down server.");
-			TalkServer.dispatcher.close();
+			Dispatcher.close();
 		}
 	}
 
