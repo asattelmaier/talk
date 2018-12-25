@@ -3,7 +3,7 @@
  */
 package com.app.talk.server.command.set;
 
-import com.app.talk.TalkServer;
+import com.app.talk.Dispatcher;
 import com.app.talk.command.RemoteCommand;
 import com.app.talk.communication.Communicator;
 
@@ -32,6 +32,6 @@ public class BroadcastCommand implements RemoteCommand {
 	 */
 	@Override
 	public void execute(Communicator communicator) {
-		TalkServer.broadcast(this.message);
+		Dispatcher.broadcast(this.message);
 	} //execute	
 } //BroadcastCommand
