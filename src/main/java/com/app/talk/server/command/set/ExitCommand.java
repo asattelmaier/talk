@@ -1,6 +1,6 @@
 package com.app.talk.server.command.set;
 
-import com.app.talk.TalkServer;
+import com.app.talk.Dispatcher;
 import com.app.talk.command.RemoteCommand;
 import com.app.talk.communication.Communicator;
 
@@ -15,6 +15,6 @@ public class ExitCommand implements RemoteCommand {
      */
     @Override
     public void execute(Communicator communicator) {    	
-        TalkServer.removeClient(communicator);
+        Dispatcher.removeClient(communicator);
     }
 } //ExitCommand Class
