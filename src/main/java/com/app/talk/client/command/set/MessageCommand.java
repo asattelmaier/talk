@@ -27,7 +27,9 @@ public class MessageCommand implements RemoteCommand {
     }
 
     @Override
-    public void execute(Context context) {
-        System.out.println(message);
+    public void execute(Context context) {	
+    	if(this.context.getId() != context.getId()) {
+    		System.out.println("[U" + context.getId() + "]" + message);
+    	}
     }
 } //MessageCommand Class

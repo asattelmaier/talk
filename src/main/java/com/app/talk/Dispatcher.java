@@ -86,7 +86,7 @@ public class Dispatcher implements Runnable {
 		System.out.println("Message: \"" + message + "\" received.");
 		for (Communicator communicator : Dispatcher.clientList) {
 			try {
-				communicator.getSender().send(new MessageCommand(communicator.getContext(), message));
+				communicator.getSender().send(new MessageCommand(context, message));
 				System.out.println(" -> redirect to client " + counter++);    			
 			} catch (Exception e) {
 				e.printStackTrace();
