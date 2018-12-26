@@ -118,7 +118,11 @@ public class Dispatcher implements Runnable {
 	}
 
 	synchronized public static Communicator getCommunicator(Context context) {
-		// TODO Auto-generated method stub
+		for (Communicator communicator : clientList) {
+			if(communicator.getContext().getId() == context.getId()) {
+				return communicator;
+			}
+		}
 		return null;
 	}
 } //Dispatcher Class
