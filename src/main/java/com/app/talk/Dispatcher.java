@@ -60,7 +60,9 @@ public class Dispatcher implements Runnable {
         	try{
         		Socket client = server.accept();
                 System.out.println("Connection request from " + client.getInetAddress().toString() + ":" + client.getPort());
-                Dispatcher.addClient(CommunicatorFactory.getInstance().createCommunicator(client, clientId++));
+                Communicator communicator = CommunicatorFactory.getInstance().createCommunicator(client, clientId++);
+                Dispatcher.addClient(communicator);
+                communicator.start();
         	} catch (SocketException e){
         		//this is fine
         	}

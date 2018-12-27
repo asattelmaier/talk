@@ -3,6 +3,7 @@ package com.app.talk.communication;
 import java.io.IOException;
 import java.net.Socket;
 
+import com.app.talk.client.command.set.SetContextCommand;
 import com.app.talk.command.Context;
 import com.app.talk.command.RemoteCommand;
 import com.app.talk.common.SystemExitCode;
@@ -15,6 +16,8 @@ public class CommunicatorFactory {
 	private final String SERVER = "Server";
 	private final String CLIENT = "Client";
 
+	private static RemoteCommand heartbeat = createHeartbeat();
+	
 	/**
 	 * Returns the single factory object.
 	 * 
@@ -64,9 +67,7 @@ public class CommunicatorFactory {
 
 		setContext(communicatorType);
 
-		setParameters();
-
-		communicator.start();
+		setParameters();		
 
 		return communicator;
 	}
@@ -83,7 +84,6 @@ public class CommunicatorFactory {
 			setServerContext();
 			break;
 		case CLIENT:
-			setClientContext();
 			break;
 		}
 	}
@@ -94,22 +94,9 @@ public class CommunicatorFactory {
 	 * @throws IOException
 	 */
 	private void setServerContext() throws IOException {
-		this.communicator.context = new Context(this.clientId);
-		this.communicator.getSender().send(this.communicator.context);
-	}
-
-	/**
-	 * Sets the Client Communicator context
-	 * 
-	 * @throws IOException
-	 */
-	private void setClientContext() throws IOException {
-		try {
-			Context context = (Context) this.communicator.getReceiver().read();
-			this.communicator.context = context;
-		} catch (ClassNotFoundException e) {
-			System.exit(SystemExitCode.ABORT.ordinal());
-		}
+		Context context = new Context(this.clientId);
+		this.communicator.context = context;
+		this.communicator.getSender().send(new SetContextCommand(context));
 	}
 
 	/**
@@ -118,10 +105,8 @@ public class CommunicatorFactory {
 	 * @throws IOException
 	 */
 	private void setParameters() {
-		RemoteCommand heartbeat = createHeartbeat();
-
 		this.communicator.setHeartbeatTimeout(60000);
-		this.communicator.setHeartbeat(heartbeat);
+		this.communicator.setHeartbeat(CommunicatorFactory.heartbeat);
 	}
 
 	/**
@@ -129,7 +114,7 @@ public class CommunicatorFactory {
 	 * 
 	 * @return a new RemoteCommand Instance
 	 */
-	private RemoteCommand createHeartbeat() {
+	private static RemoteCommand createHeartbeat() {
 		return new RemoteCommand() {
 			private static final long serialVersionUID = -1801133200424887639L;
 

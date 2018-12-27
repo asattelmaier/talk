@@ -5,9 +5,11 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import com.app.talk.client.command.set.SetContextCommand;
 import com.app.talk.common.Config;
 import com.app.talk.common.ConfigParser;
 import com.app.talk.common.ConfigParserException;
+import com.app.talk.common.SystemExitCode;
 import com.app.talk.common.User;
 import com.app.talk.communication.Communicator;
 import com.app.talk.communication.CommunicatorFactory;
@@ -36,7 +38,7 @@ public class TalkClient {
     /**
      * Connection Handler for out- and incoming traffic.
      */
-    private Communicator communicator;
+     public static Communicator communicator;
     
     /**
      * Client constructor.
@@ -56,6 +58,13 @@ public class TalkClient {
     private void init() throws IOException {
         System.out.println("End communication with line = \"exit.\"");
         this.communicator = CommunicatorFactory.getInstance().createCommunicator(socket);
+		try {
+			SetContextCommand command = (SetContextCommand) this.communicator.getReceiver().read();
+			command.execute(null);
+		} catch (ClassNotFoundException e) {
+			System.exit(SystemExitCode.ABORT.ordinal());
+		}
+		this.communicator.start();
     } //init
     
     /**
