@@ -21,15 +21,12 @@ public class MessageCommand implements RemoteCommand {
      *
      * @param message the message to send
      */
-    public MessageCommand(Context context, String message) {
-    	this.context = context;
+    public MessageCommand(String message) {
         this.message = message;
     }
 
     @Override
     public void execute(Context context) {	
-    	if(this.context.getId() != context.getId()) {
-    		System.out.println("[U" + context.getId() + "]" + message);
-    	}
+    	System.out.println("[U" + context.getId() + "]" + message);
     }
 } //MessageCommand Class

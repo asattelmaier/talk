@@ -86,12 +86,14 @@ public class Dispatcher implements Runnable {
 		int counter = 0;
 		System.out.println("Message: \"" + message + "\" received.");
 		for (Communicator communicator : Dispatcher.clientList) {
-			try {
-				communicator.getSender().send(new MessageCommand(context, message));
-				System.out.println(" -> redirect to client " + counter++);    			
-			} catch (Exception e) {
-				e.printStackTrace();
-			} //try-catch
+			if (communicator.getContext().getId() != context.getId()){
+				try {
+					communicator.getSender().send(new MessageCommand(message));
+					System.out.println(" -> redirect to client " + counter++);    			
+				} catch (Exception e) {
+					e.printStackTrace();
+				} //try-catch
+			}
 		} //for
 	} //broadcast
 
