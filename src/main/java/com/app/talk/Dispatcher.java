@@ -17,6 +17,7 @@ import com.app.talk.communication.CommunicatorFactory;
  * The dispatcher waits for clients to connect to its serverSocket and creates a communicator for each connected client.
  */
 public class Dispatcher implements Runnable {
+	private static int clientId = 0;
 	private static ServerSocket server;
     private int port;
 	/**
@@ -59,7 +60,7 @@ public class Dispatcher implements Runnable {
         	try{
         		Socket client = server.accept();
                 System.out.println("Connection request from " + client.getInetAddress().toString() + ":" + client.getPort());
-                Dispatcher.addClient(CommunicatorFactory.getInstance().createCommunicator(client, true));
+                Dispatcher.addClient(CommunicatorFactory.getInstance().createCommunicator(client, clientId++));
         	} catch (SocketException e){
         		//this is fine
         	}

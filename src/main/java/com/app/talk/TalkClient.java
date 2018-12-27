@@ -55,7 +55,7 @@ public class TalkClient {
      */
     private void init() throws IOException {
         System.out.println("End communication with line = \"exit.\"");
-        this.communicator = CommunicatorFactory.getInstance().createCommunicator(socket, false);
+        this.communicator = CommunicatorFactory.getInstance().createCommunicator(socket);
     } //init
     
     /**
