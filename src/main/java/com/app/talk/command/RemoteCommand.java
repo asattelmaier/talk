@@ -14,5 +14,5 @@ public interface RemoteCommand extends Serializable {
     /**
      * Executes the command.
      */
-    void execute(Communicator command);
+    void execute(Context context);
 }

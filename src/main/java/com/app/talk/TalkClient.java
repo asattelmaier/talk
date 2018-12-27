@@ -105,7 +105,7 @@ public class TalkClient {
      * @param message - message that should be sent to the other host.
      */
     public void sendMessage(String message) throws IOException {
-        BroadcastCommand messageCommand = new BroadcastCommand("[" + TalkClient.user.getName() + "]: " + message);
+        BroadcastCommand messageCommand = new BroadcastCommand(message);
         this.communicator.getSender().send(messageCommand);
     } //sendMessage
     

@@ -4,6 +4,7 @@ import static com.app.talk.common.SystemExitCode.ABORT;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
@@ -18,7 +19,7 @@ public class Receiver extends Observable implements Runnable {
     /**
      * A buffered Reader for incoming messages.
      */
-    private ObjectInputStream input = null;
+    private final ObjectInputStream input;
     /**
      * The communicators socket.
      */
@@ -28,9 +29,12 @@ public class Receiver extends Observable implements Runnable {
      * A main.java.Receiver of information from the network.
      *
      * @param socket - configuration object.
+     * @throws IOException 
      */
-    public Receiver(Socket socket) {
+    public Receiver(Socket socket) throws IOException {
         this.socket = socket;
+        InputStream in = this.socket.getInputStream();
+        this.input = new ObjectInputStream(in);
     } //constructor
 
     /**
@@ -41,7 +45,7 @@ public class Receiver extends Observable implements Runnable {
     public void run() {
 
         try {
-            this.input = new ObjectInputStream(this.socket.getInputStream());
+        	
             this.receive();
         } catch (IOException e) {
         	e.printStackTrace();
@@ -63,7 +67,7 @@ public class Receiver extends Observable implements Runnable {
         RemoteCommand response;
         
         try{
-        	while ((response = (RemoteCommand) input.readObject()) != null) {
+        	while ((response = (RemoteCommand) read()) != null) {
         		setChanged();
         		notifyObservers(response);
             } //while
@@ -84,4 +88,8 @@ public class Receiver extends Observable implements Runnable {
     public void closeConnection() throws IOException {
         this.input.close();        
     } //closeConnection
+    
+    public Object read() throws ClassNotFoundException, IOException {
+    	return input.readObject();
+    }
 }

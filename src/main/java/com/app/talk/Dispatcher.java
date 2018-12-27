@@ -5,8 +5,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map.Entry;
 
 import com.app.talk.client.command.set.MessageCommand;
+import com.app.talk.command.Context;
 import com.app.talk.communication.Communicator;
 import com.app.talk.communication.CommunicatorFactory;
 
@@ -14,6 +17,7 @@ import com.app.talk.communication.CommunicatorFactory;
  * The dispatcher waits for clients to connect to its serverSocket and creates a communicator for each connected client.
  */
 public class Dispatcher implements Runnable {
+	private static int clientId = 0;
 	private static ServerSocket server;
     private int port;
 	/**
@@ -56,7 +60,7 @@ public class Dispatcher implements Runnable {
         	try{
         		Socket client = server.accept();
                 System.out.println("Connection request from " + client.getInetAddress().toString() + ":" + client.getPort());
-                Dispatcher.addClient(CommunicatorFactory.getInstance().createCommunicator(client));
+                Dispatcher.addClient(CommunicatorFactory.getInstance().createCommunicator(client, clientId++));
         	} catch (SocketException e){
         		//this is fine
         	}
@@ -75,18 +79,21 @@ public class Dispatcher implements Runnable {
 	/**
 	 * sends a received message to all known chat clients.
 	 * @param message textual message to be sent.
+	 * @param context 
 	 * @throws IOException 
 	 */
-	synchronized public static void broadcast(String message) {
+	synchronized public static void broadcast(Context context, String message) {
 		int counter = 0;
 		System.out.println("Message: \"" + message + "\" received.");
 		for (Communicator communicator : Dispatcher.clientList) {
-			try {
-				communicator.getSender().send(new MessageCommand(message));
-				System.out.println(" -> redirect to client " + counter++);    			
-			} catch (Exception e) {
-				e.printStackTrace();
-			} //try-catch
+			if (communicator.getContext().getId() != context.getId()){
+				try {
+					communicator.getSender().send(new MessageCommand(message));
+					System.out.println(" -> redirect to client " + counter++);    			
+				} catch (Exception e) {
+					e.printStackTrace();
+				} //try-catch
+			}
 		} //for
 	} //broadcast
 
@@ -104,12 +111,21 @@ public class Dispatcher implements Runnable {
 			Dispatcher.close();
 		}
 	}
-
+	
 	/**
 	 * adds a chat client to the list of clients.
 	 * @param client communicator object representing the specific chat client.
 	 */
 	synchronized public static void addClient(Communicator client) {
 		Dispatcher.clientList.add(client);
+	}
+
+	synchronized public static Communicator getCommunicator(Context context) {
+		for (Communicator communicator : clientList) {
+			if(communicator.getContext().getId() == context.getId()) {
+				return communicator;
+			}
+		}
+		return null;
 	}
 } //Dispatcher Class

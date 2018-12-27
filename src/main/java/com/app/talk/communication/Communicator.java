@@ -2,6 +2,7 @@ package com.app.talk.communication;
 
 import com.app.talk.Receiver;
 import com.app.talk.Sender;
+import com.app.talk.command.Context;
 import com.app.talk.command.RemoteCommand;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.Observer;
  * A combination of a sender and a receiver threads.
  */
 public class Communicator {
-	
+	Context context;
 	private Socket socket;
 	private Sender sender;
 	private Receiver receiver;
@@ -44,6 +45,14 @@ public class Communicator {
 	public Sender getSender() {
 		return sender;
 	} 
+	
+	/**
+	 * @return the context
+	 */
+	public Context getContext() {
+		return context;
+	}
+	
 	/**
 	 * fetches receiver.
 	 * @return receiver object.
@@ -64,21 +73,24 @@ public class Communicator {
      */
     private void init() throws IOException {
     	System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());
+
+		this.sender = new Sender(this.socket);
+	    senderThread = new Thread(sender);    	
+    	
     	this.receiver = new Receiver(this.socket);
     	Observer observer = new Observer() {
 			
 			@Override
 			public void update(Observable o, Object arg) {
-				RemoteCommand remoteCommand = (RemoteCommand)arg;
-				remoteCommand.execute(Communicator.this);
+				RemoteCommand remoteCommand = (RemoteCommand)arg;			
+				remoteCommand.execute(context);
 			}
 		};
-    	
+	        
 		this.receiver.addObserver(observer);
         receiverThread = new Thread(receiver);
 
-        this.sender = new Sender(this.socket);
-        senderThread = new Thread(sender);
+       
 
         // Given the thread a name
         receiverThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Receiver");
