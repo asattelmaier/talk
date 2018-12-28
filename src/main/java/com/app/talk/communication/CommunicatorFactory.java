@@ -6,6 +6,7 @@ import java.net.Socket;
 import com.app.talk.client.command.set.SetContextCommand;
 import com.app.talk.command.Context;
 import com.app.talk.command.RemoteCommand;
+import com.app.talk.command.RemoteCommandProcessor;
 import com.app.talk.common.SystemExitCode;
 
 public class CommunicatorFactory {
@@ -64,7 +65,7 @@ public class CommunicatorFactory {
 	 */
 	private Communicator createCommunicator(String communicatorType) throws IOException {
 		this.communicator = new Communicator(this.socket);
-
+		
 		setContext(communicatorType);
 
 		setParameters();		
