@@ -101,7 +101,7 @@ public class Communicator {
     } //start
 
     
-    void start() {
+    public void start() {
         receiverThread.start();
         senderThread.start();
 	}
@@ -128,6 +128,11 @@ public class Communicator {
 			// TODO Auto-generated catch block
 		}
 		senderThread.interrupt();
+		
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
 		
 	}
 } //Communicator Class
