@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.Map.Entry;
 
 import com.app.talk.client.command.set.MessageCommand;
+import com.app.talk.client.command.set.PingCommandClient;
 import com.app.talk.command.Context;
 import com.app.talk.communication.Communicator;
 import com.app.talk.communication.CommunicatorFactory;
@@ -129,5 +130,17 @@ public class Dispatcher implements Runnable {
 			}
 		}
 		return null;
+	}
+
+	public static void pingResponse(Context context) {		
+		Communicator communicator = getCommunicator(context);
+		try {			
+			communicator.getSender().send(new PingCommandClient());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Received ping request from client " + context.getId());
+		
 	}
 } //Dispatcher Class

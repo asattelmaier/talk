@@ -6,6 +6,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import com.app.talk.client.command.set.SetContextCommand;
+import com.app.talk.command.RemoteCommand;
 import com.app.talk.common.Config;
 import com.app.talk.common.ConfigParser;
 import com.app.talk.common.ConfigParserException;
@@ -15,6 +16,7 @@ import com.app.talk.communication.Communicator;
 import com.app.talk.communication.CommunicatorFactory;
 import com.app.talk.server.command.set.BroadcastCommand;
 import com.app.talk.server.command.set.ExitCommand;
+import com.app.talk.server.command.set.PingCommandServer;
 
 /**
  * A client to connect to a TalkServer.
@@ -34,6 +36,8 @@ public class TalkClient {
      * Reads keyboard input.
      */
     private Scanner scanner = new Scanner(System.in);
+
+	public static long startPingTime;
     
     /**
      * Connection Handler for out- and incoming traffic.
@@ -74,14 +78,17 @@ public class TalkClient {
     private void sendUserInput() throws IOException {
         String userInput;
         boolean userExits;
+        boolean userPing;
 
         while (true) {
             userInput = scanner.nextLine();
             userExits = userInput.equals("exit.");
-
+            userPing = userInput.equals("ping.");
+            
             if (userExits) {
                 sendExit();
-                break;
+            } else if(userPing){
+            	sendPing();
             } else {
                 sendMessage(userInput);
             }
@@ -150,4 +157,15 @@ public class TalkClient {
         client.init();
         client.sendUserInput();
     } //main
+	
+	public void sendPing() {
+		try {			
+			RemoteCommand command =  new PingCommandServer();
+			startPingTime = System.nanoTime();
+			communicator.getSender().send(command);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 } //TalkClient Class
