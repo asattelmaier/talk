@@ -103,7 +103,7 @@ public class TalkClient {
 			e.printStackTrace();
 		}
         Thread.currentThread().interrupt();
-    	communicator.getSenderThread().interrupt();
+    	communicator.close();
     	socket.close();
         
     } //sendExit
