@@ -93,7 +93,7 @@ public class Dispatcher implements Runnable {
 		for (Communicator communicator : Dispatcher.clientMap.values()) {
 			if (communicator.getContext().getId() != context.getId()){
 				try {
-					communicator.send(new MessageCommand(message));
+					communicator.send(new MessageCommand(message, context));
 					System.out.println(" -> redirect to client " + counter++);    			
 				} catch (Exception e) {
 					e.printStackTrace();
