@@ -60,12 +60,6 @@ public class TalkClient {
     private void init() throws IOException {
         System.out.println("End communication with line = \"exit.\"");
         this.communicator = CommunicatorFactory.getInstance().createCommunicator(socket, CommunicatorFactory.CLIENT);
-		try {
-			SetContextCommand command = (SetContextCommand) this.communicator.getReceiver().read();
-			command.execute();
-		} catch (ClassNotFoundException e) {
-			System.exit(SystemExitCode.ABORT.ordinal());
-		}
 		this.communicator.start();
     } //init
     
@@ -78,7 +72,7 @@ public class TalkClient {
         boolean userExits;
         boolean userPing;
 
-        while (true) {
+        while (!Thread.interrupted()) {
             userInput = scanner.nextLine();
             userExits = userInput.equals("exit.");
             userPing = userInput.equals("ping.");

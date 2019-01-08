@@ -24,17 +24,16 @@ public class RemoteCommandProcessor implements Runnable {
 				
 				RemoteCommand command;
 				command = commandQueue.take();
-				//TODO: remove instanceof
-				if (command instanceof RemoteCommandServer) {
+				if (context != null) {
 					RemoteCommandServer rcs = (RemoteCommandServer) command;
 					rcs.execute(context);
-				} else if (command instanceof RemoteCommandClient) {
+				} else {
 					RemoteCommandClient rcc = (RemoteCommandClient) command;
 					rcc.execute();
 				}			
 			}
 		} catch (InterruptedException e) {
 			//This is ok
-		}
+		}	
 	}
 }

@@ -9,6 +9,7 @@ import com.app.talk.command.Context;
 import com.app.talk.command.RemoteCommand;
 import com.app.talk.command.RemoteCommandProcessor;
 import com.app.talk.common.SystemExitCode;
+import com.app.talk.server.command.set.RemoteCommandServer;
 
 public class CommunicatorFactory {
 	private static CommunicatorFactory single = new CommunicatorFactory();
@@ -17,7 +18,8 @@ public class CommunicatorFactory {
 	public static final boolean SERVER = true;
 	public static final boolean CLIENT = false;
 
-	private static RemoteCommand heartbeat = createHeartbeat();
+	private static RemoteCommand heartbeatClient = createHeartbeatClient();
+	private static RemoteCommand heartbeatServer = createHeartbeatServer();
 
 	/**
 	 * Returns the single factory object.
@@ -53,7 +55,7 @@ public class CommunicatorFactory {
 
 		setContext(createServerCommunicator);
 
-		setParameters();
+		setParameters(createServerCommunicator);
 
 		return communicator;
 	}
@@ -87,9 +89,13 @@ public class CommunicatorFactory {
 	 * 
 	 * @throws IOException
 	 */
-	private void setParameters() {
+	private void setParameters(boolean createServerCommunicator) {
 		this.communicator.setHeartbeatTimeout(60000);
-		this.communicator.setHeartbeat(CommunicatorFactory.heartbeat);
+		if (createServerCommunicator) {
+			this.communicator.setHeartbeat(CommunicatorFactory.heartbeatClient);
+		} else {
+			this.communicator.setHeartbeat(CommunicatorFactory.heartbeatServer);
+		}
 	}
 
 	/**
@@ -97,7 +103,7 @@ public class CommunicatorFactory {
 	 * 
 	 * @return a new RemoteCommand Instance
 	 */
-	private static RemoteCommandClient createHeartbeat() {
+	private static RemoteCommandClient createHeartbeatClient() {
 		return new RemoteCommandClient() {
 			/**
 			 * 
@@ -106,6 +112,26 @@ public class CommunicatorFactory {
 
 			@Override
 			public void execute() {
+			}
+		};
+	}
+	
+	/**
+	 * Creates a new HeartBeat
+	 * 
+	 * @return a new RemoteCommand Instance
+	 */
+	private static RemoteCommandServer createHeartbeatServer() {
+		return new RemoteCommandServer() {
+
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -9063875966534927008L;
+
+			@Override
+			public void execute(Context context) {				
 			}
 		};
 	}

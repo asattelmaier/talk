@@ -10,4 +10,5 @@ import com.app.talk.communication.Communicator;
 public interface RemoteCommand extends Serializable {
     
 	long serialVersionUID = 8056449433508589194L;
+	
 }
