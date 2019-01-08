@@ -7,7 +7,7 @@ import com.app.talk.communication.Communicator;
 /**
  * Represents a command that will write a message to standard output.
  */
-public class MessageCommand implements RemoteCommand {
+public class MessageCommand implements RemoteCommandClient {
     private static final long serialVersionUID = 8308526182902674398L;
 
     private Context context;
@@ -26,7 +26,7 @@ public class MessageCommand implements RemoteCommand {
     }
 
     @Override
-    public void execute(Context context) {	
+    public void execute() {	
     	System.out.println("[U" + context.getId() + "]" + message);
     }
 } //MessageCommand Class

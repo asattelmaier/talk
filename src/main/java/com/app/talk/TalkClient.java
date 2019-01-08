@@ -36,8 +36,6 @@ public class TalkClient {
      * Reads keyboard input.
      */
     private Scanner scanner = new Scanner(System.in);
-
-	public static long startPingTime;
     
     /**
      * Connection Handler for out- and incoming traffic.
@@ -61,10 +59,10 @@ public class TalkClient {
      */
     private void init() throws IOException {
         System.out.println("End communication with line = \"exit.\"");
-        this.communicator = CommunicatorFactory.getInstance().createCommunicator(socket);
+        this.communicator = CommunicatorFactory.getInstance().createCommunicator(socket, CommunicatorFactory.CLIENT);
 		try {
 			SetContextCommand command = (SetContextCommand) this.communicator.getReceiver().read();
-			command.execute(null);
+			command.execute();
 		} catch (ClassNotFoundException e) {
 			System.exit(SystemExitCode.ABORT.ordinal());
 		}
@@ -100,7 +98,7 @@ public class TalkClient {
      */
     private void sendExit() throws IOException {
         ExitCommand exitCommand = new ExitCommand();    
-        communicator.getSender().send(exitCommand);
+        communicator.send(exitCommand);
         
         try {
         	//give the Sender time so send the ExitCommand
@@ -122,7 +120,7 @@ public class TalkClient {
      */
     public void sendMessage(String message) throws IOException {
         BroadcastCommand messageCommand = new BroadcastCommand(message);
-        this.communicator.getSender().send(messageCommand);
+        this.communicator.send(messageCommand);
     } //sendMessage
     
     /**
@@ -161,8 +159,7 @@ public class TalkClient {
 	public void sendPing() {
 		try {			
 			RemoteCommand command =  new PingCommandServer();
-			startPingTime = System.nanoTime();
-			communicator.getSender().send(command);
+			communicator.send(command);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

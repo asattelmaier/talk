@@ -3,6 +3,7 @@ package com.app.talk.communication;
 import java.io.IOException;
 import java.net.Socket;
 
+import com.app.talk.client.command.set.RemoteCommandClient;
 import com.app.talk.client.command.set.SetContextCommand;
 import com.app.talk.command.Context;
 import com.app.talk.command.RemoteCommand;
@@ -11,14 +12,13 @@ import com.app.talk.common.SystemExitCode;
 
 public class CommunicatorFactory {
 	private static CommunicatorFactory single = new CommunicatorFactory();
-	private int clientId;
 	private Socket socket;
 	private Communicator communicator;
-	private final String SERVER = "Server";
-	private final String CLIENT = "Client";
+	public static final boolean SERVER = true;
+	public static final boolean CLIENT = false;
 
 	private static RemoteCommand heartbeat = createHeartbeat();
-	
+
 	/**
 	 * Returns the single factory object.
 	 * 
@@ -36,24 +36,9 @@ public class CommunicatorFactory {
 	 * @return
 	 * @throws IOException
 	 */
-	public Communicator createCommunicator(Socket socket, int clientId) throws IOException {
-		this.clientId = clientId;
+	public Communicator createCommunicator(Socket socket, boolean createServerCommunicator) throws IOException {
 		this.socket = socket;
-
-		return createCommunicator(SERVER);
-	}
-
-	/**
-	 * Creates a Client Communicator.
-	 * 
-	 * @param socket
-	 * @return
-	 * @throws IOException
-	 */
-	public Communicator createCommunicator(Socket socket) throws IOException {
-		this.socket = socket;
-
-		return createCommunicator(CLIENT);
+		return createCommunicator(createServerCommunicator);
 	}
 
 	/**
@@ -63,12 +48,12 @@ public class CommunicatorFactory {
 	 * @return
 	 * @throws IOException
 	 */
-	private Communicator createCommunicator(String communicatorType) throws IOException {
+	private Communicator createCommunicator(boolean createServerCommunicator) throws IOException {
 		this.communicator = new Communicator(this.socket);
-		
-		setContext(communicatorType);
 
-		setParameters();		
+		setContext(createServerCommunicator);
+
+		setParameters();
 
 		return communicator;
 	}
@@ -79,14 +64,11 @@ public class CommunicatorFactory {
 	 * @param communicatorType
 	 * @throws IOException
 	 */
-	private void setContext(String communicatorType) throws IOException {
-		switch (communicatorType) {
-		case SERVER:
+	private void setContext(boolean createServerCommunicator) throws IOException {
+		if (createServerCommunicator) {
 			setServerContext();
-			break;
-		case CLIENT:
-			break;
 		}
+
 	}
 
 	/**
@@ -95,9 +77,9 @@ public class CommunicatorFactory {
 	 * @throws IOException
 	 */
 	private void setServerContext() throws IOException {
-		Context context = new Context(this.clientId);
+		Context context = new Context();
 		this.communicator.context = context;
-		this.communicator.getSender().send(new SetContextCommand(context));
+		this.communicator.send(new SetContextCommand(context));
 	}
 
 	/**
@@ -115,12 +97,15 @@ public class CommunicatorFactory {
 	 * 
 	 * @return a new RemoteCommand Instance
 	 */
-	private static RemoteCommand createHeartbeat() {
-		return new RemoteCommand() {
-			private static final long serialVersionUID = -1801133200424887639L;
+	private static RemoteCommandClient createHeartbeat() {
+		return new RemoteCommandClient() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1958388813301466171L;
 
 			@Override
-			public void execute(Context context) {
+			public void execute() {
 			}
 		};
 	}

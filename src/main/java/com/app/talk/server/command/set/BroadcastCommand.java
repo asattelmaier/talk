@@ -10,7 +10,7 @@ import com.app.talk.command.RemoteCommand;
 /**
  * Broadcasts a given textual massage to every known chat client.
  */
-public class BroadcastCommand implements RemoteCommand{
+public class BroadcastCommand implements RemoteCommandServer{
 
 	private static final long serialVersionUID = -7134775297117601744L;
 	

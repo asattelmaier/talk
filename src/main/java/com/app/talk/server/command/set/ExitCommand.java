@@ -8,7 +8,7 @@ import com.app.talk.communication.Communicator;
 /**
  * Exit command.
  */
-public class ExitCommand implements RemoteCommand {
+public class ExitCommand implements RemoteCommandServer {
     private static final long serialVersionUID = 7412994438667771531L;
     
     /**

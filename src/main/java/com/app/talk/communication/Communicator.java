@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * A combination of a sender and a receiver threads.
@@ -24,6 +25,7 @@ public class Communicator {
 	private Thread receiverThread;
 	private Thread commandProcessorThread;
 	
+	private LinkedBlockingQueue<Object> commandQueue = new LinkedBlockingQueue<Object>();
 	
 	/**
 	 * The constructor creates and activates the two threads. One for the sender (+ given user name), one for the receiver
@@ -78,7 +80,7 @@ public class Communicator {
     private void init() throws IOException {
     	System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());    	
     	
-		this.sender = new Sender(this.socket);
+		this.sender = new Sender(this.socket, commandQueue);
 	    senderThread = new Thread(sender);    	
     	
     	this.receiver = new Receiver(this.socket);
@@ -151,4 +153,15 @@ public class Communicator {
 		this.context = context;
 		
 	}
+	
+    /**
+     * sends a object to the outputstream.
+     *
+     * @param object the object to send for.
+     * @throws IOException throws an IO Exception
+     */
+    public void send(Object object) throws IOException {    	
+    	commandQueue.offer(object);
+    } //send
+	
 } //Communicator Class

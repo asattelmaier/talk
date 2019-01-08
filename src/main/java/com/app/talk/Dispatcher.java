@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map.Entry;
 
@@ -18,13 +19,14 @@ import com.app.talk.communication.CommunicatorFactory;
  * The dispatcher waits for clients to connect to its serverSocket and creates a communicator for each connected client.
  */
 public class Dispatcher implements Runnable {
-	private static int clientId = 0;
 	private static ServerSocket server;
     private int port;
 	/**
 	 * stores chat clients, represented by communicator objects.
 	 */
-	static ArrayList<Communicator> clientList = new ArrayList<Communicator>();
+//	static ArrayList<Communicator> clientList = new ArrayList<Communicator>();
+	static HashMap<Context, Communicator> clientMap = new HashMap<>();
+	
     private static boolean acceptClients = true;
 
     /**
@@ -61,7 +63,7 @@ public class Dispatcher implements Runnable {
         	try{
         		Socket client = server.accept();
                 System.out.println("Connection request from " + client.getInetAddress().toString() + ":" + client.getPort());
-                Communicator communicator = CommunicatorFactory.getInstance().createCommunicator(client, clientId++);
+                Communicator communicator = CommunicatorFactory.getInstance().createCommunicator(client, CommunicatorFactory.SERVER);
                 Dispatcher.addClient(communicator);
                 communicator.start();
         	} catch (SocketException e){
@@ -88,10 +90,10 @@ public class Dispatcher implements Runnable {
 	synchronized public static void broadcast(Context context, String message) {
 		int counter = 0;
 		System.out.println("Message: \"" + message + "\" received.");
-		for (Communicator communicator : Dispatcher.clientList) {
+		for (Communicator communicator : Dispatcher.clientMap.values()) {
 			if (communicator.getContext().getId() != context.getId()){
 				try {
-					communicator.getSender().send(new MessageCommand(message));
+					communicator.send(new MessageCommand(message));
 					System.out.println(" -> redirect to client " + counter++);    			
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -105,11 +107,12 @@ public class Dispatcher implements Runnable {
 	 * @param client communicator object representing the specific chat client.
 	 */
 	synchronized public static void removeClient(Communicator client) {
-		boolean removed = Dispatcher.clientList.remove(client);
-		if (removed) {
+//		boolean removed = Dispatcher.clientList.remove(client);
+		Communicator removed = Dispatcher.clientMap.remove(client.getContext());
+		if (removed != null) {
 			client.close();
 		}
-		if (Dispatcher.clientList.size() == 0) {
+		if (Dispatcher.clientMap.size() == 0) {
 			System.out.println("No more clients available - shutting down server.");
 			Dispatcher.close();
 		}
@@ -120,22 +123,23 @@ public class Dispatcher implements Runnable {
 	 * @param client communicator object representing the specific chat client.
 	 */
 	synchronized public static void addClient(Communicator client) {
-		Dispatcher.clientList.add(client);
+//		Dispatcher.clientList.add(client);
+		Dispatcher.clientMap.put(client.getContext(), client);
 	}
 
 	synchronized public static Communicator getCommunicator(Context context) {
-		for (Communicator communicator : clientList) {
-			if(communicator.getContext().getId() == context.getId()) {
-				return communicator;
-			}
-		}
-		return null;
+//		for (Communicator communicator : clientList) {
+//			if(communicator.getContext().getId() == context.getId()) {
+//				return communicator;
+//			}
+//		}		
+		return clientMap.get(context);
 	}
 
-	public static void pingResponse(Context context) {		
+	public static void pingResponse(Context context, long startPingTime) {		
 		Communicator communicator = getCommunicator(context);
 		try {			
-			communicator.getSender().send(new PingCommandClient());
+			communicator.send(new PingCommandClient(startPingTime));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

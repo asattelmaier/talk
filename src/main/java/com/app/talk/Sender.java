@@ -24,7 +24,7 @@ public class Sender implements Runnable {
     /**
      * queues the given commands.
      */
-    private LinkedBlockingQueue<Object> commandQueue = new LinkedBlockingQueue<Object>();
+    private LinkedBlockingQueue<Object> commandQueue;
 	/**
 	 * Timeout before heartbeat/keepalive.
 	 */
@@ -40,8 +40,9 @@ public class Sender implements Runnable {
      *
      * @param socket
      */
-    public Sender(Socket socket) throws IOException {
+    public Sender(Socket socket, LinkedBlockingQueue<Object> commandQueue) throws IOException {
         this.socket = socket;
+        this.commandQueue = commandQueue;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         this.outputStream.flush();
     } //constructor
@@ -86,13 +87,5 @@ public class Sender implements Runnable {
 		this.timeout = timeout;
 	}
 	
-    /**
-     * sends a object to the outputstream.
-     *
-     * @param object the object to send for.
-     * @throws IOException throws an IO Exception
-     */
-    public void send(Object object) throws IOException {    	
-    	commandQueue.offer(object);
-    } //send
+
 } //Sender Class
