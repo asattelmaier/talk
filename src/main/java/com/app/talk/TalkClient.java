@@ -85,6 +85,7 @@ public class TalkClient {
                 sendMessage(userInput);
             }
         }
+        
     } //sendUserInput
     
     /**
@@ -148,6 +149,7 @@ public class TalkClient {
         TalkClient client = new TalkClient(config);
         client.init();
         client.sendUserInput();
+        
     } //main
 	
 	public void sendPing() {
