@@ -2,8 +2,6 @@ package com.app.talk.command;
 
 import java.io.Serializable;
 
-import com.app.talk.communication.Communicator;
-
 /**
  * Command pattern implementation.
  */

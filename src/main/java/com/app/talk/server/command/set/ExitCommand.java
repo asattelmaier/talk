@@ -2,16 +2,15 @@ package com.app.talk.server.command.set;
 
 import com.app.talk.Dispatcher;
 import com.app.talk.command.Context;
-import com.app.talk.command.RemoteCommand;
 import com.app.talk.communication.Communicator;
 
 /**
  * Exit command.
  */
 public class ExitCommand implements RemoteCommandServer {
-    private static final long serialVersionUID = 7412994438667771531L;
-    
-    /**
+	private static final long serialVersionUID = 8203735131553893997L;
+
+	/**
      * Executes the ExitCommand.
      */
     @Override
@@ -19,4 +18,4 @@ public class ExitCommand implements RemoteCommandServer {
     	Communicator communicator = Dispatcher.getCommunicator(context);
         Dispatcher.removeClient(communicator);
     }
-} //ExitCommand Class
+}

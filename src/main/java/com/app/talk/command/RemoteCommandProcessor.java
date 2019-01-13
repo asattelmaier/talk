@@ -21,7 +21,7 @@ public class RemoteCommandProcessor implements Runnable {
 	public void run() {
 		try {
 			while (true) {
-				
+
 				RemoteCommand command;
 				command = commandQueue.take();
 				if (context != null) {
@@ -30,10 +30,10 @@ public class RemoteCommandProcessor implements Runnable {
 				} else {
 					RemoteCommandClient rcc = (RemoteCommandClient) command;
 					rcc.execute();
-				}			
+				}
 			}
 		} catch (InterruptedException e) {
-			//This is ok
-		}	
+			// This is ok
+		}
 	}
 }

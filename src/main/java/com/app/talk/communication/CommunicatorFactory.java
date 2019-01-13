@@ -7,8 +7,6 @@ import com.app.talk.client.command.set.RemoteCommandClient;
 import com.app.talk.client.command.set.SetContextCommand;
 import com.app.talk.command.Context;
 import com.app.talk.command.RemoteCommand;
-import com.app.talk.command.RemoteCommandProcessor;
-import com.app.talk.common.SystemExitCode;
 import com.app.talk.server.command.set.RemoteCommandServer;
 
 public class CommunicatorFactory {
@@ -115,7 +113,7 @@ public class CommunicatorFactory {
 			}
 		};
 	}
-	
+
 	/**
 	 * Creates a new HeartBeat
 	 * 
@@ -123,15 +121,10 @@ public class CommunicatorFactory {
 	 */
 	private static RemoteCommandServer createHeartbeatServer() {
 		return new RemoteCommandServer() {
-
-
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = -9063875966534927008L;
 
 			@Override
-			public void execute(Context context) {				
+			public void execute(Context context) {
 			}
 		};
 	}

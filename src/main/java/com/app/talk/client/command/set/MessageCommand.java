@@ -6,29 +6,23 @@ import com.app.talk.command.Context;
  * Represents a command that will write a message to standard output.
  */
 public class MessageCommand implements RemoteCommandClient {
-
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -7385361505683714660L;
 	private Context context;
-    /**
-     * textual message to be shown.
-     */
-    private String message;
+	private String message;
 
-    /**
-     * A command that prints a message.
-     *
-     * @param message the message to send
-     */
-    public MessageCommand(String message, Context context) {
-        this.message = message;
-        this.context = context;
-    }
+	/**
+	 * A command that prints a message.
+	 *
+	 * @param message
+	 *            the message to send
+	 */
+	public MessageCommand(String message, Context context) {
+		this.message = message;
+		this.context = context;
+	}
 
-    @Override
-    public void execute() {	
-    	System.out.println("[U" + context.getId() + "]" + message);
-    }
-} //MessageCommand Class
+	@Override
+	public void execute() {
+		System.out.println("[U" + context.getId() + "]" + message);
+	}
+}

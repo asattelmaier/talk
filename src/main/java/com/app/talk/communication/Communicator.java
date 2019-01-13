@@ -24,121 +24,124 @@ public class Communicator {
 	private Thread senderThread;
 	private Thread receiverThread;
 	private Thread commandProcessorThread;
-	
+
 	private LinkedBlockingQueue<Object> commandQueue = new LinkedBlockingQueue<Object>();
-	
+
 	/**
-	 * The constructor creates and activates the two threads. One for the sender (+ given user name), one for the receiver
+	 * The constructor creates and activates the two threads. One for the sender
+	 * (+ given user name), one for the receiver
 	 * 
 	 * @param socket
 	 */
 	Communicator(Socket socket) throws IOException {
 		this.socket = socket;
-		this.init();		
-	} //constructor
-	
+		this.init();
+	}
+
 	/**
 	 * fetches socket
+	 * 
 	 * @return socket object.
 	 */
-	public Socket getSocket(){
+	public Socket getSocket() {
 		return socket;
 	}
+
 	/**
 	 * fetches sender.
+	 * 
 	 * @return sender object.
 	 */
 	public Sender getSender() {
 		return sender;
-	} 
-	
+	}
+
 	/**
 	 * @return the context
 	 */
 	public Context getContext() {
 		return context;
 	}
-	
+
 	/**
 	 * fetches receiver.
+	 * 
 	 * @return receiver object.
 	 */
 	public Receiver getReceiver() {
 		return receiver;
-	} 
+	}
+
 	/**
 	 * fetches sender thread
+	 * 
 	 * @return thread object.
 	 */
-	public Thread getSenderThread(){
+	public Thread getSenderThread() {
 		return senderThread;
 	}
-	
-    /**
-     * Creates a Sender and a Receiver object.
-     */
-    private void init() throws IOException {
-    	System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());    	
-    	
+
+	/**
+	 * Creates a Sender and a Receiver object.
+	 */
+	private void init() throws IOException {
+		System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());
+
 		this.sender = new Sender(this.socket, commandQueue);
-	    senderThread = new Thread(sender);    	
-    	
-    	this.receiver = new Receiver(this.socket);
-        receiverThread = new Thread(receiver);
+		senderThread = new Thread(sender);
 
-       
+		this.receiver = new Receiver(this.socket);
+		receiverThread = new Thread(receiver);
 
-        // Given the thread a name
-        receiverThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Receiver");
-        senderThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Sender");
-        
+		receiverThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Receiver");
+		senderThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Sender");
 
-        
-    } //start
-
-    
-    public void start() throws IOException {
-    	initCommandProcessor();
-		commandProcessorThread.start();
-        receiverThread.start();
-        senderThread.start();
 	}
-    
-    private void initCommandProcessor() {
-    	commandProcessor = new RemoteCommandProcessor(this.context);
-    	commandProcessorThread = new Thread(commandProcessor);
-    	Observer observer = new Observer() {
-			
+
+	public void start() throws IOException {
+		initCommandProcessor();
+		commandProcessorThread.start();
+		receiverThread.start();
+		senderThread.start();
+	}
+
+	private void initCommandProcessor() {
+		commandProcessor = new RemoteCommandProcessor(this.context);
+		commandProcessorThread = new Thread(commandProcessor);
+		Observer observer = new Observer() {
+
 			@Override
 			public void update(Observable o, Object arg) {
-				RemoteCommand remoteCommand = (RemoteCommand)arg;			
+				RemoteCommand remoteCommand = (RemoteCommand) arg;
 				try {
 					commandProcessor.put(remoteCommand);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-					//This is ok
+					// This is ok
 				}
 			}
 		};
-	        
+
 		this.receiver.addObserver(observer);
 	}
-    
+
 	/**
-     *   
-     * @param heartbeat the timeout to set
-     */
-    void setHeartbeat(RemoteCommand heartbeat) {
+	 * 
+	 * @param heartbeat
+	 *            the timeout to set
+	 */
+	void setHeartbeat(RemoteCommand heartbeat) {
 		this.sender.setHeartbeat(heartbeat);
 	}
 
 	/**
-	 * @param timeout the timeout to set
+	 * @param timeout
+	 *            the timeout to set
 	 */
 	void setHeartbeatTimeout(long timeout) {
 		this.sender.setTimeout(timeout);
 	}
-    
+
 	public void close() {
 		try {
 			socket.close();
@@ -151,17 +154,18 @@ public class Communicator {
 
 	public void setContext(Context context) {
 		this.context = context;
-		
+
 	}
-	
-    /**
-     * sends a object to the outputstream.
-     *
-     * @param object the object to send for.
-     * @throws IOException throws an IO Exception
-     */
-    public void send(Object object) throws IOException {    	
-    	commandQueue.offer(object);
-    } //send
-	
-} //Communicator Class
+
+	/**
+	 * sends a object to the output stream.
+	 *
+	 * @param object
+	 *            the object to send for.
+	 * @throws IOException
+	 *             throws an IO Exception
+	 */
+	public void send(Object object) throws IOException {
+		commandQueue.offer(object);
+	}
+}

@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map.Entry;
 
 import com.app.talk.client.command.set.MessageCommand;
 import com.app.talk.client.command.set.PingCommandClient;
@@ -16,98 +13,101 @@ import com.app.talk.communication.Communicator;
 import com.app.talk.communication.CommunicatorFactory;
 
 /**
- * The dispatcher waits for clients to connect to its serverSocket and creates a communicator for each connected client.
+ * The dispatcher waits for clients to connect to its serverSocket and creates a
+ * communicator for each connected client.
  */
 public class Dispatcher implements Runnable {
 	private static ServerSocket server;
-    private int port;
-	/**
-	 * stores chat clients, represented by communicator objects.
-	 */
-//	static ArrayList<Communicator> clientList = new ArrayList<Communicator>();
+	private int port;
 	static HashMap<Context, Communicator> clientMap = new HashMap<>();
-	
-    private static boolean acceptClients = true;
 
-    /**
-     * Dispatcher constructor.
-     *
-     * @param port The port to listen to.
-     */
-    Dispatcher(int port) {
-        this.port = port;
-    } //constructor
+	private static boolean acceptClients = true;
 
-    /**
-     * Runnable implementation.
-     */
-    public void run() {
-        try {
-            this.listen();
-        } catch (IOException | ClassNotFoundException e) {
-        	e.printStackTrace();
-        } //try-catch
-    } //run
+	/**
+	 * Dispatcher constructor.
+	 *
+	 * @param port
+	 *            The port to listen to.
+	 */
+	Dispatcher(int port) {
+		this.port = port;
+	}
 
-    /**
-     * Creates communicators for connected clients.
-     *
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    private void listen() throws IOException, ClassNotFoundException {
-        server = new ServerSocket(this.port);
-        System.out.println("Server started. Listening for incoming connection requests on port: " + this.port);   
+	/**
+	 * Runnable implementation.
+	 */
+	public void run() {
+		try {
+			this.listen();
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
-        while (acceptClients) {     	
-        	try{
-        		Socket client = server.accept();
-                System.out.println("Connection request from " + client.getInetAddress().toString() + ":" + client.getPort());
-                Communicator communicator = CommunicatorFactory.getInstance().createCommunicator(client, CommunicatorFactory.SERVER);
-                Dispatcher.addClient(communicator);
-                communicator.start();
-        	} catch (SocketException e){
-        		//this is fine
-        	}
-        } //while
-    } //listen
+	/**
+	 * Creates communicators for connected clients.
+	 *
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	private void listen() throws IOException, ClassNotFoundException {
+		server = new ServerSocket(this.port);
+		System.out.println("Server started. Listening for incoming connection requests on port: " + this.port);
+
+		while (acceptClients) {
+			try {
+				Socket client = server.accept();
+				System.out.println(
+						"Connection request from " + client.getInetAddress().toString() + ":" + client.getPort());
+				Communicator communicator = CommunicatorFactory.getInstance().createCommunicator(client,
+						CommunicatorFactory.SERVER);
+				Dispatcher.addClient(communicator);
+				communicator.start();
+			} catch (SocketException e) {
+				// this is fine
+			}
+		}
+	}
 
 	public static void close() {
 		try {
 			acceptClients = false;
 			server.close();
 		} catch (IOException e) {
-			// Doesn't matter if already closed.			
-		}		
-	}//close()
+			// Doesn't matter if already closed.
+		}
+	}
 
 	/**
 	 * sends a received message to all known chat clients.
-	 * @param message textual message to be sent.
-	 * @param context 
-	 * @throws IOException 
+	 * 
+	 * @param message
+	 *            textual message to be sent.
+	 * @param context
+	 * @throws IOException
 	 */
 	synchronized public static void broadcast(Context context, String message) {
 		int counter = 0;
 		System.out.println("Message: \"" + message + "\" received.");
 		for (Communicator communicator : Dispatcher.clientMap.values()) {
-			if (communicator.getContext().getId() != context.getId()){
+			if (communicator.getContext().getId() != context.getId()) {
 				try {
 					communicator.send(new MessageCommand(message, context));
-					System.out.println(" -> redirect to client " + counter++);    			
+					System.out.println(" -> redirect to client " + counter++);
 				} catch (Exception e) {
 					e.printStackTrace();
-				} //try-catch
+				}
 			}
-		} //for
-	} //broadcast
+		}
+	}
 
 	/**
 	 * removes a specific chat client from the list of clients.
-	 * @param client communicator object representing the specific chat client.
+	 * 
+	 * @param client
+	 *            communicator object representing the specific chat client.
 	 */
 	synchronized public static void removeClient(Communicator client) {
-//		boolean removed = Dispatcher.clientList.remove(client);
 		Communicator removed = Dispatcher.clientMap.remove(client.getContext());
 		if (removed != null) {
 			client.close();
@@ -117,34 +117,29 @@ public class Dispatcher implements Runnable {
 			Dispatcher.close();
 		}
 	}
-	
+
 	/**
 	 * adds a chat client to the list of clients.
-	 * @param client communicator object representing the specific chat client.
+	 * 
+	 * @param client
+	 *            communicator object representing the specific chat client.
 	 */
 	synchronized public static void addClient(Communicator client) {
-//		Dispatcher.clientList.add(client);
 		Dispatcher.clientMap.put(client.getContext(), client);
 	}
 
 	synchronized public static Communicator getCommunicator(Context context) {
-//		for (Communicator communicator : clientList) {
-//			if(communicator.getContext().getId() == context.getId()) {
-//				return communicator;
-//			}
-//		}		
 		return clientMap.get(context);
 	}
 
-	public static void pingResponse(Context context, long startPingTime) {		
+	public static void pingResponse(Context context, long startPingTime) {
 		Communicator communicator = getCommunicator(context);
-		try {			
+		try {
 			communicator.send(new PingCommandClient(startPingTime));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("Received ping request from client " + context.getId());
-		
+
 	}
-} //Dispatcher Class
+}
