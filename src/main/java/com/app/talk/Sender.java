@@ -20,8 +20,10 @@ public class Sender implements Runnable {
 
 	/**
 	 * A sender of information over the network.
-	 *
+	 * 
 	 * @param socket
+	 * @param commandQueue
+	 * @throws IOException
 	 */
 	public Sender(Socket socket, LinkedBlockingQueue<Object> commandQueue) throws IOException {
 		this.socket = socket;
@@ -58,7 +60,7 @@ public class Sender implements Runnable {
 	/**
 	 * 
 	 * @param heartbeat
-	 *            the timeout to set
+	 *            The timeout to set.
 	 */
 	public void setHeartbeat(RemoteCommand heartbeat) {
 		this.heartbeat = heartbeat;
@@ -66,7 +68,7 @@ public class Sender implements Runnable {
 
 	/**
 	 * @param timeout
-	 *            the timeout to set
+	 *            The timeout to set.
 	 */
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;

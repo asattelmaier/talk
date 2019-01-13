@@ -10,7 +10,7 @@ public class User implements Serializable {
 	/**
 	 * Get the name of the user.
 	 *
-	 * @return the user name
+	 * @return The user name.
 	 */
 	public String getName() {
 		return this.name;
@@ -20,14 +20,14 @@ public class User implements Serializable {
 	 * Set the name of the user.
 	 *
 	 * @param name
-	 *            the user name
+	 *            The user name.
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Gets User keyboard input and sets it as the username.
+	 * Gets User keyboard input and sets it as the user name.
 	 */
 	public void setNameFromUserInput() {
 		@SuppressWarnings("resource")

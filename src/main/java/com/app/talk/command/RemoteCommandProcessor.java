@@ -9,10 +9,22 @@ public class RemoteCommandProcessor implements Runnable {
 	ArrayBlockingQueue<RemoteCommand> commandQueue = new ArrayBlockingQueue<RemoteCommand>(10);
 	private final Context context;
 
+	/**
+	 * RemoteCommandProcessor constructor.
+	 * 
+	 * @param context
+	 */
 	public RemoteCommandProcessor(Context context) {
 		this.context = context;
 	}
 
+	/**
+	 * Puts a command to the command queue.
+	 * 
+	 * @param command
+	 *            The given command for the command queue.
+	 * @throws InterruptedException
+	 */
 	public void put(RemoteCommand command) throws InterruptedException {
 		commandQueue.put(command);
 	}

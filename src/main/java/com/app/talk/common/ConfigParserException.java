@@ -14,7 +14,7 @@ public class ConfigParserException extends Exception {
 	 * Simple Exception constructor.
 	 *
 	 * @param errorCode
-	 *            of the thrown error
+	 *            Of the thrown error.
 	 */
 	ConfigParserException(ErrorCode errorCode) {
 		this.errorCode = errorCode;
@@ -24,9 +24,9 @@ public class ConfigParserException extends Exception {
 	 * Exception constructor with additional parameter.
 	 *
 	 * @param errorCode
-	 *            of the thrown error
+	 *            Of the thrown error.
 	 * @param errorParameter
-	 *            of the thrown error
+	 *            Of the thrown error.
 	 */
 	ConfigParserException(ErrorCode errorCode, String errorParameter) {
 		this.errorCode = errorCode;
@@ -36,7 +36,7 @@ public class ConfigParserException extends Exception {
 	/**
 	 * Handles the given Error Code and returns the mapped Error message.
 	 *
-	 * @return the error message
+	 * @return The error message.
 	 */
 	public String errorMessage() {
 		switch (errorCode) {

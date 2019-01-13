@@ -12,9 +12,11 @@ public class MessageCommand implements RemoteCommandClient {
 
 	/**
 	 * A command that prints a message.
-	 *
+	 * 
 	 * @param message
-	 *            the message to send
+	 *            The message to send.
+	 * @param context
+	 *            Clients context.
 	 */
 	public MessageCommand(String message, Context context) {
 		this.message = message;

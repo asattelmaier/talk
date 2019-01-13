@@ -18,17 +18,17 @@ public class ConfigParser {
 	/**
 	 * Return the configuration object, that hold the ports and host
 	 *
-	 * @return the configuration object
+	 * @return The configuration object.
 	 */
 	public Config getConfig() {
 		return new Config(this.port, this.remoteHost);
 	}
 
 	/**
-	 * Parses the given argments.
+	 * Parses the given arguments.
 	 *
 	 * @param args
-	 *            the given Arguments
+	 *            The given Arguments.
 	 */
 	private void parseArgumentStrings(String[] args) throws ConfigParserException {
 		if (args.length > 0)
@@ -43,8 +43,8 @@ public class ConfigParser {
 	 * Parses a given string to integer.
 	 *
 	 * @param value
-	 *            checks if the given value is an integer
-	 * @return returns the given value as Integer
+	 *            Checks if the given value is an integer.
+	 * @return The given value as Integer.
 	 */
 	private int parseStringToInteger(String value) throws ConfigParserException {
 		int intValue;

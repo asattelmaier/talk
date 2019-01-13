@@ -27,10 +27,9 @@ public class TalkClient {
 
 	/**
 	 * Client constructor.
-	 *
+	 * 
 	 * @param config
-	 *            client configuration
-	 * @throws IOException
+	 * @throws InterruptedException
 	 */
 	private TalkClient(Config config) throws InterruptedException {
 		user = new User();
@@ -50,6 +49,8 @@ public class TalkClient {
 	/**
 	 * A method that creates a loop in which the user keyboard input is being
 	 * taken in and sent to the other Host.
+	 * 
+	 * @throws IOException
 	 */
 	private void sendUserInput() throws IOException {
 		String userInput;
@@ -73,6 +74,8 @@ public class TalkClient {
 
 	/**
 	 * Sends the exit command.
+	 * 
+	 * @throws IOException
 	 */
 	private void sendExit() throws IOException {
 		ExitCommand exitCommand = new ExitCommand();
@@ -91,22 +94,23 @@ public class TalkClient {
 	/**
 	 * A method that receives a String message and writes it in sequences of
 	 * bytes to the other host.
-	 *
+	 * 
 	 * @param message
-	 *            - message that should be sent to the other host.
+	 *            Message that should be sent to the other host.
+	 * @throws IOException
 	 */
 	public void sendMessage(String message) throws IOException {
 		BroadcastCommand messageCommand = new BroadcastCommand(message);
 		this.communicator.send(messageCommand);
-	} // sendMessage
+	}
 
 	/**
-	 * establishes the connection to server and tries to reconnect.
+	 * Establishes the connection to server and tries to reconnect.
 	 * 
 	 * @param config
-	 *            includes port and ip of server
+	 *            Includes port and ip of server.
 	 * @throws InterruptedException
-	 *             wont happen
+	 *             Will not happen.
 	 */
 	private void connect(Config config) throws InterruptedException {
 		while (socket == null) {
@@ -120,7 +124,7 @@ public class TalkClient {
 
 	/**
 	 * Starts the client.
-	 *
+	 * 
 	 * @param args
 	 * @throws ConfigParserException
 	 * @throws IOException
@@ -135,6 +139,9 @@ public class TalkClient {
 		client.sendUserInput();
 	}
 
+	/**
+	 * Sends the ping command.
+	 */
 	public void sendPing() {
 		try {
 			RemoteCommand command = new PingCommandServer();

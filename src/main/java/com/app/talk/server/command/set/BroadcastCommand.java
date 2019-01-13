@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.app.talk.server.command.set;
 
 import com.app.talk.Dispatcher;
@@ -17,7 +14,7 @@ public class BroadcastCommand implements RemoteCommandServer {
 	 * Constructs a BroadcastCommand object to be read by the receiver.
 	 * 
 	 * @param message
-	 *            textual message to be sent.
+	 *            Textual message to be sent.
 	 */
 	public BroadcastCommand(String message) {
 		this.message = message;

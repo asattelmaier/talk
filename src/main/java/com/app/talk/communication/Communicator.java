@@ -32,6 +32,7 @@ public class Communicator {
 	 * (+ given user name), one for the receiver
 	 * 
 	 * @param socket
+	 * @throws IOException
 	 */
 	Communicator(Socket socket) throws IOException {
 		this.socket = socket;
@@ -39,32 +40,32 @@ public class Communicator {
 	}
 
 	/**
-	 * fetches socket
+	 * Fetches socket.
 	 * 
-	 * @return socket object.
+	 * @return Socket object.
 	 */
 	public Socket getSocket() {
 		return socket;
 	}
 
 	/**
-	 * fetches sender.
+	 * Fetches sender.
 	 * 
-	 * @return sender object.
+	 * @return Sender object.
 	 */
 	public Sender getSender() {
 		return sender;
 	}
 
 	/**
-	 * @return the context
+	 * @return the context.
 	 */
 	public Context getContext() {
 		return context;
 	}
 
 	/**
-	 * fetches receiver.
+	 * Fetches receiver.
 	 * 
 	 * @return receiver object.
 	 */
@@ -73,7 +74,7 @@ public class Communicator {
 	}
 
 	/**
-	 * fetches sender thread
+	 * Fetches sender thread.
 	 * 
 	 * @return thread object.
 	 */
@@ -83,6 +84,8 @@ public class Communicator {
 
 	/**
 	 * Creates a Sender and a Receiver object.
+	 * 
+	 * @throws IOException
 	 */
 	private void init() throws IOException {
 		System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());
@@ -98,6 +101,11 @@ public class Communicator {
 
 	}
 
+	/**
+	 * Initialised the RemoteCommandProcessor and starts the threads.
+	 * 
+	 * @throws IOException
+	 */
 	public void start() throws IOException {
 		initCommandProcessor();
 		commandProcessorThread.start();
@@ -105,6 +113,9 @@ public class Communicator {
 		senderThread.start();
 	}
 
+	/**
+	 * Initialisation of the RemoteCommandProcessor.
+	 */
 	private void initCommandProcessor() {
 		commandProcessor = new RemoteCommandProcessor(this.context);
 		commandProcessorThread = new Thread(commandProcessor);
@@ -128,7 +139,7 @@ public class Communicator {
 	/**
 	 * 
 	 * @param heartbeat
-	 *            the timeout to set
+	 *            The timeout to set.
 	 */
 	void setHeartbeat(RemoteCommand heartbeat) {
 		this.sender.setHeartbeat(heartbeat);
@@ -136,12 +147,15 @@ public class Communicator {
 
 	/**
 	 * @param timeout
-	 *            the timeout to set
+	 *            The timeout to set.
 	 */
 	void setHeartbeatTimeout(long timeout) {
 		this.sender.setTimeout(timeout);
 	}
 
+	/**
+	 * Closes the socket and the open threads.
+	 */
 	public void close() {
 		try {
 			socket.close();
@@ -152,18 +166,23 @@ public class Communicator {
 		commandProcessorThread.interrupt();
 	}
 
+	/**
+	 * Sets the context.
+	 * 
+	 * @param context
+	 */
 	public void setContext(Context context) {
 		this.context = context;
 
 	}
 
 	/**
-	 * sends a object to the output stream.
+	 * Sends a object to the output stream.
 	 *
 	 * @param object
-	 *            the object to send for.
+	 *            The object to send for.
 	 * @throws IOException
-	 *             throws an IO Exception
+	 *             Throws an IO Exception.
 	 */
 	public void send(Object object) throws IOException {
 		commandQueue.offer(object);

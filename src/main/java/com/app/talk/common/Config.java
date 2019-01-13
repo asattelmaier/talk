@@ -5,7 +5,7 @@ public class Config {
 	private String remoteHost = null;
 
 	/**
-	 * Config constructor with default values.
+	 * Configuration constructor with default values.
 	 */
 	public Config(int port, String remoteHost) {
 		this.port = port;
@@ -15,7 +15,7 @@ public class Config {
 	/**
 	 * Return the talk port.
 	 *
-	 * @return the talk port
+	 * @return The talk port.
 	 */
 	public int getPort() {
 		return this.port;
@@ -24,7 +24,7 @@ public class Config {
 	/**
 	 * Returns the remote host.
 	 *
-	 * @return the remote host
+	 * @return The remote host.
 	 */
 	public String getRemoteHost() {
 		return this.remoteHost;

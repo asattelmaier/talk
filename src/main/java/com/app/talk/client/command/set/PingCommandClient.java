@@ -5,6 +5,11 @@ public class PingCommandClient implements RemoteCommandClient {
 	public final long startPingTime;
 	long oneWayPingTime = System.nanoTime();
 
+	/**
+	 * PingCommandClient constructor.
+	 * 
+	 * @param startPingTime
+	 */
 	public PingCommandClient(long startPingTime) {
 		this.startPingTime = startPingTime;
 	}

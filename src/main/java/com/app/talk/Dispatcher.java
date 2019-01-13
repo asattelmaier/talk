@@ -69,6 +69,9 @@ public class Dispatcher implements Runnable {
 		}
 	}
 
+	/**
+	 * Closes the server and disables client acception.
+	 */
 	public static void close() {
 		try {
 			acceptClients = false;
@@ -79,12 +82,12 @@ public class Dispatcher implements Runnable {
 	}
 
 	/**
-	 * sends a received message to all known chat clients.
+	 * Sends a received message to all known chat clients.
 	 * 
-	 * @param message
-	 *            textual message to be sent.
 	 * @param context
-	 * @throws IOException
+	 *            The current client context.
+	 * @param message
+	 *            Clients text message.
 	 */
 	synchronized public static void broadcast(Context context, String message) {
 		int counter = 0;
@@ -102,10 +105,10 @@ public class Dispatcher implements Runnable {
 	}
 
 	/**
-	 * removes a specific chat client from the list of clients.
+	 * Removes a specific chat client from the list of clients.
 	 * 
 	 * @param client
-	 *            communicator object representing the specific chat client.
+	 *            Communicator object representing the specific chat client.
 	 */
 	synchronized public static void removeClient(Communicator client) {
 		Communicator removed = Dispatcher.clientMap.remove(client.getContext());
@@ -119,10 +122,10 @@ public class Dispatcher implements Runnable {
 	}
 
 	/**
-	 * adds a chat client to the list of clients.
+	 * Adds a chat client to the list of clients.
 	 * 
 	 * @param client
-	 *            communicator object representing the specific chat client.
+	 *            Communicator object representing the specific chat client.
 	 */
 	synchronized public static void addClient(Communicator client) {
 		Dispatcher.clientMap.put(client.getContext(), client);

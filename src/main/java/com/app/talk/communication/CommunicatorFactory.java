@@ -29,11 +29,11 @@ public class CommunicatorFactory {
 	}
 
 	/**
-	 * Creates a Server Communicator.
+	 * Creates a Communicator.
 	 * 
 	 * @param socket
-	 * @param clientId
-	 * @return
+	 * @param createServerCommunicator
+	 * @return the created Communicator.
 	 * @throws IOException
 	 */
 	public Communicator createCommunicator(Socket socket, boolean createServerCommunicator) throws IOException {
@@ -44,8 +44,8 @@ public class CommunicatorFactory {
 	/**
 	 * Creates a Communicator.
 	 * 
-	 * @param communicatorType
-	 * @return
+	 * @param createServerCommunicator
+	 * @return the created Communicator.
 	 * @throws IOException
 	 */
 	private Communicator createCommunicator(boolean createServerCommunicator) throws IOException {
@@ -68,7 +68,6 @@ public class CommunicatorFactory {
 		if (createServerCommunicator) {
 			setServerContext();
 		}
-
 	}
 
 	/**
@@ -83,9 +82,9 @@ public class CommunicatorFactory {
 	}
 
 	/**
-	 * Sets Communicator parameters
+	 * Sets Communicator parameters.
 	 * 
-	 * @throws IOException
+	 * @param createServerCommunicator
 	 */
 	private void setParameters(boolean createServerCommunicator) {
 		this.communicator.setHeartbeatTimeout(60000);
@@ -97,15 +96,12 @@ public class CommunicatorFactory {
 	}
 
 	/**
-	 * Creates a new HeartBeat
+	 * Creates a new client heartBeat.
 	 * 
-	 * @return a new RemoteCommand Instance
+	 * @return a new RemoteCommand Instance.
 	 */
 	private static RemoteCommandClient createHeartbeatClient() {
 		return new RemoteCommandClient() {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1958388813301466171L;
 
 			@Override
@@ -115,7 +111,7 @@ public class CommunicatorFactory {
 	}
 
 	/**
-	 * Creates a new HeartBeat
+	 * Creates a new server heartBeat.
 	 * 
 	 * @return a new RemoteCommand Instance
 	 */

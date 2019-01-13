@@ -29,10 +29,10 @@ public class TalkServer {
 	 * Starts the server.
 	 *
 	 * @param args
-	 *            - arguments transferred from the operating system args[0]: the
+	 *            Arguments transferred from the operating system args[0]: the
 	 *            port to listen to (default: 2048) args[1]: the port to talk to
 	 *            (default: 2049) args[2]: remoteHost of the machine to talk to
-	 *            (default: localhost)
+	 *            (default: localhost).
 	 */
 	public static void main(String[] args) throws ConfigParserException {
 		ConfigParser configParser = new ConfigParser(args);

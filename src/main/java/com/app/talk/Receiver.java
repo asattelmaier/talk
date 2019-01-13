@@ -23,7 +23,7 @@ public class Receiver extends Observable implements Runnable {
 	 * A main.java.Receiver of information from the network.
 	 *
 	 * @param socket
-	 *            - configuration object.
+	 *            Configuration object.
 	 * @throws IOException
 	 */
 	public Receiver(Socket socket) throws IOException {
@@ -84,6 +84,13 @@ public class Receiver extends Observable implements Runnable {
 		this.input.close();
 	}
 
+	/**
+	 * Reads the received object.
+	 * 
+	 * @return The received object.
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	public Object read() throws ClassNotFoundException, IOException {
 		return input.readObject();
 	}
