@@ -1,10 +1,10 @@
-package com.app.talk.communication;
+package main.java.com.app.talk.communication;
 
-import com.app.talk.Receiver;
-import com.app.talk.Sender;
-import com.app.talk.command.Context;
-import com.app.talk.command.RemoteCommand;
-import com.app.talk.command.RemoteCommandProcessor;
+import main.java.com.app.talk.Receiver;
+import main.java.com.app.talk.Sender;
+import main.java.com.app.talk.command.Context;
+import main.java.com.app.talk.command.RemoteCommand;
+import main.java.com.app.talk.command.RemoteCommandProcessor;
 
 import java.io.IOException;
 import java.net.Socket;

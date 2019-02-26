@@ -1,20 +1,20 @@
-package com.app.talk;
+package main.java.com.app.talk;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-import com.app.talk.command.RemoteCommand;
-import com.app.talk.common.Config;
-import com.app.talk.common.ConfigParser;
-import com.app.talk.common.ConfigParserException;
-import com.app.talk.common.User;
-import com.app.talk.communication.Communicator;
-import com.app.talk.communication.CommunicatorFactory;
-import com.app.talk.server.command.set.BroadcastCommand;
-import com.app.talk.server.command.set.ExitCommand;
-import com.app.talk.server.command.set.PingCommandServer;
+import main.java.com.app.talk.command.RemoteCommand;
+import main.java.com.app.talk.common.Config;
+import main.java.com.app.talk.common.ConfigParser;
+import main.java.com.app.talk.common.ConfigParserException;
+import main.java.com.app.talk.common.User;
+import main.java.com.app.talk.communication.Communicator;
+import main.java.com.app.talk.communication.CommunicatorFactory;
+import main.java.com.app.talk.server.command.set.BroadcastCommand;
+import main.java.com.app.talk.server.command.set.ExitCommand;
+import main.java.com.app.talk.server.command.set.PingCommandServer;
 
 /**
  * A client to connect to a TalkServer.

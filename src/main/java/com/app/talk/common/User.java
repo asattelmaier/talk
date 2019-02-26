@@ -1,4 +1,4 @@
-package com.app.talk.common;
+package main.java.com.app.talk.common;
 
 import java.io.Serializable;
 import java.util.Scanner;

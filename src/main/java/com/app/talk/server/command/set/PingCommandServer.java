@@ -1,7 +1,7 @@
-package com.app.talk.server.command.set;
+package main.java.com.app.talk.server.command.set;
 
-import com.app.talk.Dispatcher;
-import com.app.talk.command.Context;
+import main.java.com.app.talk.Dispatcher;
+import main.java.com.app.talk.command.Context;
 
 public class PingCommandServer implements RemoteCommandServer {
 	private static final long serialVersionUID = -6438430634274964628L;

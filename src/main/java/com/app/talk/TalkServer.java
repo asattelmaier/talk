@@ -1,8 +1,8 @@
-package com.app.talk;
+package main.java.com.app.talk;
 
-import com.app.talk.common.Config;
-import com.app.talk.common.ConfigParser;
-import com.app.talk.common.ConfigParserException;
+import main.java.com.app.talk.common.Config;
+import main.java.com.app.talk.common.ConfigParser;
+import main.java.com.app.talk.common.ConfigParserException;
 
 /**
  * A simple talk server.

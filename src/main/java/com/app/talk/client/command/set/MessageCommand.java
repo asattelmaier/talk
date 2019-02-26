@@ -1,6 +1,6 @@
-package com.app.talk.client.command.set;
+package main.java.com.app.talk.client.command.set;
 
-import com.app.talk.command.Context;
+import main.java.com.app.talk.command.Context;
 
 /**
  * Represents a command that will write a message to standard output.

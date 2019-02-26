@@ -1,7 +1,7 @@
-package com.app.talk.server.command.set;
+package main.java.com.app.talk.server.command.set;
 
-import com.app.talk.command.Context;
-import com.app.talk.command.RemoteCommand;
+import main.java.com.app.talk.command.Context;
+import main.java.com.app.talk.command.RemoteCommand;
 
 public interface RemoteCommandServer extends RemoteCommand {
 

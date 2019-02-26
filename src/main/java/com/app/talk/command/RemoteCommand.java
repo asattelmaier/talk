@@ -1,4 +1,4 @@
-package com.app.talk.command;
+package main.java.com.app.talk.command;
 
 import java.io.Serializable;
 

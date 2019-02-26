@@ -1,6 +1,6 @@
-package com.app.talk.common;
+package main.java.com.app.talk.common;
 
-import static com.app.talk.common.ConfigParserException.ErrorCode.*;
+import static main.java.com.app.talk.common.ConfigParserException.ErrorCode.*;
 
 public class ConfigParser {
 	private int port = 0;

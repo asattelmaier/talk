@@ -1,4 +1,4 @@
-package com.app.talk;
+package main.java.com.app.talk;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import com.app.talk.command.RemoteCommand;
+import main.java.com.app.talk.command.RemoteCommand;
 
 /**
  * A simple sender of network traffic.
