@@ -50,7 +50,7 @@ public class Communicator {
     }
 
     private void createSender() {
-        Sender sender = new Sender(socket, commandQueue);
+        Sender sender = Sender.createSender(socket, commandQueue);
         senderThread = new Thread(sender);
 
         senderThread.setName(socket.getLocalPort() + " -> " + socket.getPort() + "-Sender");
