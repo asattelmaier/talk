@@ -53,13 +53,9 @@ public class TalkClient {
             return;
 
         System.out.println("End communication with line = \"exit.\"");
-        try {
-            CommunicatorFactory communicatorFactory = new CommunicatorFactory();
-            communicator = communicatorFactory.createCommunicator(socket, CommunicatorFactory.CLIENT);
-            communicator.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        CommunicatorFactory communicatorFactory = new CommunicatorFactory();
+        communicator = communicatorFactory.createCommunicator(socket, CommunicatorFactory.CLIENT);
+        communicator.start();
     }
 
     private void userInputLoop() {

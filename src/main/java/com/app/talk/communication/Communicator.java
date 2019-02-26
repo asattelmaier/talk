@@ -8,94 +8,80 @@ import com.app.talk.command.RemoteCommandProcessor;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * A combination of a sender and a receiver threads.
- */
 public class Communicator {
-	public Context context;
-	private Socket socket;
-	private Sender sender;
-	private Receiver receiver;
-	private RemoteCommandProcessor commandProcessor;
-	private Thread senderThread;
-	private Thread receiverThread;
-	private Thread commandProcessorThread;
+    public Context context;
+    private Socket socket;
+    private RemoteCommandProcessor commandProcessor;
+    private Observer observer = (o, arg) -> commandProcessor.put((RemoteCommand) arg);
+    private Thread senderThread;
+    private Thread receiverThread;
+    private Thread remoteCommandProcessorThread;
+    private LinkedBlockingQueue<Object> commandQueue = new LinkedBlockingQueue<>();
 
-	private LinkedBlockingQueue<Object> commandQueue = new LinkedBlockingQueue<Object>();
+    public Communicator(Socket socket) {
+        this.socket = socket;
+    }
 
-	public Communicator(Socket socket) {
-		this.socket = socket;
-		this.init();
-	}
+    Communicator(Socket socket, Context context) {
+        this.socket = socket;
+        this.context = context;
+    }
 
-	public Context getContext() {
-		return context;
-	}
+    public Context getContext() {
+        return context;
+    }
 
-	private void init() {
-		if (this.socket == null)
-			return;
+    void initialize() {
+        if (socket == null)
+            return;
 
-		System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());
+        createSender();
+        createReceiver();
+        createRemoteCommandProcessor();
+    }
 
-		this.sender = new Sender(this.socket, commandQueue);
-		senderThread = new Thread(sender);
+    public void start() {
+        senderThread.start();
+        receiverThread.start();
+        remoteCommandProcessorThread.start();
+    }
 
-		this.receiver = new Receiver(this.socket);
-		receiverThread = new Thread(receiver);
+    private void createSender() {
+        Sender sender = new Sender(socket, commandQueue);
+        senderThread = new Thread(sender);
 
-		receiverThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Receiver");
-		senderThread.setName(this.socket.getLocalPort() + " -> " + this.socket.getPort() + "-Sender");
+        senderThread.setName(socket.getLocalPort() + " -> " + socket.getPort() + "-Sender");
+    }
 
-	}
+    private void createReceiver() {
+        Receiver receiver = new Receiver(socket);
+        receiverThread = new Thread(receiver);
 
-	public void start() throws IOException {
-		initCommandProcessor();
-		commandProcessorThread.start();
-		receiverThread.start();
-		senderThread.start();
-	}
+        receiver.addObserver(observer);
 
-	private void initCommandProcessor() {
-		commandProcessor = new RemoteCommandProcessor(this.context);
-		commandProcessorThread = new Thread(commandProcessor);
-		Observer observer = new Observer() {
+        receiverThread.setName(socket.getLocalPort() + " -> " + socket.getPort() + "-Receiver");
+    }
 
-			@Override
-			public void update(Observable o, Object arg) {
-				RemoteCommand remoteCommand = (RemoteCommand) arg;
-				try {
-					commandProcessor.put(remoteCommand);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-					// This is ok
-				}
-			}
-		};
+    private void createRemoteCommandProcessor() {
+        commandProcessor = new RemoteCommandProcessor(this.context);
+        remoteCommandProcessorThread = new Thread(commandProcessor);
+    }
 
-		this.receiver.addObserver(observer);
-	}
+    public void close() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        senderThread.interrupt();
+        receiverThread.interrupt();
+        remoteCommandProcessorThread.interrupt();
+    }
 
-	public void close() {
-		try {
-			socket.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-		}
-		senderThread.interrupt();
-		commandProcessorThread.interrupt();
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
-
-	}
-
-	public void send(Object object) {
-		commandQueue.offer(object);
-	}
+    public void send(Object object) {
+        commandQueue.offer(object);
+    }
 }

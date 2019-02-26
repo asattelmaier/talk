@@ -9,11 +9,16 @@ public class CommunicatorFactory {
     public static final boolean CLIENT = false;
 
     public Communicator createCommunicator(Socket socket, boolean createServerCommunicator) {
-        Communicator communicator = new Communicator(socket);
+        Communicator communicator;
 
-        if (createServerCommunicator) {
-            communicator.context = new Context();
-        }
+        if (createServerCommunicator)
+            communicator = new Communicator(socket, new Context());
+        else
+            communicator = new Communicator(socket);
+
+        System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());
+
+        communicator.initialize();
 
         return communicator;
     }
