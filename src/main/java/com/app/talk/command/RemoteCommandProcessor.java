@@ -1,9 +1,9 @@
-package main.java.com.app.talk.command;
+package com.app.talk.command;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
-import main.java.com.app.talk.client.command.set.RemoteCommandClient;
-import main.java.com.app.talk.server.command.set.RemoteCommandServer;
+import com.app.talk.client.command.set.RemoteCommandClient;
+import com.app.talk.server.command.set.RemoteCommandServer;
 
 public class RemoteCommandProcessor implements Runnable {
 	ArrayBlockingQueue<RemoteCommand> commandQueue = new ArrayBlockingQueue<RemoteCommand>(10);

@@ -1,153 +1,97 @@
-package main.java.com.app.talk;
+package com.app.talk;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-import main.java.com.app.talk.command.RemoteCommand;
-import main.java.com.app.talk.common.Config;
-import main.java.com.app.talk.common.ConfigParser;
-import main.java.com.app.talk.common.ConfigParserException;
-import main.java.com.app.talk.common.User;
-import main.java.com.app.talk.communication.Communicator;
-import main.java.com.app.talk.communication.CommunicatorFactory;
-import main.java.com.app.talk.server.command.set.BroadcastCommand;
-import main.java.com.app.talk.server.command.set.ExitCommand;
-import main.java.com.app.talk.server.command.set.PingCommandServer;
+import com.app.talk.command.RemoteCommand;
+import com.app.talk.common.Config;
+import com.app.talk.common.ConfigParser;
+import com.app.talk.communication.Communicator;
+import com.app.talk.communication.CommunicatorFactory;
+import com.app.talk.server.command.set.BroadcastCommand;
+import com.app.talk.server.command.set.ExitCommand;
+import com.app.talk.server.command.set.PingCommandServer;
 
-/**
- * A client to connect to a TalkServer.
- */
 public class TalkClient {
-	private Socket socket = null;
-	static User user = null;
-	private Scanner scanner = new Scanner(System.in);
-	public static Communicator communicator;
+    boolean connected = false;
+    private Socket socket = null;
+    private Scanner scanner = new Scanner(System.in);
+    public static Communicator communicator;
+    int connectionTry = 0;
 
-	/**
-	 * Client constructor.
-	 * 
-	 * @param config
-	 * @throws InterruptedException
-	 */
-	private TalkClient(Config config) throws InterruptedException {
-		user = new User();
-		user.setNameFromUserInput();
-		connect(config);
-	}
+    void connect(Config config) {
+        try {
+            socket = new Socket(config.getRemoteHost(), config.getPort());
+            connected = true;
+        } catch (Exception e) {
+            reconnect(config);
+        }
+    }
 
-	/**
-	 * @throws IOException
-	 */
-	private void init() throws IOException {
-		System.out.println("End communication with line = \"exit.\"");
-		this.communicator = CommunicatorFactory.getInstance().createCommunicator(socket, CommunicatorFactory.CLIENT);
-		this.communicator.start();
-	}
+    private void reconnect(Config config) {
+        connectionTry++;
 
-	/**
-	 * A method that creates a loop in which the user keyboard input is being
-	 * taken in and sent to the other Host.
-	 * 
-	 * @throws IOException
-	 */
-	private void sendUserInput() throws IOException {
-		String userInput;
-		boolean userExits;
-		boolean userPing;
+        if (connectionTry == 10)
+            return;
 
-		while (!Thread.interrupted()) {
-			userInput = scanner.nextLine();
-			userExits = userInput.equals("exit.");
-			userPing = userInput.equals("ping.");
+        clientWait();
+        connect(config);
+    }
 
-			if (userExits) {
-				sendExit();
-			} else if (userPing) {
-				sendPing();
-			} else {
-				sendMessage(userInput);
-			}
-		}
-	}
+    void clientWait() {
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * Sends the exit command.
-	 * 
-	 * @throws IOException
-	 */
-	private void sendExit() throws IOException {
-		ExitCommand exitCommand = new ExitCommand();
-		communicator.send(exitCommand);
+    void startCommunicator() {
+        if (!connected)
+            return;
 
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		Thread.currentThread().interrupt();
-		communicator.close();
-		socket.close();
-	}
+        System.out.println("End communication with line = \"exit.\"");
+        try {
+            communicator = CommunicatorFactory.getInstance().createCommunicator(socket, CommunicatorFactory.CLIENT);
+            communicator.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * A method that receives a String message and writes it in sequences of
-	 * bytes to the other host.
-	 * 
-	 * @param message
-	 *            Message that should be sent to the other host.
-	 * @throws IOException
-	 */
-	public void sendMessage(String message) throws IOException {
-		BroadcastCommand messageCommand = new BroadcastCommand(message);
-		this.communicator.send(messageCommand);
-	}
+    private void sendUserInput() {
+        String userInput;
+        boolean isExitCommand;
+        boolean isPingCommand;
+        RemoteCommand command;
 
-	/**
-	 * Establishes the connection to server and tries to reconnect.
-	 * 
-	 * @param config
-	 *            Includes port and ip of server.
-	 * @throws InterruptedException
-	 *             Will not happen.
-	 */
-	private void connect(Config config) throws InterruptedException {
-		while (socket == null) {
-			try {
-				this.socket = new Socket(config.getRemoteHost(), config.getPort());
-			} catch (Exception e) {
-				TimeUnit.SECONDS.sleep(10);
-			}
-		}
-	}
+        while (!Thread.interrupted()) {
+            userInput = scanner.nextLine();
+            isExitCommand = userInput.equals("exit.");
+            isPingCommand = userInput.equals("ping.");
 
-	/**
-	 * Starts the client.
-	 * 
-	 * @param args
-	 * @throws ConfigParserException
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	public static void main(String[] args) throws ConfigParserException, IOException, InterruptedException {
-		ConfigParser configParser = new ConfigParser(args);
-		Config config = configParser.getConfig();
+            if (isExitCommand)
+                command = new ExitCommand();
+            else if (isPingCommand)
+                command = new PingCommandServer();
+            else
+                command = new BroadcastCommand(userInput);
 
-		TalkClient client = new TalkClient(config);
-		client.init();
-		client.sendUserInput();
-	}
+            communicator.send(command);
+        }
+    }
 
-	/**
-	 * Sends the ping command.
-	 */
-	public void sendPing() {
-		try {
-			RemoteCommand command = new PingCommandServer();
-			communicator.send(command);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public static void main(String[] args) {
+        Config config = ConfigParser.makeConfig(args);
+
+        TalkClient client = new TalkClient();
+
+        client.connect(config);
+
+        client.startCommunicator();
+
+        client.sendUserInput();
+    }
 }

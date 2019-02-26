@@ -1,13 +1,13 @@
-package main.java.com.app.talk.communication;
+package com.app.talk.communication;
 
 import java.io.IOException;
 import java.net.Socket;
 
-import main.java.com.app.talk.client.command.set.RemoteCommandClient;
-import main.java.com.app.talk.client.command.set.SetContextCommand;
-import main.java.com.app.talk.command.Context;
-import main.java.com.app.talk.command.RemoteCommand;
-import main.java.com.app.talk.server.command.set.RemoteCommandServer;
+import com.app.talk.client.command.set.RemoteCommandClient;
+import com.app.talk.client.command.set.SetContextCommand;
+import com.app.talk.command.Context;
+import com.app.talk.command.RemoteCommand;
+import com.app.talk.server.command.set.RemoteCommandServer;
 
 public class CommunicatorFactory {
 	private static CommunicatorFactory single = new CommunicatorFactory();

@@ -1,6 +1,6 @@
-package main.java.com.app.talk;
+package com.app.talk;
 
-import static main.java.com.app.talk.common.SystemExitCode.ABORT;
+import static com.app.talk.common.SystemExitCode.ABORT;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Observable;
 
-import main.java.com.app.talk.command.RemoteCommand;
+import com.app.talk.command.RemoteCommand;
 
 /**
  * A simple receiver of network traffic.

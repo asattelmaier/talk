@@ -1,8 +1,8 @@
-package main.java.com.app.talk;
+package com.app.talk;
 
-import main.java.com.app.talk.common.Config;
-import main.java.com.app.talk.common.ConfigParser;
-import main.java.com.app.talk.common.ConfigParserException;
+import com.app.talk.common.Config;
+import com.app.talk.common.ConfigParser;
+import com.app.talk.common.ConfigParserException;
 
 /**
  * A simple talk server.
@@ -34,9 +34,8 @@ public class TalkServer {
 	 *            (default: 2049) args[2]: remoteHost of the machine to talk to
 	 *            (default: localhost).
 	 */
-	public static void main(String[] args) throws ConfigParserException {
-		ConfigParser configParser = new ConfigParser(args);
-		Config config = configParser.getConfig();
+	public static void main(String[] args) {
+		Config config = ConfigParser.makeConfig(args);
 
 		TalkServer talkServer = new TalkServer(config);
 		talkServer.run();

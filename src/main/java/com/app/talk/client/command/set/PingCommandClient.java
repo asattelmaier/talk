@@ -1,4 +1,4 @@
-package main.java.com.app.talk.client.command.set;
+package com.app.talk.client.command.set;
 
 public class PingCommandClient implements RemoteCommandClient {
 	private static final long serialVersionUID = 7777572474626661378L;

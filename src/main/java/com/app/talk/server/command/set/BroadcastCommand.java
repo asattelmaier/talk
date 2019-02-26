@@ -1,7 +1,7 @@
-package main.java.com.app.talk.server.command.set;
+package com.app.talk.server.command.set;
 
-import main.java.com.app.talk.Dispatcher;
-import main.java.com.app.talk.command.Context;
+import com.app.talk.Dispatcher;
+import com.app.talk.command.Context;
 
 /**
  * Broadcasts a given textual massage to every known chat client.

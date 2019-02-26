@@ -1,7 +1,7 @@
-package main.java.com.app.talk.client.command.set;
+package com.app.talk.client.command.set;
 
-import main.java.com.app.talk.TalkClient;
-import main.java.com.app.talk.command.Context;
+import com.app.talk.TalkClient;
+import com.app.talk.command.Context;
 
 public class SetContextCommand implements RemoteCommandClient {
 	private static final long serialVersionUID = -5292609199183740710L;

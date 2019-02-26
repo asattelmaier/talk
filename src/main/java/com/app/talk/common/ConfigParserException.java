@@ -1,6 +1,6 @@
-package main.java.com.app.talk.common;
+package com.app.talk.common;
 
-import static main.java.com.app.talk.common.ConfigParserException.ErrorCode.*;
+import static com.app.talk.common.ConfigParserException.ErrorCode.*;
 
 /**
  * Exception handling for Talk.

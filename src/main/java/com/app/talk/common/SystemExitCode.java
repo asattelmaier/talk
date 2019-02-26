@@ -1,4 +1,4 @@
-package main.java.com.app.talk.common;
+package com.app.talk.common;
 
 /**
  * Enumerates possible system exit codes.

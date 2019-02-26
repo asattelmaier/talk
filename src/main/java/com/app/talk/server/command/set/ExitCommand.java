@@ -1,8 +1,8 @@
-package main.java.com.app.talk.server.command.set;
+package com.app.talk.server.command.set;
 
-import main.java.com.app.talk.Dispatcher;
-import main.java.com.app.talk.command.Context;
-import main.java.com.app.talk.communication.Communicator;
+import com.app.talk.Dispatcher;
+import com.app.talk.command.Context;
+import com.app.talk.communication.Communicator;
 
 /**
  * Exit command.
@@ -17,5 +17,7 @@ public class ExitCommand implements RemoteCommandServer {
 	public void execute(Context context) {
 		Communicator communicator = Dispatcher.getCommunicator(context);
 		Dispatcher.removeClient(communicator);
+		communicator.close();
+		Thread.currentThread().interrupt();
 	}
 }

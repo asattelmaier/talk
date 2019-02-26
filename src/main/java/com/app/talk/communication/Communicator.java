@@ -1,10 +1,10 @@
-package main.java.com.app.talk.communication;
+package com.app.talk.communication;
 
-import main.java.com.app.talk.Receiver;
-import main.java.com.app.talk.Sender;
-import main.java.com.app.talk.command.Context;
-import main.java.com.app.talk.command.RemoteCommand;
-import main.java.com.app.talk.command.RemoteCommandProcessor;
+import com.app.talk.Receiver;
+import com.app.talk.Sender;
+import com.app.talk.command.Context;
+import com.app.talk.command.RemoteCommand;
+import com.app.talk.command.RemoteCommandProcessor;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -34,7 +34,7 @@ public class Communicator {
 	 * @param socket
 	 * @throws IOException
 	 */
-	Communicator(Socket socket) throws IOException {
+	public Communicator(Socket socket) throws IOException {
 		this.socket = socket;
 		this.init();
 	}
@@ -88,6 +88,9 @@ public class Communicator {
 	 * @throws IOException
 	 */
 	private void init() throws IOException {
+		if (this.socket == null)
+			return;
+
 		System.out.println("Trying to connect to remote " + socket.getInetAddress() + ":" + socket.getPort());
 
 		this.sender = new Sender(this.socket, commandQueue);
@@ -184,7 +187,7 @@ public class Communicator {
 	 * @throws IOException
 	 *             Throws an IO Exception.
 	 */
-	public void send(Object object) throws IOException {
+	public void send(Object object) {
 		commandQueue.offer(object);
 	}
 }

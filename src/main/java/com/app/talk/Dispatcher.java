@@ -1,4 +1,4 @@
-package main.java.com.app.talk;
+package com.app.talk;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -6,11 +6,11 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.HashMap;
 
-import main.java.com.app.talk.client.command.set.MessageCommand;
-import main.java.com.app.talk.client.command.set.PingCommandClient;
-import main.java.com.app.talk.command.Context;
-import main.java.com.app.talk.communication.Communicator;
-import main.java.com.app.talk.communication.CommunicatorFactory;
+import com.app.talk.client.command.set.MessageCommand;
+import com.app.talk.client.command.set.PingCommandClient;
+import com.app.talk.command.Context;
+import com.app.talk.communication.Communicator;
+import com.app.talk.communication.CommunicatorFactory;
 
 /**
  * The dispatcher waits for clients to connect to its serverSocket and creates a
@@ -137,12 +137,7 @@ public class Dispatcher implements Runnable {
 
 	public static void pingResponse(Context context, long startPingTime) {
 		Communicator communicator = getCommunicator(context);
-		try {
-			communicator.send(new PingCommandClient(startPingTime));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		communicator.send(new PingCommandClient(startPingTime));
 		System.out.println("Received ping request from client " + context.getId());
-
 	}
 }
