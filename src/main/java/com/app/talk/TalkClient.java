@@ -48,7 +48,7 @@ public class TalkClient {
         }
     }
 
-    void startCommunicator() {
+    private void startCommunicator() {
         if (!connected)
             return;
 
@@ -61,26 +61,28 @@ public class TalkClient {
         }
     }
 
-    private void sendUserInput() {
+    private void userInputLoop() {
         String userInput;
-        boolean isExitCommand;
-        boolean isPingCommand;
-        RemoteCommand command;
 
         while (!Thread.interrupted()) {
             userInput = scanner.nextLine();
-            isExitCommand = userInput.equals("exit.");
-            isPingCommand = userInput.equals("ping.");
-
-            if (isExitCommand)
-                command = new ExitCommand();
-            else if (isPingCommand)
-                command = new PingCommandServer();
-            else
-                command = new BroadcastCommand(userInput);
-
-            communicator.send(command);
+            sendUserInput(userInput);
         }
+    }
+
+    void sendUserInput(String userInput) {
+        boolean isExitCommand = userInput.equals("exit.");
+        boolean isPingCommand = userInput.equals("ping.");
+        RemoteCommand command;
+
+        if (isExitCommand)
+            command = new ExitCommand();
+        else if (isPingCommand)
+            command = new PingCommandServer();
+        else
+            command = new BroadcastCommand(userInput);
+
+        communicator.send(command);
     }
 
     public static void main(String[] args) {
@@ -92,6 +94,6 @@ public class TalkClient {
 
         client.startCommunicator();
 
-        client.sendUserInput();
+        client.userInputLoop();
     }
 }
