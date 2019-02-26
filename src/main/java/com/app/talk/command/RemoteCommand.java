@@ -7,6 +7,6 @@ import java.io.Serializable;
  */
 public interface RemoteCommand extends Serializable {
 
-	long serialVersionUID = 8056449433508589194L;
+    long serialVersionUID = 8056449433508589194L;
 
 }

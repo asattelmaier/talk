@@ -16,7 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * A combination of a sender and a receiver threads.
  */
 public class Communicator {
-	Context context;
+	public Context context;
 	private Socket socket;
 	private Sender sender;
 	private Receiver receiver;
@@ -27,67 +27,16 @@ public class Communicator {
 
 	private LinkedBlockingQueue<Object> commandQueue = new LinkedBlockingQueue<Object>();
 
-	/**
-	 * The constructor creates and activates the two threads. One for the sender
-	 * (+ given user name), one for the receiver
-	 * 
-	 * @param socket
-	 * @throws IOException
-	 */
-	public Communicator(Socket socket) throws IOException {
+	public Communicator(Socket socket) {
 		this.socket = socket;
 		this.init();
 	}
 
-	/**
-	 * Fetches socket.
-	 * 
-	 * @return Socket object.
-	 */
-	public Socket getSocket() {
-		return socket;
-	}
-
-	/**
-	 * Fetches sender.
-	 * 
-	 * @return Sender object.
-	 */
-	public Sender getSender() {
-		return sender;
-	}
-
-	/**
-	 * @return the context.
-	 */
 	public Context getContext() {
 		return context;
 	}
 
-	/**
-	 * Fetches receiver.
-	 * 
-	 * @return receiver object.
-	 */
-	public Receiver getReceiver() {
-		return receiver;
-	}
-
-	/**
-	 * Fetches sender thread.
-	 * 
-	 * @return thread object.
-	 */
-	public Thread getSenderThread() {
-		return senderThread;
-	}
-
-	/**
-	 * Creates a Sender and a Receiver object.
-	 * 
-	 * @throws IOException
-	 */
-	private void init() throws IOException {
+	private void init() {
 		if (this.socket == null)
 			return;
 
@@ -104,11 +53,6 @@ public class Communicator {
 
 	}
 
-	/**
-	 * Initialised the RemoteCommandProcessor and starts the threads.
-	 * 
-	 * @throws IOException
-	 */
 	public void start() throws IOException {
 		initCommandProcessor();
 		commandProcessorThread.start();
@@ -116,9 +60,6 @@ public class Communicator {
 		senderThread.start();
 	}
 
-	/**
-	 * Initialisation of the RemoteCommandProcessor.
-	 */
 	private void initCommandProcessor() {
 		commandProcessor = new RemoteCommandProcessor(this.context);
 		commandProcessorThread = new Thread(commandProcessor);
@@ -139,26 +80,6 @@ public class Communicator {
 		this.receiver.addObserver(observer);
 	}
 
-	/**
-	 * 
-	 * @param heartbeat
-	 *            The timeout to set.
-	 */
-	void setHeartbeat(RemoteCommand heartbeat) {
-		this.sender.setHeartbeat(heartbeat);
-	}
-
-	/**
-	 * @param timeout
-	 *            The timeout to set.
-	 */
-	void setHeartbeatTimeout(long timeout) {
-		this.sender.setTimeout(timeout);
-	}
-
-	/**
-	 * Closes the socket and the open threads.
-	 */
 	public void close() {
 		try {
 			socket.close();
@@ -169,24 +90,11 @@ public class Communicator {
 		commandProcessorThread.interrupt();
 	}
 
-	/**
-	 * Sets the context.
-	 * 
-	 * @param context
-	 */
 	public void setContext(Context context) {
 		this.context = context;
 
 	}
 
-	/**
-	 * Sends a object to the output stream.
-	 *
-	 * @param object
-	 *            The object to send for.
-	 * @throws IOException
-	 *             Throws an IO Exception.
-	 */
 	public void send(Object object) {
 		commandQueue.offer(object);
 	}

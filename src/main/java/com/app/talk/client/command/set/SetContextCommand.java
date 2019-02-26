@@ -18,8 +18,6 @@ public class SetContextCommand implements RemoteCommandClient {
 
 	@Override
 	public void execute() {
-		TalkClient.communicator.setContext(this.context);
 		System.out.println("Client ID set to " + this.context.getId());
 	}
-
 }

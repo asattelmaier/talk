@@ -18,7 +18,7 @@ public class TalkClient {
     boolean connected = false;
     private Socket socket = null;
     private Scanner scanner = new Scanner(System.in);
-    public static Communicator communicator;
+    Communicator communicator;
     int connectionTry = 0;
 
     void connect(Config config) {
@@ -54,7 +54,8 @@ public class TalkClient {
 
         System.out.println("End communication with line = \"exit.\"");
         try {
-            communicator = CommunicatorFactory.getInstance().createCommunicator(socket, CommunicatorFactory.CLIENT);
+            CommunicatorFactory communicatorFactory = new CommunicatorFactory();
+            communicator = communicatorFactory.createCommunicator(socket, CommunicatorFactory.CLIENT);
             communicator.start();
         } catch (IOException e) {
             e.printStackTrace();

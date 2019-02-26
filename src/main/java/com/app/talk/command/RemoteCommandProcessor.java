@@ -33,9 +33,8 @@ public class RemoteCommandProcessor implements Runnable {
 	public void run() {
 		try {
 			while (true) {
+				RemoteCommand command = commandQueue.take();
 
-				RemoteCommand command;
-				command = commandQueue.take();
 				if (context != null) {
 					RemoteCommandServer rcs = (RemoteCommandServer) command;
 					rcs.execute(context);

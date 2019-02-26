@@ -49,36 +49,36 @@ class TalkClientTest {
     @DisplayName("Send exit")
     void sendExitTest() throws IOException {
         TalkClient client = new TalkClient();
-        TalkClient.communicator = spy(new Communicator(null));
+        client.communicator = spy(new Communicator(null));
         String userInput = "exit.";
 
         client.sendUserInput(userInput);
 
-        verify(TalkClient.communicator).send(isA(ExitCommand.class));
+        verify(client.communicator).send(isA(ExitCommand.class));
     }
 
     @Test
     @DisplayName("Send ping")
     void sendPingTest() throws IOException {
         TalkClient client = new TalkClient();
-        TalkClient.communicator = spy(new Communicator(null));
+        client.communicator = spy(new Communicator(null));
         String userInput = "ping.";
 
         client.sendUserInput(userInput);
 
-        verify(TalkClient.communicator).send(isA(PingCommandServer.class));
+        verify(client.communicator).send(isA(PingCommandServer.class));
     }
 
     @Test
     @DisplayName("Send message")
     void sendMessageTest() throws IOException {
         TalkClient client = new TalkClient();
-        TalkClient.communicator = spy(new Communicator(null));
+        client.communicator = spy(new Communicator(null));
         String userInput = "Test";
 
         client.sendUserInput(userInput);
 
-        verify(TalkClient.communicator).send(isA(BroadcastCommand.class));
+        verify(client.communicator).send(isA(BroadcastCommand.class));
     }
 
     private void startServer() {

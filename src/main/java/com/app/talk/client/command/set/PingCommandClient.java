@@ -1,5 +1,7 @@
 package com.app.talk.client.command.set;
 
+import com.app.talk.command.Context;
+
 public class PingCommandClient implements RemoteCommandClient {
 	private static final long serialVersionUID = 7777572474626661378L;
 	public final long startPingTime;
