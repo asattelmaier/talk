@@ -7,12 +7,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import com.app.talk.command.HeartbeatCommand;
-import com.app.talk.command.RemoteCommand;
 
 public class Sender implements Runnable {
     private ObjectOutputStream outputStream;
     private Socket socket;
     private LinkedBlockingQueue<Object> commandQueue;
+    int NEXT_COMMAND_TIMEOUT = 60000;
 
     public static Sender createSender(Socket socket, LinkedBlockingQueue<Object> commandQueue) {
         Sender sender = new Sender(socket, commandQueue);
@@ -53,20 +53,19 @@ public class Sender implements Runnable {
                 + socket.getLocalPort());
     }
 
-    private Object nextCommand() {
+    Object nextCommand() {
         Object command = null;
 
         try {
-            command = commandQueue.poll(60000, TimeUnit.MILLISECONDS);
+            command = commandQueue.poll(NEXT_COMMAND_TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        if (command == null) {
-            command = new HeartbeatCommand();
-        }
-
-        return command;
+        if (command == null)
+            return new HeartbeatCommand();
+        else
+            return command;
     }
 
     private void send(Object object) {

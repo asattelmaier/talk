@@ -17,13 +17,12 @@ import com.app.talk.command.RemoteCommand;
  */
 public class Receiver extends Observable implements Runnable {
 	private ObjectInputStream input;
-	private Socket socket;
 
 	public Receiver(Socket socket) {
-		this.socket = socket;
+		Socket socket1 = socket;
 		InputStream in = null;
 		try {
-			in = this.socket.getInputStream();
+			in = socket1.getInputStream();
 			this.input = new ObjectInputStream(in);
 		} catch (IOException e) {
 			e.printStackTrace();
